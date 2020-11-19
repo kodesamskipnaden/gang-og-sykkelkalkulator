@@ -1,0 +1,37 @@
+{
+  "name": "sykkelkalkulator",
+  "version": "1.0.0",
+  "description": "nka verktøy sykkeltiltak",
+  "main": "index.js",
+  "author": "Syver Enstad <syver.enstad@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "npm run test",
+    "postinstall": "elm-package install",
+    "build": "webpack --env production",
+    "client-for-virtualbox-ie-testing": "webpack-dev-server --host 0.0.0.0 --public 10.0.2.2:3000 --env development",
+    "client": "webpack-dev-server --port 3000 --env development",
+    "start": "nodemon --watch webpack.config.js --exec 'npm run client'",
+    "test": "elm-test",
+    "test:watch": "elm-test --watch",
+    "tdd": "npm test",
+    "predeploy": "npm run build"
+  },
+  "dependencies": {
+    "c3": "^0.4.14",
+    "css-loader": "^0.28.4",
+    "elm-webpack-loader": "^4.3.1",
+    "file-loader": "^0.11.2",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "elm-assets-loader": "^0.3.0",
+    "node-sass": "^4.5.3",
+    "nodemon": "^1.11.0",
+    "sass-loader": "^6.0.6"
+  }
+}
