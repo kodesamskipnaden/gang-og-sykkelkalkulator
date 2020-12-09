@@ -1,35 +1,26 @@
 module Views exposing (view)
 
+import Assets
+import Bootstrap.Accordion as Accordion
+import Bootstrap.Card as Card
+import Bootstrap.Grid as Grid
+import Group
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Bootstrap.Grid as Grid
-import Bootstrap.Card as Card
-import Bootstrap.Accordion as Accordion
-import Models exposing (Model, Page(..), Group(..))
+import Models exposing (Group(..), Model, Page(..))
 import Msgs exposing (Msg(..))
-import Group
 import TiltakAndGroupData
-import Assets
 import TiltakView
 
 
 groupIcon : Group -> Assets.Image
 groupIcon group =
     case group of
-        Holdeplasser ->
+        LEDLys ->
             Assets.holdeplasser
 
-        Informasjon ->
+        GsBTilGsA ->
             Assets.informasjon
-
-        Kjoeremateriell ->
-            Assets.kjoeremateriell
-
-        StrekningOgFramkommelighet ->
-            Assets.strekningOgFramkommelighet
-
-        Tilgjengelighet ->
-            Assets.tilgjengelighet
 
 
 view : Model -> Html Msg
@@ -129,21 +120,11 @@ ulike aktører, tiltakets nettonåverdi og nettonytte per budsjettkrone (nytteko
                 ]
             , Grid.row []
                 [ Grid.col []
-                    [ groupPanel Holdeplasser
+                    [ groupPanel LEDLys
                     ]
                 , Grid.col []
-                    [ groupPanel Informasjon
+                    [ groupPanel GsBTilGsA
                     ]
-                ]
-            , Grid.row []
-                [ Grid.col []
-                    [ groupPanel Kjoeremateriell ]
-                ]
-            , Grid.row []
-                [ Grid.col []
-                    [ groupPanel StrekningOgFramkommelighet ]
-                , Grid.col []
-                    [ groupPanel Tilgjengelighet ]
                 ]
             ]
         ]
@@ -183,10 +164,10 @@ pageGroup group model =
                 |> Accordion.cards allCards
                 |> Accordion.view model.accordionState
     in
-        div []
-            [ Grid.containerFluid [] [ pageHeader ]
-            , Grid.container [ class "container__narrow" ] [ tiltakAccordions ]
-            ]
+    div []
+        [ Grid.containerFluid [] [ pageHeader ]
+        , Grid.container [ class "container__narrow" ] [ tiltakAccordions ]
+        ]
 
 
 pageNotFound : Html Msg

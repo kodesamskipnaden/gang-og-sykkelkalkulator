@@ -1,18 +1,18 @@
 module Main exposing (main)
 
-import Navigation exposing (Location)
 import Bootstrap.Accordion as Accordion
-import UrlParser exposing ((</>))
 import Focus exposing ((=>))
+import FormattedValue exposing (value)
+import Group
 import Models exposing (..)
 import Msgs exposing (Msg(..))
-import Group
-import Tiltak exposing (Tiltak, sendTo)
-import TiltakCharting exposing (GraphState(..))
-import FormattedValue exposing (value)
-import TiltakAndGroupData
-import Views exposing (view)
+import Navigation exposing (Location)
 import Ports
+import Tiltak exposing (Tiltak, sendTo)
+import TiltakAndGroupData
+import TiltakCharting exposing (GraphState(..))
+import UrlParser exposing ((</>))
+import Views exposing (view)
 
 
 titleFromPage : Page -> String
@@ -21,15 +21,15 @@ titleFromPage page =
         appName =
             "Gang- og sykkel-vei kalkulator"
     in
-        case page of
-            Home ->
-                appName
+    case page of
+        Home ->
+            appName
 
-            NotFound ->
-                "Ugyldig side"
+        NotFound ->
+            "Ugyldig side"
 
-            GroupPage group ->
-                (Group.groupTitle group) ++ " - " ++ appName
+        GroupPage group ->
+            Group.groupTitle group ++ " - " ++ appName
 
 
 main : Program Never Model Msg
@@ -52,8 +52,8 @@ init location =
             , chartIds = []
             }
     in
-        -- if we had more than one cmd, use Cmd.batch : List Cmd -> Cmd
-        ( model, Ports.setTitle (titleFromPage model.page) )
+    -- if we had more than one cmd, use Cmd.batch : List Cmd -> Cmd
+    ( model, Ports.setTitle (titleFromPage model.page) )
 
 
 subscriptions : Model -> Sub Msg
@@ -72,12 +72,12 @@ update msg model =
                 newModel =
                     { model | page = pageFromLocation location }
             in
-                ( newModel
-                , Cmd.batch
-                    [ destroyAndCreateCharts model newModel
-                    , Ports.setTitle (titleFromPage newModel.page)
-                    ]
-                )
+            ( newModel
+            , Cmd.batch
+                [ destroyAndCreateCharts model newModel
+                , Ports.setTitle (titleFromPage newModel.page)
+                ]
+            )
 
         AccordionMsg state ->
             ( { model | accordionState = state }, Cmd.none )
@@ -97,7 +97,7 @@ update msg model =
 
         UpdateBompengeAndel tiltak boolean ->
             Tiltak.updateBompengeAndel tiltak boolean model.tiltakStates
-                |> (updateGraphingState model tiltak)
+                |> updateGraphingState model tiltak
 
         ChartsChanged chartIds ->
             ( { model | chartIds = chartIds }, Cmd.none )
@@ -167,19 +167,19 @@ computeGraphCmd tiltak tiltakStates ( beforeState, afterState ) =
                     |> Maybe.withDefault "WAT!!!!"
             }
     in
-        case ( beforeState, afterState ) of
-            ( GraphOff, GraphOn ) ->
-                Ports.generateC3 graphData
+    case ( beforeState, afterState ) of
+        ( GraphOff, GraphOn ) ->
+            Ports.generateC3 graphData
 
-            ( GraphOff, GraphOff ) ->
-                Cmd.none
+        ( GraphOff, GraphOff ) ->
+            Cmd.none
 
-            ( GraphOn, GraphOn ) ->
-                -- generate command to update the graph
-                Ports.updateC3 graphData
+        ( GraphOn, GraphOn ) ->
+            -- generate command to update the graph
+            Ports.updateC3 graphData
 
-            ( GraphOn, GraphOff ) ->
-                Ports.destroyC3 graphId
+        ( GraphOn, GraphOff ) ->
+            Ports.destroyC3 graphId
 
 
 updateField : Model -> Tiltak -> Field -> String -> ( Model, Cmd Msg )
@@ -207,7 +207,7 @@ updateField model tiltak field stringValue =
                     (Tiltak.getAttr tiltak .preferredToGraphFocus)
                     updatePreferredToGraph
     in
-        updateGraphingState model tiltak newTiltakStates
+    updateGraphingState model tiltak newTiltakStates
 
 
 updateGraphingState model tiltak newTiltakStates =
@@ -218,16 +218,16 @@ updateGraphingState model tiltak newTiltakStates =
         newGraphState =
             TiltakCharting.graphState tiltak newTiltakStates
     in
-        ( { model
-            | tiltakStates = newTiltakStates
-          }
-        , computeGraphCmd
-            tiltak
-            newTiltakStates
-            ( oldGraphState
-            , newGraphState
-            )
+    ( { model
+        | tiltakStates = newTiltakStates
+      }
+    , computeGraphCmd
+        tiltak
+        newTiltakStates
+        ( oldGraphState
+        , newGraphState
         )
+    )
 
 
 updateFieldToGraph : Tiltak -> Field -> Model -> ( Model, Cmd Msg )
@@ -242,10 +242,10 @@ updateFieldToGraph tiltak field model =
                 field.name
                 model.tiltakStates
     in
-        updateGraphingState
-            model
-            tiltak
-            newTiltakStates
+    updateGraphingState
+        model
+        tiltak
+        newTiltakStates
 
 
 decode : Location -> Maybe Page
@@ -261,9 +261,9 @@ routeParser =
                 UrlParser.s <|
                     Group.groupPathSansHash group
     in
-        TiltakAndGroupData.alleTyper
-            |> List.map groupToParser
-            |> List.append
-                [ UrlParser.map Home UrlParser.top
-                ]
-            |> UrlParser.oneOf
+    TiltakAndGroupData.alleTyper
+        |> List.map groupToParser
+        |> List.append
+            [ UrlParser.map Home UrlParser.top
+            ]
+        |> UrlParser.oneOf
