@@ -16,10 +16,10 @@ import TiltakView
 groupIcon : Group -> Assets.Image
 groupIcon group =
     case group of
-        LEDLys ->
+        Belysning ->
             Assets.holdeplasser
 
-        GsBTilGsA ->
+        Vedlikehold ->
             Assets.informasjon
 
 

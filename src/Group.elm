@@ -16,10 +16,10 @@ groupPathSansHash tag =
 groupTitle : Group -> String
 groupTitle tag =
     case tag of
-        GsBTilGsA ->
+        Vedlikehold ->
             "Fra GsB (brøyt og strø) til GsA (sop og salt / barvegsstandard)"
 
-        LEDLys ->
+        Belysning ->
             "Fra ingen/eldre belysning til LED-belysning"
 
 

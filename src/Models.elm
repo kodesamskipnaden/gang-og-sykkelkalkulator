@@ -2,13 +2,13 @@ port module Models exposing (..)
 
 import Bootstrap.Accordion as Accordion
 import Focus exposing (Focus)
-import TiltakStates exposing (TiltakStates)
 import FormattedValue exposing (FormattedValue)
+import TiltakStates exposing (TiltakStates)
 
 
 type Group
-    = LEDLys
-    | GsBTilGsA
+    = Belysning
+    | Vedlikehold
 
 
 type Page
