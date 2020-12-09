@@ -1,0 +1,319 @@
+$footer-height: 170px;
+
+/* Position the footer at the bottom of the page, but not fixed. */
+html {
+    min-height: 100%;
+    position: relative;
+}
+
+body {
+  /* Margin bottom by footer height */
+    margin-bottom: $footer-height;
+    padding-bottom: 10px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 0.05em;
+    word-spacing: 0.1em;
+    font-size: 18px;
+}
+
+.forsidetekst {
+    margin-bottom: 2rem;
+    margin-top: 3rem;
+}
+
+@media (min-width: 1200px) { 
+    .container__narrow {
+        width: 800px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container__narrow {
+        width: 800px;
+    }
+}
+
+@media (max-width: 1080px) {
+    .homeHeader h1 {
+        font-size: 7vw;
+    }
+}
+
+@media (min-width: 1081px) {
+    .homeHeader h1 {
+        font-size: 86px;
+    }
+}
+
+@media (max-width: 700px) {
+    .homeHeader h1 {
+        font-size: 8vw;
+    }
+}
+
+a {
+    text-decoration: underline;
+    color: #06579c;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* same as body margin-bottom here */
+    min-height: $footer-height;
+    color: #F3F3F3;
+    background-color: #3b3b3b;
+    padding-top: 10px;
+}
+
+.footer-text {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.5em;
+    font-weight: 400;
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+
+    a {
+        color: #8fc1eb;
+    }
+}
+
+.colophon {
+    margin-top: 1em;
+    font-size: 16px;
+}
+
+.toiLogo {
+    width: 500px;
+    margin-right: 10px;
+}
+
+.byvaapen {
+    width: 100px;
+}
+
+@media (max-width: 550px) {
+    .toiLogo {
+        width: 90vw;
+    }
+}
+
+@media (max-width: 630px) {
+    .toiLogo {
+        width: 90vw;
+        margin-bottom: 1rem;
+    }
+}
+
+.jumbotron, .homeHeader {
+    min-height: 200px;
+    max-height: 500px;
+    border-radius: 0;
+    color: #ebebeb;
+    background: linear-gradient( rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3) ), url('images/samuel-foster-199587.jpg');
+    background-position: center center;
+    background-size: cover;
+}
+
+.homeHeader h1 {
+    font-weight: 700;
+    font-style: italic;
+    font-family: 'Lora', serif;
+    text-shadow: 1px 1px 2px black;
+    filter: drop-shadow(5px 5px 6px #000);
+    display: inline;
+}
+
+.homeHeader h2 {
+    text-shadow: 1px 1px 2px black;
+    filter: drop-shadow(5px 5px 6px #000);
+}
+
+.homeHeader p {
+    font-size: 24px;
+    text-shadow: 1px 1px 2px black;
+    filter: drop-shadow(5px 5px 6px #000);
+}
+
+.beta {
+    text-shadow: 1px 1px 2px black;
+    filter: drop-shadow(5px 5px 6px #000);
+    display: inline;
+    vertical-align: top;
+}
+
+.ingress {
+    font-weight: 600;
+}
+
+.caretRight {
+    height: 15px;
+}
+
+img.groupIcon {
+    width: 5rem;
+}
+
+.groupPanel {
+    text-align: center;
+    color: #202020;
+    font-size: 1.5rem;    
+}
+
+.groupPanel .card {
+    margin-bottom: 2rem;
+}
+
+.groupPanel .card .card-block {
+    border: 4px solid white;
+    transition: all 200ms;
+    padding: 0.25rem;
+}
+
+.group-box-title {
+    min-height: 3.0em;
+    display: flex;
+}
+
+.groupPanel .card .card-block:hover {
+   border: 4px solid #a9a9a9;
+}
+
+.group-box-title-text {
+    width: 100%;
+    align-self: center;
+    text-align: center;
+}
+
+.card-header a {
+    color: #06579c;
+}
+
+.groupPanels {
+    margin-bottom: 4rem;
+}
+
+.backArrow {
+    height: 24px;
+}
+
+.groupPageHeader {
+    width: 100%;
+    text-align: center;
+}
+
+.groupHeader {
+    margin-top: 14px;
+}
+
+.groupHeader h1 {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 2rem;
+}
+
+.conclusion {
+    margin-top: 1em;
+}
+
+.isProfitableMark {
+    font-size: 2em;
+}
+
+.conclusion p {
+    
+}
+
+.chartBlock {
+    background-color: #f0f0f0;
+    min-height: 500px;
+}
+
+
+.chartBlock .c3-line-Nettonåverdi {
+    stroke-width: 5px;
+}
+
+.chartBlock h3 {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-weight: 200 !important;
+    font-size: 1.5rem;
+
+}
+
+.chartLedetekst {
+    min-height: 4rem;
+}
+
+.analyseColumn {
+    padding: 8px 0 8px 0;
+}
+
+.card {
+    border: 1px solid #aeaeae;
+    margin-bottom: 8px;
+}
+
+.card h3 {
+    font-weight: 700;
+}
+
+h4.card-header {
+    background: none;
+    border-bottom: 1px solid #aeaeae;
+    font-family: 'Lora', serif;
+    font-style: italic;
+}
+
+h4.card-header a:hover {
+    color: black;
+}
+
+.form-control {
+    background-color: #f8f7f7;
+}
+
+/* Styling av C3 graph */
+@media (min-width: 550px) and (max-width: 991px) {
+    .c3 svg {
+        font-size: 14px !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .c3 svg {
+        font-size: 16px !important;
+    }
+}
+
+.nkaTooltip {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip text */
+.nkaTooltip .nkaTooltipContent {
+    visibility: hidden;
+    width: 240px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    font-size: smaller;
+
+    top: -5px;
+    left: 105%;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.nkaTooltip:hover .nkaTooltipContent {
+    visibility: visible;
+}
