@@ -1,4 +1,4 @@
-# elm-nka
+# sykkelkalkulator
 
 Nytte- og kostnadsanalyse verktøy for gang og sykkelvei tiltak
 
