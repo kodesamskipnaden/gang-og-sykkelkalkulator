@@ -6,7 +6,6 @@
   "author": "Syver Enstad <syver.enstad@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "prebuild": "npm run test",
     "postinstall": "elm-package install",
     "build": "webpack --env production",
     "client-for-virtualbox-ie-testing": "webpack-dev-server --host 0.0.0.0 --public 10.0.2.2:3000 --env development",
