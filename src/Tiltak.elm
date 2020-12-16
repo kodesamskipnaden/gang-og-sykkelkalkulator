@@ -1,8 +1,8 @@
 module Tiltak exposing (..)
 
+import Field exposing (Field)
 import Focus exposing (Focus)
 import TiltakStates exposing (TiltakStates)
-import Field exposing (Field)
 
 
 type alias AnalyseData =
@@ -42,10 +42,6 @@ type alias StateCalculationMethod =
 -}
 
 
-type alias BompengeAndelField =
-    { focus : Focus TiltakStates Float }
-
-
 type alias TiltakRecord =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
@@ -64,7 +60,6 @@ type alias TiltakRecord =
     , investeringsKostInklRestverdi : StateCalculationMethod
     , graphId : Tiltak -> String
     , domId : Tiltak -> String
-    , bompengeAndelField : BompengeAndelField
     , preferredField : Tiltak -> TiltakStates -> Maybe Field
     , preferredToGraphFocus : Focus TiltakStates String
     }
@@ -95,54 +90,20 @@ analyse tiltak tiltakStates =
         f =
             bindTiltak tiltak tiltakStates
     in
-        { passasjerNytte = f .passasjerNytte
-        , analysePeriode = 40
-        , kostUtenSkyggepris = f .kostUtenSkyggepris
-        , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
-        , trafikantNytte = f .trafikantNytte
-        , operatoerNytte = f .operatoerNytte
-        , nytte = f .nytte
-        , skyggepris = f .skyggepris
-        , nettoNytte = f .nettoNytte
-        , nettoNyttePerBudsjettKrone =
-            Maybe.map2
-                (\nettoNytte kostUtenSkyggepris ->
-                    nettoNytte / (negate kostUtenSkyggepris)
-                )
-                (f .nettoNytte)
-                (f .kostUtenSkyggepris)
-        }
-
-
-updateBompengeAndel : Tiltak -> Bool -> TiltakStates -> TiltakStates
-updateBompengeAndel tiltak boolValue tiltakStates =
-    let
-        field =
-            getAttr tiltak .bompengeAndelField
-
-        value =
-            case boolValue of
-                True ->
-                    1
-
-                False ->
-                    0
-    in
-        Focus.set field.focus value tiltakStates
-
-
-bompengeAndelBool : Tiltak -> TiltakStates -> Bool
-bompengeAndelBool tiltak tiltakStates =
-    let
-        field =
-            getAttr tiltak .bompengeAndelField
-    in
-        case Focus.get field.focus tiltakStates of
-            1 ->
-                True
-
-            0 ->
-                False
-
-            _ ->
-                Debug.log "Ouch" False
+    { passasjerNytte = f .passasjerNytte
+    , analysePeriode = 40
+    , kostUtenSkyggepris = f .kostUtenSkyggepris
+    , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
+    , trafikantNytte = f .trafikantNytte
+    , operatoerNytte = f .operatoerNytte
+    , nytte = f .nytte
+    , skyggepris = f .skyggepris
+    , nettoNytte = f .nettoNytte
+    , nettoNyttePerBudsjettKrone =
+        Maybe.map2
+            (\nettoNytte kostUtenSkyggepris ->
+                nettoNytte / negate kostUtenSkyggepris
+            )
+            (f .nettoNytte)
+            (f .kostUtenSkyggepris)
+    }

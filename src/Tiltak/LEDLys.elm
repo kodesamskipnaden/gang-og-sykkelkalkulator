@@ -79,20 +79,20 @@ tiltak =
             , yearlyPassasjerNytte = yearlyPassasjerNytte
             , yearlyOperatoerNytte = yearlyOperatoerNytte
             , investeringsKostInklRestverdi =
-                \_ { opphoeyetHoldeplass } ->
+                \_ { ledLys } ->
                     BasicTiltak.investeringsKostInklRestverdi
-                        opphoeyetHoldeplass
+                        ledLys
                         levetid
             , driftOgVedlihKost =
-                \_ { opphoeyetHoldeplass } ->
-                    BasicTiltak.driftOgVedlihKost opphoeyetHoldeplass
+                \_ { ledLys } ->
+                    BasicTiltak.driftOgVedlihKost ledLys
             , skyggepris =
-                \this ({ opphoeyetHoldeplass } as state) ->
+                \this ({ ledLys } as state) ->
                     sendTo
                         this
                         .skyggeprisHelper
                         state
-                        opphoeyetHoldeplass.bompengeAndel
+                        0
         }
 
 
@@ -100,7 +100,6 @@ initialState : LEDLysState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
-    , bompengeAndel = 0
     , passengersPerYear = formattedValueDefault
     , lengdeSykkelveiKm = formattedValueDefault
     , yearlyTidsbesparelseMinutter = formattedValueDefault
@@ -116,15 +115,6 @@ fieldDefinitions =
                 (\f specificState ->
                     { specificState
                         | lengdeSykkelveiKm = f specificState.lengdeSykkelveiKm
-                    }
-                )
-
-        yearlyTidsbesparelseMinutter =
-            Focus.create
-                .yearlyTidsbesparelseMinutter
-                (\f specificState ->
-                    { specificState
-                        | yearlyTidsbesparelseMinutter = f specificState.yearlyTidsbesparelseMinutter
                     }
                 )
     in
@@ -151,12 +141,6 @@ fieldDefinitions =
       , placeholder = "Turer på mørke tider som får nytte av tiltaket"
       , focus = specificState => passengersPerYear
       , stepSize = 50
-      }
-    , { name = "yearlyTidsbesparelseMinutter"
-      , title = "Årlig tidsbesparelse"
-      , placeholder = " Tidsbesparelse ved raskere på- og avstigning, minutter"
-      , focus = specificState => yearlyTidsbesparelseMinutter
-      , stepSize = 1000
       }
     ]
 

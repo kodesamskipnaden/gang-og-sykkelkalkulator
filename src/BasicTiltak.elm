@@ -1,16 +1,17 @@
 module BasicTiltak exposing (..)
 
-import Regex
 import Focus exposing ((=>), Focus)
-import Tiltak exposing (..)
 import FormattedValue
     exposing
         ( FormattedValue
+        , bompengeAndel
         , installationCost
         , value
-        , bompengeAndel
         )
 import GeneralForutsetninger
+import Regex
+import Tiltak exposing (..)
+
 
 
 {--
@@ -40,13 +41,13 @@ nytte this state =
         f accessor =
             sendTo this accessor state
     in
-        Maybe.map3
-            (\a b c ->
-                a + b + c
-            )
-            (f .passasjerNytte)
-            (f .trafikantNytte)
-            (f .operatoerNytte)
+    Maybe.map3
+        (\a b c ->
+            a + b + c
+        )
+        (f .passasjerNytte)
+        (f .trafikantNytte)
+        (f .operatoerNytte)
 
 
 nettoNytte : StateCalculationMethod
@@ -55,10 +56,10 @@ nettoNytte this state =
         f =
             bindTiltak this state
     in
-        Maybe.map3 (\a b c -> a + b + c)
-            (f .nytte)
-            (f .kostUtenSkyggepris)
-            (f .skyggepris)
+    Maybe.map3 (\a b c -> a + b + c)
+        (f .nytte)
+        (f .kostUtenSkyggepris)
+        (f .skyggepris)
 
 
 passasjerNytte : StateCalculationMethod
@@ -72,7 +73,7 @@ trafikantNytte =
 
 
 analysePeriodeNytteFor accessor this state =
-    (sendTo this accessor state) |> Maybe.map ((*) GeneralForutsetninger.afaktorVekst)
+    sendTo this accessor state |> Maybe.map ((*) GeneralForutsetninger.afaktorVekst)
 
 
 operatoerNytte : StateCalculationMethod
@@ -86,9 +87,9 @@ kostUtenSkyggepris this state =
         f =
             bindTiltak this state
     in
-        Maybe.map2 (+)
-            (f .investeringsKostInklRestverdi)
-            (f .driftOgVedlihKost)
+    Maybe.map2 (+)
+        (f .investeringsKostInklRestverdi)
+        (f .driftOgVedlihKost)
 
 
 skyggeprisHelper this state bompengeAndel =
@@ -98,8 +99,8 @@ skyggeprisHelper this state bompengeAndel =
                 * kostUtenSkyggepris
                 * GeneralForutsetninger.skyggepris
     in
-        (sendTo this .kostUtenSkyggepris state)
-            |> Maybe.map calculation
+    sendTo this .kostUtenSkyggepris state
+        |> Maybe.map calculation
 
 
 basicTiltakRecord specificStateFocus =
@@ -120,9 +121,8 @@ basicTiltakRecord specificStateFocus =
     , investeringsKostInklRestverdi = \_ _ -> Nothing
     , graphId = \this -> sendTo this .domId |> (++) "c3graph"
     , domId = \this -> sendTo this .title |> toDomId
-    , bompengeAndelField = { focus = (specificStateFocus => bompengeAndel) }
     , preferredField = preferredField specificStateFocus
-    , preferredToGraphFocus = (specificStateFocus => preferredToGraph)
+    , preferredToGraphFocus = specificStateFocus => preferredToGraph
     }
 
 
@@ -143,9 +143,9 @@ preferredField specificStateFocus tiltak tiltakStates =
         filterByName field =
             field.name == fieldName
     in
-        sendTo tiltak .fields
-            |> List.filter filterByName
-            |> List.head
+    sendTo tiltak .fields
+        |> List.filter filterByName
+        |> List.head
 
 
 investeringsKostInklRestverdi :

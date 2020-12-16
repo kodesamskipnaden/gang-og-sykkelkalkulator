@@ -6,7 +6,6 @@ import FormattedValue exposing (..)
 type alias BasicState =
     { passengersPerYear : FormattedValue Float
     , preferredToGraph : String
-    , bompengeAndel : Float -- spuriøs, ingen kostnader her
     }
 
 

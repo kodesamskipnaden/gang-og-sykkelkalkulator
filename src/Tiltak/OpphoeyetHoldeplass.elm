@@ -1,19 +1,19 @@
 module Tiltak.OpphoeyetHoldeplass exposing (..)
 
-import Focus exposing (Focus, (=>))
-import Tiltak exposing (Tiltak(..), StateCalculationMethod, sendTo)
+import BasicTiltak
 import Field exposing (Field, SimpleField)
-import SpecificStates exposing (OpphoeyetHoldeplassState)
+import Focus exposing ((=>), Focus)
 import FormattedValue
     exposing
         ( formattedValueDefault
         , installationCost
-        , yearlyMaintenance
         , passengersPerYear
         , value
+        , yearlyMaintenance
         )
-import BasicTiltak
 import GeneralForutsetninger
+import SpecificStates exposing (OpphoeyetHoldeplassState)
+import Tiltak exposing (StateCalculationMethod, Tiltak(..), sendTo)
 
 
 specificState :
@@ -55,7 +55,7 @@ yearlyPassasjerNytte this ({ opphoeyetHoldeplass } as state) =
                 opphoeyetHoldeplass.beleggForbiPassasjererPerBuss.value
                 opphoeyetHoldeplass.yearlyTidsbesparelseMinutter.value
     in
-        Maybe.map2 (+) first second
+    Maybe.map2 (+) first second
 
 
 yearlyOperatoerNytte : StateCalculationMethod
@@ -64,7 +64,7 @@ yearlyOperatoerNytte this ({ opphoeyetHoldeplass } as state) =
         verdisettinger =
             GeneralForutsetninger.verdisettinger
     in
-        Maybe.map (\minutter -> minutter * verdisettinger.operatoerKostnad) opphoeyetHoldeplass.yearlyTidsbesparelseMinutter.value
+    Maybe.map (\minutter -> minutter * verdisettinger.operatoerKostnad) opphoeyetHoldeplass.yearlyTidsbesparelseMinutter.value
 
 
 levetid : number
@@ -78,35 +78,34 @@ tiltak =
         basicTiltakRecord =
             BasicTiltak.basicTiltakRecord specificState
     in
-        Tiltak
-            { basicTiltakRecord
-                | title = \_ -> "Opphøyet holdeplass"
-                , fields = \_ -> fields
-                , yearlyPassasjerNytte = yearlyPassasjerNytte
-                , yearlyOperatoerNytte = yearlyOperatoerNytte
-                , investeringsKostInklRestverdi =
-                    \_ { opphoeyetHoldeplass } ->
-                        BasicTiltak.investeringsKostInklRestverdi
-                            opphoeyetHoldeplass
-                            levetid
-                , driftOgVedlihKost =
-                    \_ { opphoeyetHoldeplass } ->
-                        BasicTiltak.driftOgVedlihKost opphoeyetHoldeplass
-                , skyggepris =
-                    \this ({ opphoeyetHoldeplass } as state) ->
-                        sendTo
-                            this
-                            .skyggeprisHelper
-                            state
-                            opphoeyetHoldeplass.bompengeAndel
-            }
+    Tiltak
+        { basicTiltakRecord
+            | title = \_ -> "Opphøyet holdeplass"
+            , fields = \_ -> fields
+            , yearlyPassasjerNytte = yearlyPassasjerNytte
+            , yearlyOperatoerNytte = yearlyOperatoerNytte
+            , investeringsKostInklRestverdi =
+                \_ { opphoeyetHoldeplass } ->
+                    BasicTiltak.investeringsKostInklRestverdi
+                        opphoeyetHoldeplass
+                        levetid
+            , driftOgVedlihKost =
+                \_ { opphoeyetHoldeplass } ->
+                    BasicTiltak.driftOgVedlihKost opphoeyetHoldeplass
+            , skyggepris =
+                \this ({ opphoeyetHoldeplass } as state) ->
+                    sendTo
+                        this
+                        .skyggeprisHelper
+                        state
+                        0
+        }
 
 
 initialState : OpphoeyetHoldeplassState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
-    , bompengeAndel = 0
     , passengersPerYear = formattedValueDefault
     , beleggForbiPassasjererPerBuss = formattedValueDefault
     , yearlyTidsbesparelseMinutter = formattedValueDefault
@@ -134,37 +133,37 @@ fieldDefinitions =
                     }
                 )
     in
-        [ { name = "installationCost"
-          , title = "Installasjonskostnad"
-          , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"
-          , focus = specificState => installationCost
-          , stepSize = 50000
-          }
-        , { name = "yearlyMaintenance"
-          , title = "Årlige drifts- og vedlikeholdskostnader"
-          , placeholder = BasicTiltak.yearlyMaintenancePlaceholder
-          , focus = specificState => yearlyMaintenance
-          , stepSize = 5000
-          }
-        , { name = "passengersPerYear"
-          , title = "Antall av- og påstigende passasjerer på holdeplassen"
-          , placeholder = "På- og avstigende passasjerer per år"
-          , focus = specificState => passengersPerYear
-          , stepSize = 50
-          }
-        , { name = "beleggForbiPassasjererPerBuss"
-          , title = "Gjennomsnittsbelegg forbi holdeplassen"
-          , placeholder = "Passasjerer pr buss"
-          , focus = specificState => beleggForbiPassasjererPerBuss
-          , stepSize = 5
-          }
-        , { name = "yearlyTidsbesparelseMinutter"
-          , title = "Årlig tidsbesparelse"
-          , placeholder = " Tidsbesparelse ved raskere på- og avstigning, minutter"
-          , focus = specificState => yearlyTidsbesparelseMinutter
-          , stepSize = 1000
-          }
-        ]
+    [ { name = "installationCost"
+      , title = "Installasjonskostnad"
+      , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"
+      , focus = specificState => installationCost
+      , stepSize = 50000
+      }
+    , { name = "yearlyMaintenance"
+      , title = "Årlige drifts- og vedlikeholdskostnader"
+      , placeholder = BasicTiltak.yearlyMaintenancePlaceholder
+      , focus = specificState => yearlyMaintenance
+      , stepSize = 5000
+      }
+    , { name = "passengersPerYear"
+      , title = "Antall av- og påstigende passasjerer på holdeplassen"
+      , placeholder = "På- og avstigende passasjerer per år"
+      , focus = specificState => passengersPerYear
+      , stepSize = 50
+      }
+    , { name = "beleggForbiPassasjererPerBuss"
+      , title = "Gjennomsnittsbelegg forbi holdeplassen"
+      , placeholder = "Passasjerer pr buss"
+      , focus = specificState => beleggForbiPassasjererPerBuss
+      , stepSize = 5
+      }
+    , { name = "yearlyTidsbesparelseMinutter"
+      , title = "Årlig tidsbesparelse"
+      , placeholder = " Tidsbesparelse ved raskere på- og avstigning, minutter"
+      , focus = specificState => yearlyTidsbesparelseMinutter
+      , stepSize = 1000
+      }
+    ]
 
 
 fields : List Field

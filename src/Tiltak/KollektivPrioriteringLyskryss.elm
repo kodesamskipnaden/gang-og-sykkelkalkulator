@@ -1,19 +1,19 @@
 module Tiltak.KollektivPrioriteringLyskryss exposing (..)
 
-import Focus exposing (..)
-import Tiltak exposing (Tiltak(..), StateCalculationMethod, sendTo)
-import Field exposing (SimpleField, Field)
 import BasicTiltak
-import SpecificStates exposing (KollektivPrioriteringLyskryssState)
+import Field exposing (Field, SimpleField)
+import Focus exposing (..)
 import FormattedValue
     exposing
-        ( passengersPerYear
+        ( formattedValueDefault
         , installationCost
-        , yearlyMaintenance
+        , passengersPerYear
         , value
-        , formattedValueDefault
+        , yearlyMaintenance
         )
 import GeneralForutsetninger exposing (verdisettinger)
+import SpecificStates exposing (KollektivPrioriteringLyskryssState)
+import Tiltak exposing (StateCalculationMethod, Tiltak(..), sendTo)
 
 
 levetid : number
@@ -58,10 +58,10 @@ yearlyOperatoerNytte this ({ kollektivPrioriteringLyskryss } as state) =
         calculation passerendeAvganger =
             passerendeAvganger
                 * (tidsbesparelsePerAvgangSeconds / 60)
-                * (verdisettinger).operatoerKostnad
+                * verdisettinger.operatoerKostnad
     in
-        kollektivPrioriteringLyskryss.antallPasserendeAvgangerPerYear.value
-            |> Maybe.map calculation
+    kollektivPrioriteringLyskryss.antallPasserendeAvgangerPerYear.value
+        |> Maybe.map calculation
 
 
 investeringsKostInklRestverdi : StateCalculationMethod
@@ -78,7 +78,7 @@ driftOgVedlihKost this ({ kollektivPrioriteringLyskryss } as state) =
 
 skyggepris : StateCalculationMethod
 skyggepris this ({ kollektivPrioriteringLyskryss } as state) =
-    (sendTo this .skyggeprisHelper state kollektivPrioriteringLyskryss.bompengeAndel)
+    sendTo this .skyggeprisHelper state 0
 
 
 tiltak : Tiltak
@@ -87,17 +87,17 @@ tiltak =
         basicTiltakRecord =
             BasicTiltak.basicTiltakRecord specificStateFocus
     in
-        Tiltak
-            { basicTiltakRecord
-                | title = \_ -> "Kollektivprioritering i lyskryss"
-                , yearlyPassasjerNytte = yearlyPassasjerNytte
-                , yearlyTrafikantNytte = yearlyTrafikantNytte
-                , yearlyOperatoerNytte = yearlyOperatoerNytte
-                , investeringsKostInklRestverdi = investeringsKostInklRestverdi
-                , driftOgVedlihKost = driftOgVedlihKost
-                , skyggepris = skyggepris
-                , fields = \_ -> fields
-            }
+    Tiltak
+        { basicTiltakRecord
+            | title = \_ -> "Kollektivprioritering i lyskryss"
+            , yearlyPassasjerNytte = yearlyPassasjerNytte
+            , yearlyTrafikantNytte = yearlyTrafikantNytte
+            , yearlyOperatoerNytte = yearlyOperatoerNytte
+            , investeringsKostInklRestverdi = investeringsKostInklRestverdi
+            , driftOgVedlihKost = driftOgVedlihKost
+            , skyggepris = skyggepris
+            , fields = \_ -> fields
+        }
 
 
 initialState : KollektivPrioriteringLyskryssState
@@ -105,7 +105,6 @@ initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
     , passengersPerYear = formattedValueDefault
-    , bompengeAndel = 0
     , antallBilerForsinketPerAvgang = formattedValueDefault
     , forsinkelsePerBilSeconds = formattedValueDefault
     , antallPasserendeAvgangerPerYear = formattedValueDefault

@@ -95,10 +95,6 @@ update msg model =
             , Cmd.none
             )
 
-        UpdateBompengeAndel tiltak boolean ->
-            Tiltak.updateBompengeAndel tiltak boolean model.tiltakStates
-                |> updateGraphingState model tiltak
-
         ChartsChanged chartIds ->
             ( { model | chartIds = chartIds }, Cmd.none )
 
