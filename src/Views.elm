@@ -82,7 +82,7 @@ pageHome model =
     div []
         [ div [ class "jumbotron homeHeader" ]
             [ Grid.container [ class "container__narrow" ]
-                [ h1 [] [ text "Sykkelveikalkulator" ]
+                [ h1 [] [ text "Gang- og sykkelveikalkulator" ]
                 , h2 [] [ text "Nyttekostnadsverktøy for sykkel- og gangveitiltak" ]
                 , p [] [ text "Publisert 2021" ]
                 ]
@@ -93,7 +93,7 @@ pageHome model =
                     [ Grid.col []
                         [ p []
                             [ text """
-Sykkelkalkulatoren er et
+Gang og sykkelkalkulatoren er et
 nyttekostnadsberegningsverktøy for
 sykkel- og gangveitiltak. Kalkulatoren følger gjeldende
 tilnærming og metodikk for nyttekostnadsanalyser i
@@ -120,10 +120,10 @@ ulike aktører, tiltakets nettonåverdi og nettonytte per budsjettkrone (nytteko
                 ]
             , Grid.row []
                 [ Grid.col []
-                    [ groupPanel LEDLys
+                    [ groupPanel Belysning
                     ]
                 , Grid.col []
-                    [ groupPanel GsBTilGsA
+                    [ groupPanel Vedlikehold
                     ]
                 ]
             ]

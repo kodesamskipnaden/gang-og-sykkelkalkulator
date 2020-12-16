@@ -32,4 +32,5 @@ tiltakForGroup gruppeType =
 initialTiltakStates =
     { kollektivPrioriteringLyskryss = KollektivPrioriteringLyskryss.initialState
     , opphoeyetHoldeplass = OpphoeyetHoldeplass.initialState
+    , ledLys = LEDLys.initialState
     }

@@ -12,28 +12,28 @@ import FormattedValue
         , yearlyMaintenance
         )
 import GeneralForutsetninger
-import SpecificStates exposing (OpphoeyetHoldeplassState)
+import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (StateCalculationMethod, Tiltak(..), sendTo)
 
 
 specificState :
     Focus
         { tiltakStates
-            | opphoeyetHoldeplass : OpphoeyetHoldeplassState
+            | ledLys : LEDLysState
         }
-        OpphoeyetHoldeplassState
+        LEDLysState
 specificState =
     Focus.create
-        .opphoeyetHoldeplass
+        .ledLys
         (\f tiltakStates ->
             { tiltakStates
-                | opphoeyetHoldeplass = f tiltakStates.opphoeyetHoldeplass
+                | ledLys = f tiltakStates.ledLys
             }
         )
 
 
 yearlyPassasjerNytte : StateCalculationMethod
-yearlyPassasjerNytte this ({ opphoeyetHoldeplass } as state) =
+yearlyPassasjerNytte this ({ ledLys } as state) =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
@@ -42,29 +42,23 @@ yearlyPassasjerNytte this ({ opphoeyetHoldeplass } as state) =
             passengersPerYear * verdisettinger.opphoyetHoldeplass
 
         first =
-            Maybe.map firstCalc opphoeyetHoldeplass.passengersPerYear.value
+            Maybe.map firstCalc ledLys.passengersPerYear.value
 
         secondCalc beleggForbiPassasjererPerBuss yearlyTidsbesparelseMinutter =
             beleggForbiPassasjererPerBuss
                 * yearlyTidsbesparelseMinutter
                 * verdisettinger.reisetidKollektivTransport
-
-        second =
-            Maybe.map2
-                secondCalc
-                opphoeyetHoldeplass.beleggForbiPassasjererPerBuss.value
-                opphoeyetHoldeplass.yearlyTidsbesparelseMinutter.value
     in
-    Maybe.map2 (+) first second
+    Maybe.map2 (+) (Just 1) (Just 2)
 
 
 yearlyOperatoerNytte : StateCalculationMethod
-yearlyOperatoerNytte this ({ opphoeyetHoldeplass } as state) =
+yearlyOperatoerNytte this ({ ledLys } as state) =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
     in
-    Maybe.map (\minutter -> minutter * verdisettinger.operatoerKostnad) opphoeyetHoldeplass.yearlyTidsbesparelseMinutter.value
+    Maybe.map (\minutter -> minutter * verdisettinger.operatoerKostnad) ledLys.yearlyTidsbesparelseMinutter.value
 
 
 levetid : number
@@ -80,7 +74,7 @@ tiltak =
     in
     Tiltak
         { basicTiltakRecord
-            | title = \_ -> "Opphøyet holdeplass"
+            | title = \_ -> "LED-lys for syklende"
             , fields = \_ -> fields
             , yearlyPassasjerNytte = yearlyPassasjerNytte
             , yearlyOperatoerNytte = yearlyOperatoerNytte
@@ -102,13 +96,13 @@ tiltak =
         }
 
 
-initialState : OpphoeyetHoldeplassState
+initialState : LEDLysState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
     , bompengeAndel = 0
     , passengersPerYear = formattedValueDefault
-    , beleggForbiPassasjererPerBuss = formattedValueDefault
+    , lengdeSykkelveiKm = formattedValueDefault
     , yearlyTidsbesparelseMinutter = formattedValueDefault
     , preferredToGraph = ""
     }
@@ -117,11 +111,11 @@ initialState =
 fieldDefinitions : List SimpleField
 fieldDefinitions =
     let
-        beleggForbiPassasjererPerBuss =
-            Focus.create .beleggForbiPassasjererPerBuss
+        lengdeSykkelveiKm =
+            Focus.create .lengdeSykkelveiKm
                 (\f specificState ->
                     { specificState
-                        | beleggForbiPassasjererPerBuss = f specificState.beleggForbiPassasjererPerBuss
+                        | lengdeSykkelveiKm = f specificState.lengdeSykkelveiKm
                     }
                 )
 
@@ -146,17 +140,17 @@ fieldDefinitions =
       , focus = specificState => yearlyMaintenance
       , stepSize = 5000
       }
+    , { name = "lengdeSykkelveiKm"
+      , title = "Sykkelvei lengde i kilometer"
+      , placeholder = "Lengde sykkelvei (km)"
+      , focus = specificState => lengdeSykkelveiKm
+      , stepSize = 5
+      }
     , { name = "passengersPerYear"
-      , title = "Antall av- og påstigende passasjerer på holdeplassen"
-      , placeholder = "På- og avstigende passasjerer per år"
+      , title = "Antall sykkelturer per år"
+      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
       , focus = specificState => passengersPerYear
       , stepSize = 50
-      }
-    , { name = "beleggForbiPassasjererPerBuss"
-      , title = "Gjennomsnittsbelegg forbi holdeplassen"
-      , placeholder = "Passasjerer pr buss"
-      , focus = specificState => beleggForbiPassasjererPerBuss
-      , stepSize = 5
       }
     , { name = "yearlyTidsbesparelseMinutter"
       , title = "Årlig tidsbesparelse"

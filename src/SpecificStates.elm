@@ -39,6 +39,17 @@ type alias OpphoeyetHoldeplassState =
     OpphoeyetHoldeplassStatePartial SimpleCommonState
 
 
+type alias LEDLysStatePartial a =
+    { a
+        | lengdeSykkelveiKm : FormattedValue Float
+        , yearlyTidsbesparelseMinutter : FormattedValue Float
+    }
+
+
+type alias LEDLysState =
+    LEDLysStatePartial SimpleCommonState
+
+
 type alias KollektivPrioriteringLyskryssStatePartial a =
     { a
         | antallBilerForsinketPerAvgang : FormattedValue Float

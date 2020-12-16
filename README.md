@@ -1,4 +1,4 @@
-# sykkelkalkulator
+# Gang- og sykkelkalkulator
 
 Nytte- og kostnadsanalyse verktøy for gang og sykkelvei tiltak
 
