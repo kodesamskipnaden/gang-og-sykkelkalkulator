@@ -7,7 +7,7 @@ import FormattedValue
     exposing
         ( formattedValueDefault
         , installationCost
-        , passengersPerYear
+        , sykkelturerPerYear
         , value
         , yearlyMaintenance
         )
@@ -29,12 +29,12 @@ tidsbesparelsePerAvgangSeconds =
 yearlyPassasjerNytte : StateCalculationMethod
 yearlyPassasjerNytte this tiltakStates =
     tiltakStates
-        |> Focus.get (specificStateFocus => passengersPerYear => value)
+        |> Focus.get (specificStateFocus => sykkelturerPerYear => value)
         |> Maybe.map
-            (\passengersPerYear ->
+            (\sykkelturerPerYear ->
                 (tidsbesparelsePerAvgangSeconds / 60)
                     * verdisettinger.reisetidKollektivTransport
-                    * passengersPerYear
+                    * sykkelturerPerYear
             )
 
 
@@ -92,7 +92,6 @@ tiltak =
             | title = \_ -> "Kollektivprioritering i lyskryss"
             , yearlyPassasjerNytte = yearlyPassasjerNytte
             , yearlyTrafikantNytte = yearlyTrafikantNytte
-            , yearlyOperatoerNytte = yearlyOperatoerNytte
             , investeringsKostInklRestverdi = investeringsKostInklRestverdi
             , driftOgVedlihKost = driftOgVedlihKost
             , skyggepris = skyggepris
@@ -104,7 +103,7 @@ initialState : KollektivPrioriteringLyskryssState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
-    , passengersPerYear = formattedValueDefault
+    , sykkelturerPerYear = formattedValueDefault
     , antallBilerForsinketPerAvgang = formattedValueDefault
     , forsinkelsePerBilSeconds = formattedValueDefault
     , antallPasserendeAvgangerPerYear = formattedValueDefault
@@ -171,10 +170,10 @@ fieldDefinitions =
       , focus = specificStateFocus => yearlyMaintenance
       , stepSize = 5000
       }
-    , { name = "passengersPerYear"
+    , { name = "sykkelturerPerYear"
       , title = "Antall passasjerer ombord per år"
       , placeholder = "Antall kollektivpassasjerer som omfattes av tiltaket"
-      , focus = specificStateFocus => passengersPerYear
+      , focus = specificStateFocus => sykkelturerPerYear
       , stepSize = 50
       }
     , { name = "antallBilerForsinketPerAvgang"

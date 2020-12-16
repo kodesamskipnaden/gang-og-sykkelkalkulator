@@ -1,22 +1,22 @@
 module SuperSimpleTiltak exposing (..)
 
-import Focus exposing (Focus, (=>))
-import TiltakStates exposing (TiltakStates)
+import BasicTiltak
+import Field exposing (SimpleField)
+import Focus exposing ((=>), Focus)
+import FormattedValue
+    exposing
+        ( formattedValueDefault
+        , sykkelturerPerYear
+        , value
+        , yearlyMaintenance
+        )
 import SpecificStates
     exposing
         ( SimpleCommonState
         , SuperSimpleCommonState
         )
-import FormattedValue
-    exposing
-        ( formattedValueDefault
-        , passengersPerYear
-        , yearlyMaintenance
-        , value
-        )
-import Field exposing (SimpleField)
-import BasicTiltak
-import Tiltak exposing (Tiltak(..), StateCalculationMethod, bindTiltak, sendTo)
+import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
+import TiltakStates exposing (TiltakStates)
 
 
 type alias SuperSimpleTiltak a =
@@ -29,7 +29,7 @@ type alias SuperSimpleTiltak a =
 initialState : SuperSimpleCommonState
 initialState =
     { yearlyMaintenance = formattedValueDefault
-    , passengersPerYear = formattedValueDefault
+    , sykkelturerPerYear = formattedValueDefault
     , bompengeAndel = 0
     , preferredToGraph = ""
     }
@@ -40,13 +40,13 @@ fieldDefinitions tiltakFocus =
     [ { name = "yearlyMaintenance"
       , title = "Årlige drifts- og vedlikeholdskostnader"
       , placeholder = BasicTiltak.yearlyMaintenancePlaceholder
-      , focus = (tiltakFocus => yearlyMaintenance)
+      , focus = tiltakFocus => yearlyMaintenance
       , stepSize = 5000
       }
-    , { name = "passengersPerYear"
+    , { name = "sykkelturerPerYear"
       , title = "Antall passasjerer per år"
       , placeholder = "Påstigende passasjerer per år"
-      , focus = (tiltakFocus => passengersPerYear)
+      , focus = tiltakFocus => sykkelturerPerYear
       , stepSize = 50
       }
     ]
@@ -57,28 +57,28 @@ createTiltak simpleTiltak =
         basicTiltakRecord =
             BasicTiltak.basicTiltakRecord simpleTiltak.focus
     in
-        Tiltak
-            { basicTiltakRecord
-                | title = \_ -> simpleTiltak.title
-                , fields =
-                    \_ ->
-                        Field.transformToFields
-                            (fieldDefinitions simpleTiltak.focus)
-                , skyggepris =
-                    \this state ->
-                        sendTo this
-                            .skyggeprisHelper
-                            state
-                            ((Focus.get simpleTiltak.focus state).bompengeAndel)
-                , yearlyPassasjerNytte =
-                    \_ state ->
+    Tiltak
+        { basicTiltakRecord
+            | title = \_ -> simpleTiltak.title
+            , fields =
+                \_ ->
+                    Field.transformToFields
+                        (fieldDefinitions simpleTiltak.focus)
+            , skyggepris =
+                \this state ->
+                    sendTo this
+                        .skyggeprisHelper
                         state
-                            |> Focus.get (simpleTiltak.focus => passengersPerYear => value)
-                            |> Maybe.map ((*) simpleTiltak.nytteMultiplikator)
-                , driftOgVedlihKost =
-                    \_ state ->
-                        BasicTiltak.driftOgVedlihKost <| Focus.get simpleTiltak.focus state
-                , investeringsKostInklRestverdi =
-                    \_ state ->
-                        Just 0
-            }
+                        (Focus.get simpleTiltak.focus state).bompengeAndel
+            , yearlyPassasjerNytte =
+                \_ state ->
+                    state
+                        |> Focus.get (simpleTiltak.focus => sykkelturerPerYear => value)
+                        |> Maybe.map ((*) simpleTiltak.nytteMultiplikator)
+            , driftOgVedlihKost =
+                \_ state ->
+                    BasicTiltak.driftOgVedlihKost <| Focus.get simpleTiltak.focus state
+            , investeringsKostInklRestverdi =
+                \_ state ->
+                    Just 0
+        }

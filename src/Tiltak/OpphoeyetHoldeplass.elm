@@ -7,7 +7,7 @@ import FormattedValue
     exposing
         ( formattedValueDefault
         , installationCost
-        , passengersPerYear
+        , sykkelturerPerYear
         , value
         , yearlyMaintenance
         )
@@ -38,11 +38,11 @@ yearlyPassasjerNytte this ({ opphoeyetHoldeplass } as state) =
         verdisettinger =
             GeneralForutsetninger.verdisettinger
 
-        firstCalc passengersPerYear =
-            passengersPerYear * verdisettinger.opphoyetHoldeplass
+        firstCalc sykkelturerPerYear =
+            sykkelturerPerYear * verdisettinger.opphoyetHoldeplass
 
         first =
-            Maybe.map firstCalc opphoeyetHoldeplass.passengersPerYear.value
+            Maybe.map firstCalc opphoeyetHoldeplass.sykkelturerPerYear.value
 
         secondCalc beleggForbiPassasjererPerBuss yearlyTidsbesparelseMinutter =
             beleggForbiPassasjererPerBuss
@@ -56,15 +56,6 @@ yearlyPassasjerNytte this ({ opphoeyetHoldeplass } as state) =
                 opphoeyetHoldeplass.yearlyTidsbesparelseMinutter.value
     in
     Maybe.map2 (+) first second
-
-
-yearlyOperatoerNytte : StateCalculationMethod
-yearlyOperatoerNytte this ({ opphoeyetHoldeplass } as state) =
-    let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-    in
-    Maybe.map (\minutter -> minutter * verdisettinger.operatoerKostnad) opphoeyetHoldeplass.yearlyTidsbesparelseMinutter.value
 
 
 levetid : number
@@ -83,7 +74,6 @@ tiltak =
             | title = \_ -> "Opphøyet holdeplass"
             , fields = \_ -> fields
             , yearlyPassasjerNytte = yearlyPassasjerNytte
-            , yearlyOperatoerNytte = yearlyOperatoerNytte
             , investeringsKostInklRestverdi =
                 \_ { opphoeyetHoldeplass } ->
                     BasicTiltak.investeringsKostInklRestverdi
@@ -106,7 +96,7 @@ initialState : OpphoeyetHoldeplassState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
-    , passengersPerYear = formattedValueDefault
+    , sykkelturerPerYear = formattedValueDefault
     , beleggForbiPassasjererPerBuss = formattedValueDefault
     , yearlyTidsbesparelseMinutter = formattedValueDefault
     , preferredToGraph = ""
@@ -145,10 +135,10 @@ fieldDefinitions =
       , focus = specificState => yearlyMaintenance
       , stepSize = 5000
       }
-    , { name = "passengersPerYear"
+    , { name = "sykkelturerPerYear"
       , title = "Antall av- og påstigende passasjerer på holdeplassen"
       , placeholder = "På- og avstigende passasjerer per år"
-      , focus = specificState => passengersPerYear
+      , focus = specificState => sykkelturerPerYear
       , stepSize = 50
       }
     , { name = "beleggForbiPassasjererPerBuss"

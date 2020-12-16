@@ -11,7 +11,6 @@ type alias AnalyseData =
     , analysePeriode : Float
     , isProfitable : Maybe Bool
     , trafikantNytte : Maybe Float
-    , operatoerNytte : Maybe Float
     , nytte : Maybe Float
     , skyggepris : Maybe Float
     , nettoNytte : Maybe Float
@@ -47,7 +46,6 @@ type alias TiltakRecord =
     , fields : Tiltak -> List Field
     , passasjerNytte : StateCalculationMethod
     , trafikantNytte : StateCalculationMethod
-    , operatoerNytte : StateCalculationMethod
     , nytte : StateCalculationMethod
     , skyggepris : StateCalculationMethod
     , skyggeprisHelper : Tiltak -> TiltakStates -> Float -> Maybe Float
@@ -55,7 +53,6 @@ type alias TiltakRecord =
     , nettoNytte : StateCalculationMethod
     , yearlyPassasjerNytte : StateCalculationMethod
     , yearlyTrafikantNytte : StateCalculationMethod
-    , yearlyOperatoerNytte : StateCalculationMethod
     , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
     , graphId : Tiltak -> String
@@ -95,7 +92,6 @@ analyse tiltak tiltakStates =
     , kostUtenSkyggepris = f .kostUtenSkyggepris
     , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
     , trafikantNytte = f .trafikantNytte
-    , operatoerNytte = f .operatoerNytte
     , nytte = f .nytte
     , skyggepris = f .skyggepris
     , nettoNytte = f .nettoNytte

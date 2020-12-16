@@ -4,7 +4,7 @@ import FormattedValue exposing (..)
 
 
 type alias BasicState =
-    { passengersPerYear : FormattedValue Float
+    { sykkelturerPerYear : FormattedValue Float
     , preferredToGraph : String
     }
 
@@ -41,7 +41,6 @@ type alias OpphoeyetHoldeplassState =
 type alias LEDLysStatePartial a =
     { a
         | lengdeSykkelveiKm : FormattedValue Float
-        , yearlyTidsbesparelseMinutter : FormattedValue Float
     }
 
 

@@ -1,13 +1,13 @@
 module AnalyseView exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
 import Bootstrap.Grid as Grid
 import Bootstrap.Grid.Col as Col
 import Bootstrap.Grid.Row as Row
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Msgs exposing (Msg(..))
 import NumberFormat
 import Tiltak exposing (AnalyseData)
-import Msgs exposing (Msg(..))
 
 
 conclusionRow : AnalyseData -> Html Msg
@@ -39,37 +39,33 @@ conclusionRow data =
                 )
             ]
     in
-        div [ class "conclusion" ]
-            [ h3 [] [ text "Konklusjon" ]
-            , p []
-                (data.isProfitable
-                    |> Maybe.map conclusionContent
-                    |> Maybe.withDefault [ text "Ufullstendige data" ]
-                )
-            ]
+    div [ class "conclusion" ]
+        [ h3 [] [ text "Konklusjon" ]
+        , p []
+            (data.isProfitable
+                |> Maybe.map conclusionContent
+                |> Maybe.withDefault [ text "Ufullstendige data" ]
+            )
+        ]
 
 
 view : AnalyseData -> List (Html Msg)
 view data =
     let
         titleAndValueList =
-            [ ( "Passasjerenes nytte over " ++ (toString data.analysePeriode) ++ " år"
+            [ ( "Passasjerenes nytte over " ++ toString data.analysePeriode ++ " år"
               , data.passasjerNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av passasjerenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
-            , ( "Øvrige trafikanters nytte over " ++ (toString data.analysePeriode) ++ " år"
+            , ( "Øvrige trafikanters nytte over " ++ toString data.analysePeriode ++ " år"
               , data.trafikantNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
               )
-            , ( "Operatørnytte over " ++ (toString data.analysePeriode) ++ " år"
-              , data.operatoerNytte |> NumberFormat.maybePretty
-              , text "Nåverdien av operatøren nytte over hele analyseperioden"
-              )
-            , ( "Sum nytteelementer over " ++ (toString data.analysePeriode) ++ " år"
+            , ( "Sum nytteelementer over " ++ toString data.analysePeriode ++ " år"
               , data.nytte |> NumberFormat.maybePretty
               , text "-"
               )
-            , ( "Sum kostnader over " ++ (toString data.analysePeriode) ++ " år"
+            , ( "Sum kostnader over " ++ toString data.analysePeriode ++ " år"
               , data.kostUtenSkyggepris |> NumberFormat.maybePretty
               , text "Verdien i dag av alle kostnader (drift/vedlikehold, investering og ev. gjeninvestering) som vil påløpe i analyseperioden"
               )
@@ -105,4 +101,4 @@ view data =
         gridRows =
             dataRows ++ [ conclusionRow data ]
     in
-        h3 [] [ text "Samfunnsøkonomisk analyse" ] :: gridRows
+    h3 [] [ text "Samfunnsøkonomisk analyse" ] :: gridRows

@@ -1,20 +1,19 @@
 module SimpleTiltak exposing (..)
 
+import BasicTiltak
+import Field exposing (SimpleField)
 import Focus exposing (..)
-import TiltakStates exposing (TiltakStates)
-import SpecificStates exposing (SimpleCommonState)
 import FormattedValue
     exposing
         ( formattedValueDefault
         , installationCost
+        , sykkelturerPerYear
         , value
         , yearlyMaintenance
-        , passengersPerYear
         )
-import Field exposing (SimpleField)
-import BasicTiltak
-import Tiltak exposing (Tiltak(..), StateCalculationMethod, bindTiltak, sendTo)
-import Focus exposing ((=>))
+import SpecificStates exposing (SimpleCommonState)
+import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
+import TiltakStates exposing (TiltakStates)
 
 
 type alias SimpleTiltak =
@@ -30,7 +29,7 @@ initialState : SimpleCommonState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
-    , passengersPerYear = formattedValueDefault
+    , sykkelturerPerYear = formattedValueDefault
     , bompengeAndel = 0
     , preferredToGraph = ""
     }
@@ -50,7 +49,7 @@ fieldDefinitions tiltakFocus isHoldeplassTiltak =
       , focus = tiltakFocus => yearlyMaintenance
       , stepSize = 5000
       }
-    , { name = "passengersPerYear"
+    , { name = "sykkelturerPerYear"
       , title = "Antall passasjerer per år"
       , placeholder =
             case isHoldeplassTiltak of
@@ -59,7 +58,7 @@ fieldDefinitions tiltakFocus isHoldeplassTiltak =
 
                 False ->
                     "Årlig antall passasjerer om bord"
-      , focus = tiltakFocus => passengersPerYear
+      , focus = tiltakFocus => sykkelturerPerYear
       , stepSize = 50
       }
     ]
@@ -71,35 +70,35 @@ createTiltak simpleTiltak =
         basicTiltakRecord =
             BasicTiltak.basicTiltakRecord simpleTiltak.focus
     in
-        Tiltak
-            { basicTiltakRecord
-                | title = \_ -> simpleTiltak.title
-                , fields =
-                    \_ ->
-                        Field.transformToFields
-                            (fieldDefinitions
-                                simpleTiltak.focus
-                                simpleTiltak.isHoldeplassTiltak
-                            )
-                , skyggepris =
-                    \this state ->
-                        sendTo this
-                            .skyggeprisHelper
-                            state
-                            ((Focus.get simpleTiltak.focus state).bompengeAndel)
-                , yearlyPassasjerNytte =
-                    \_ state ->
+    Tiltak
+        { basicTiltakRecord
+            | title = \_ -> simpleTiltak.title
+            , fields =
+                \_ ->
+                    Field.transformToFields
+                        (fieldDefinitions
+                            simpleTiltak.focus
+                            simpleTiltak.isHoldeplassTiltak
+                        )
+            , skyggepris =
+                \this state ->
+                    sendTo this
+                        .skyggeprisHelper
                         state
-                            |> Focus.get (simpleTiltak.focus => passengersPerYear => value)
-                            |> Maybe.map ((*) simpleTiltak.nytteMultiplikator)
-                , driftOgVedlihKost =
-                    \_ state ->
-                        state
-                            |> Focus.get simpleTiltak.focus
-                            |> BasicTiltak.driftOgVedlihKost
-                , investeringsKostInklRestverdi =
-                    \_ state ->
-                        BasicTiltak.investeringsKostInklRestverdi
-                            (Focus.get simpleTiltak.focus state)
-                            simpleTiltak.levetid
-            }
+                        (Focus.get simpleTiltak.focus state).bompengeAndel
+            , yearlyPassasjerNytte =
+                \_ state ->
+                    state
+                        |> Focus.get (simpleTiltak.focus => sykkelturerPerYear => value)
+                        |> Maybe.map ((*) simpleTiltak.nytteMultiplikator)
+            , driftOgVedlihKost =
+                \_ state ->
+                    state
+                        |> Focus.get simpleTiltak.focus
+                        |> BasicTiltak.driftOgVedlihKost
+            , investeringsKostInklRestverdi =
+                \_ state ->
+                    BasicTiltak.investeringsKostInklRestverdi
+                        (Focus.get simpleTiltak.focus state)
+                        simpleTiltak.levetid
+        }

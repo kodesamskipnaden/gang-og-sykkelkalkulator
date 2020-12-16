@@ -41,13 +41,12 @@ nytte this state =
         f accessor =
             sendTo this accessor state
     in
-    Maybe.map3
-        (\a b c ->
-            a + b + c
+    Maybe.map2
+        (\a b ->
+            a + b
         )
         (f .passasjerNytte)
         (f .trafikantNytte)
-        (f .operatoerNytte)
 
 
 nettoNytte : StateCalculationMethod
@@ -74,11 +73,6 @@ trafikantNytte =
 
 analysePeriodeNytteFor accessor this state =
     sendTo this accessor state |> Maybe.map ((*) GeneralForutsetninger.afaktorVekst)
-
-
-operatoerNytte : StateCalculationMethod
-operatoerNytte =
-    analysePeriodeNytteFor .yearlyOperatoerNytte
 
 
 kostUtenSkyggepris : StateCalculationMethod
@@ -108,7 +102,6 @@ basicTiltakRecord specificStateFocus =
     , fields = \_ -> []
     , passasjerNytte = passasjerNytte
     , trafikantNytte = trafikantNytte
-    , operatoerNytte = operatoerNytte
     , kostUtenSkyggepris = kostUtenSkyggepris
     , nettoNytte = nettoNytte
     , nytte = nytte
@@ -116,7 +109,6 @@ basicTiltakRecord specificStateFocus =
     , skyggeprisHelper = skyggeprisHelper
     , yearlyPassasjerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
-    , yearlyOperatoerNytte = \_ _ -> Just 0
     , driftOgVedlihKost = \_ _ -> Nothing
     , investeringsKostInklRestverdi = \_ _ -> Nothing
     , graphId = \this -> sendTo this .domId |> (++) "c3graph"
@@ -168,5 +160,6 @@ driftOgVedlihKost specificState =
         |> Maybe.map negate
 
 
+yearlyMaintenancePlaceholder : String
 yearlyMaintenancePlaceholder =
     "Årlige (økninger i) kostnader til drift og vedlikehold som knytter seg til dette tiltaket"

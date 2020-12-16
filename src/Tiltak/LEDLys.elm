@@ -7,7 +7,7 @@ import FormattedValue
     exposing
         ( formattedValueDefault
         , installationCost
-        , passengersPerYear
+        , sykkelturerPerYear
         , value
         , yearlyMaintenance
         )
@@ -38,11 +38,11 @@ yearlyPassasjerNytte this ({ ledLys } as state) =
         verdisettinger =
             GeneralForutsetninger.verdisettinger
 
-        firstCalc passengersPerYear =
-            passengersPerYear * verdisettinger.opphoyetHoldeplass
+        firstCalc sykkelturerPerYear =
+            sykkelturerPerYear * verdisettinger.opphoyetHoldeplass
 
         first =
-            Maybe.map firstCalc ledLys.passengersPerYear.value
+            Maybe.map firstCalc ledLys.sykkelturerPerYear.value
 
         secondCalc beleggForbiPassasjererPerBuss yearlyTidsbesparelseMinutter =
             beleggForbiPassasjererPerBuss
@@ -52,13 +52,9 @@ yearlyPassasjerNytte this ({ ledLys } as state) =
     Maybe.map2 (+) (Just 1) (Just 2)
 
 
-yearlyOperatoerNytte : StateCalculationMethod
-yearlyOperatoerNytte this ({ ledLys } as state) =
-    let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-    in
-    Maybe.map (\minutter -> minutter * verdisettinger.operatoerKostnad) ledLys.yearlyTidsbesparelseMinutter.value
+ledTidsbesparelseMinutterPerTur : Float
+ledTidsbesparelseMinutterPerTur =
+    0.5
 
 
 levetid : number
@@ -77,7 +73,6 @@ tiltak =
             | title = \_ -> "LED-lys for syklende"
             , fields = \_ -> fields
             , yearlyPassasjerNytte = yearlyPassasjerNytte
-            , yearlyOperatoerNytte = yearlyOperatoerNytte
             , investeringsKostInklRestverdi =
                 \_ { ledLys } ->
                     BasicTiltak.investeringsKostInklRestverdi
@@ -100,9 +95,8 @@ initialState : LEDLysState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
-    , passengersPerYear = formattedValueDefault
+    , sykkelturerPerYear = formattedValueDefault
     , lengdeSykkelveiKm = formattedValueDefault
-    , yearlyTidsbesparelseMinutter = formattedValueDefault
     , preferredToGraph = ""
     }
 
@@ -136,10 +130,10 @@ fieldDefinitions =
       , focus = specificState => lengdeSykkelveiKm
       , stepSize = 5
       }
-    , { name = "passengersPerYear"
+    , { name = "sykkelturerPerYear"
       , title = "Antall sykkelturer per år"
       , placeholder = "Turer på mørke tider som får nytte av tiltaket"
-      , focus = specificState => passengersPerYear
+      , focus = specificState => sykkelturerPerYear
       , stepSize = 50
       }
     ]

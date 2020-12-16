@@ -1,6 +1,6 @@
 module FormattedValue exposing (..)
 
-import Focus exposing (Focus, (=>))
+import Focus exposing ((=>), Focus)
 
 
 type Editable
@@ -53,12 +53,12 @@ yearlyMaintenance =
         )
 
 
-passengersPerYear : Focus { specificState | passengersPerYear : a } a
-passengersPerYear =
+sykkelturerPerYear : Focus { specificState | sykkelturerPerYear : a } a
+sykkelturerPerYear =
     Focus.create
-        .passengersPerYear
+        .sykkelturerPerYear
         (\f specificState ->
-            { specificState | passengersPerYear = f specificState.passengersPerYear }
+            { specificState | sykkelturerPerYear = f specificState.sykkelturerPerYear }
         )
 
 
