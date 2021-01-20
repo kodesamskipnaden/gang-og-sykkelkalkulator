@@ -45,7 +45,7 @@ nytte this state =
         (\a b ->
             a + b
         )
-        (f .passasjerNytte)
+        (f .brukerNytte)
         (f .trafikantNytte)
 
 
@@ -61,9 +61,9 @@ nettoNytte this state =
         (f .skyggepris)
 
 
-passasjerNytte : StateCalculationMethod
-passasjerNytte =
-    analysePeriodeNytteFor .yearlyPassasjerNytte
+brukerNytte : StateCalculationMethod
+brukerNytte =
+    analysePeriodeNytteFor .yearlyBrukerNytte
 
 
 trafikantNytte : StateCalculationMethod
@@ -100,14 +100,14 @@ skyggeprisHelper this state bompengeAndel =
 basicTiltakRecord specificStateFocus =
     { title = \_ -> "Basic tiltak"
     , fields = \_ -> []
-    , passasjerNytte = passasjerNytte
+    , brukerNytte = brukerNytte
     , trafikantNytte = trafikantNytte
     , kostUtenSkyggepris = kostUtenSkyggepris
     , nettoNytte = nettoNytte
     , nytte = nytte
     , skyggepris = \_ _ -> Nothing
     , skyggeprisHelper = skyggeprisHelper
-    , yearlyPassasjerNytte = \_ _ -> Nothing
+    , yearlyBrukerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
     , driftOgVedlihKost = \_ _ -> Nothing
     , investeringsKostInklRestverdi = \_ _ -> Nothing

@@ -50,14 +50,14 @@ fieldDefinitions tiltakFocus isHoldeplassTiltak =
       , stepSize = 5000
       }
     , { name = "sykkelturerPerYear"
-      , title = "Antall passasjerer per år"
+      , title = "Antall brukerer per år"
       , placeholder =
             case isHoldeplassTiltak of
                 True ->
-                    "Årlig antall påstigende passasjerer på holdeplassen"
+                    "Årlig antall påstigende brukerer på holdeplassen"
 
                 False ->
-                    "Årlig antall passasjerer om bord"
+                    "Årlig antall brukerer om bord"
       , focus = tiltakFocus => sykkelturerPerYear
       , stepSize = 50
       }
@@ -86,7 +86,7 @@ createTiltak simpleTiltak =
                         .skyggeprisHelper
                         state
                         (Focus.get simpleTiltak.focus state).bompengeAndel
-            , yearlyPassasjerNytte =
+            , yearlyBrukerNytte =
                 \_ state ->
                     state
                         |> Focus.get (simpleTiltak.focus => sykkelturerPerYear => value)

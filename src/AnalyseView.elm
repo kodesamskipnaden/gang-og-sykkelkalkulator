@@ -53,9 +53,9 @@ view : AnalyseData -> List (Html Msg)
 view data =
     let
         titleAndValueList =
-            [ ( "Passasjerenes nytte over " ++ toString data.analysePeriode ++ " år"
-              , data.passasjerNytte |> NumberFormat.maybePretty
-              , text "Verdien i dag av passasjerenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
+            [ ( "Brukerenes nytte over " ++ toString data.analysePeriode ++ " år"
+              , data.brukerNytte |> NumberFormat.maybePretty
+              , text "Verdien i dag av brukerenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
             , ( "Øvrige trafikanters nytte over " ++ toString data.analysePeriode ++ " år"
               , data.trafikantNytte |> NumberFormat.maybePretty

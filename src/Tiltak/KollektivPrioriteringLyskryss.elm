@@ -26,8 +26,8 @@ tidsbesparelsePerAvgangSeconds =
     20
 
 
-yearlyPassasjerNytte : StateCalculationMethod
-yearlyPassasjerNytte this tiltakStates =
+yearlyBrukerNytte : StateCalculationMethod
+yearlyBrukerNytte this tiltakStates =
     tiltakStates
         |> Focus.get (specificStateFocus => sykkelturerPerYear => value)
         |> Maybe.map
@@ -90,7 +90,7 @@ tiltak =
     Tiltak
         { basicTiltakRecord
             | title = \_ -> "Kollektivprioritering i lyskryss"
-            , yearlyPassasjerNytte = yearlyPassasjerNytte
+            , yearlyBrukerNytte = yearlyBrukerNytte
             , yearlyTrafikantNytte = yearlyTrafikantNytte
             , investeringsKostInklRestverdi = investeringsKostInklRestverdi
             , driftOgVedlihKost = driftOgVedlihKost
@@ -171,7 +171,7 @@ fieldDefinitions =
       , stepSize = 5000
       }
     , { name = "sykkelturerPerYear"
-      , title = "Antall passasjerer ombord per år"
+      , title = "Antall brukerer ombord per år"
       , placeholder = "Antall kollektivpassasjerer som omfattes av tiltaket"
       , focus = specificStateFocus => sykkelturerPerYear
       , stepSize = 50

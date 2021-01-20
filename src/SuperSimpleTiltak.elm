@@ -44,8 +44,8 @@ fieldDefinitions tiltakFocus =
       , stepSize = 5000
       }
     , { name = "sykkelturerPerYear"
-      , title = "Antall passasjerer per år"
-      , placeholder = "Påstigende passasjerer per år"
+      , title = "Antall brukerer per år"
+      , placeholder = "Påstigende brukerer per år"
       , focus = tiltakFocus => sykkelturerPerYear
       , stepSize = 50
       }
@@ -70,7 +70,7 @@ createTiltak simpleTiltak =
                         .skyggeprisHelper
                         state
                         (Focus.get simpleTiltak.focus state).bompengeAndel
-            , yearlyPassasjerNytte =
+            , yearlyBrukerNytte =
                 \_ state ->
                     state
                         |> Focus.get (simpleTiltak.focus => sykkelturerPerYear => value)

@@ -32,8 +32,8 @@ specificState =
         )
 
 
-yearlyPassasjerNytte : StateCalculationMethod
-yearlyPassasjerNytte this ({ opphoeyetHoldeplass } as state) =
+yearlyBrukerNytte : StateCalculationMethod
+yearlyBrukerNytte this ({ opphoeyetHoldeplass } as state) =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
@@ -73,7 +73,7 @@ tiltak =
         { basicTiltakRecord
             | title = \_ -> "Opphøyet holdeplass"
             , fields = \_ -> fields
-            , yearlyPassasjerNytte = yearlyPassasjerNytte
+            , yearlyBrukerNytte = yearlyBrukerNytte
             , investeringsKostInklRestverdi =
                 \_ { opphoeyetHoldeplass } ->
                     BasicTiltak.investeringsKostInklRestverdi

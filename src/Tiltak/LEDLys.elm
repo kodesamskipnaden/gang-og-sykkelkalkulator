@@ -32,24 +32,16 @@ specificState =
         )
 
 
-yearlyPassasjerNytte : StateCalculationMethod
-yearlyPassasjerNytte this ({ ledLys } as state) =
+yearlyBrukerNytte : StateCalculationMethod
+yearlyBrukerNytte this ({ ledLys } as state) =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
 
         firstCalc sykkelturerPerYear =
-            sykkelturerPerYear * verdisettinger.opphoyetHoldeplass
-
-        first =
-            Maybe.map firstCalc ledLys.sykkelturerPerYear.value
-
-        secondCalc beleggForbiPassasjererPerBuss yearlyTidsbesparelseMinutter =
-            beleggForbiPassasjererPerBuss
-                * yearlyTidsbesparelseMinutter
-                * verdisettinger.reisetidKollektivTransport
+            sykkelturerPerYear * verdisettinger.reisetidSykkel * ledTidsbesparelseMinutterPerTur
     in
-    Maybe.map2 (+) (Just 1) (Just 2)
+    Maybe.map firstCalc ledLys.sykkelturerPerYear.value
 
 
 ledTidsbesparelseMinutterPerTur : Float
@@ -72,7 +64,7 @@ tiltak =
         { basicTiltakRecord
             | title = \_ -> "LED-lys for syklende"
             , fields = \_ -> fields
-            , yearlyPassasjerNytte = yearlyPassasjerNytte
+            , yearlyBrukerNytte = yearlyBrukerNytte
             , investeringsKostInklRestverdi =
                 \_ { ledLys } ->
                     BasicTiltak.investeringsKostInklRestverdi

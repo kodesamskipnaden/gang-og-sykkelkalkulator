@@ -3,7 +3,11 @@ module GeneralForutsetninger exposing (..)
 
 verdisettinger =
     -- alle verdier i NOK
-    { reisetidKollektivTransport =
+    { reisetidSykkel =
+        -- VoT_Sykkel
+        -- pr min pr syklist
+        147.47 / 60
+    , reisetidKollektivTransport =
         -- pr min pr passasjer
         1.29
     , reisetidBil =
@@ -97,17 +101,17 @@ investeringsFaktor levetid =
     -- denne funksjonen virker relatert til afaktorCalculation
     let
         beregningsTekniskMellomregning =
-            toFloat <| (analysePeriode // (truncate levetid)) + 1
+            toFloat <| (analysePeriode // truncate levetid) + 1
 
         ledd1 =
-            (1 - ((1 + drente) ^ ((negate levetid) * beregningsTekniskMellomregning)))
-                / (1 - ((1 + drente) ^ (negate levetid)))
+            (1 - ((1 + drente) ^ (negate levetid * beregningsTekniskMellomregning)))
+                / (1 - ((1 + drente) ^ negate levetid))
 
         ledd2 =
             (analysePeriode - (levetid * beregningsTekniskMellomregning))
                 / (levetid * ((1 + drente) ^ analysePeriode))
     in
-        ledd1 + ledd2
+    ledd1 + ledd2
 
 
 afaktorCalculation : Float -> Float

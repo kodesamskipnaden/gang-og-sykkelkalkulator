@@ -6,7 +6,7 @@ import TiltakStates exposing (TiltakStates)
 
 
 type alias AnalyseData =
-    { passasjerNytte : Maybe Float
+    { brukerNytte : Maybe Float
     , kostUtenSkyggepris : Maybe Float
     , analysePeriode : Float
     , isProfitable : Maybe Bool
@@ -30,9 +30,9 @@ type alias StateCalculationMethod =
 {-
     Some invariants
 
-   passasjerNytte + trafikantNytte + operatoerNytte == nytte
+   brukerNytte + trafikantNytte + operatoerNytte == nytte
 
-   nytte == (  yearlyPassasjerNytte
+   nytte == (  yearlyBrukerNytte
              + yearlyTrafikantNytte
              + yearlyOperatoerNytte) * afaktorVekst
 
@@ -44,14 +44,14 @@ type alias StateCalculationMethod =
 type alias TiltakRecord =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
-    , passasjerNytte : StateCalculationMethod
+    , brukerNytte : StateCalculationMethod
     , trafikantNytte : StateCalculationMethod
     , nytte : StateCalculationMethod
     , skyggepris : StateCalculationMethod
     , skyggeprisHelper : Tiltak -> TiltakStates -> Float -> Maybe Float
     , kostUtenSkyggepris : StateCalculationMethod
     , nettoNytte : StateCalculationMethod
-    , yearlyPassasjerNytte : StateCalculationMethod
+    , yearlyBrukerNytte : StateCalculationMethod
     , yearlyTrafikantNytte : StateCalculationMethod
     , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
@@ -87,7 +87,7 @@ analyse tiltak tiltakStates =
         f =
             bindTiltak tiltak tiltakStates
     in
-    { passasjerNytte = f .passasjerNytte
+    { brukerNytte = f .brukerNytte
     , analysePeriode = 40
     , kostUtenSkyggepris = f .kostUtenSkyggepris
     , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
