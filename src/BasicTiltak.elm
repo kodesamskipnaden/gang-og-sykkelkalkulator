@@ -41,12 +41,13 @@ nytte this state =
         f accessor =
             sendTo this accessor state
     in
-    Maybe.map2
-        (\a b ->
-            a + b
+    Maybe.map3
+        (\a b c ->
+            a + b + c
         )
         (f .brukerNytte)
         (f .trafikantNytte)
+        (f .tsGevinstNytte)
 
 
 nettoNytte : StateCalculationMethod
@@ -69,6 +70,11 @@ brukerNytte =
 trafikantNytte : StateCalculationMethod
 trafikantNytte =
     analysePeriodeNytteFor .yearlyTrafikantNytte
+
+
+tsGevinstNytte : StateCalculationMethod
+tsGevinstNytte =
+    analysePeriodeNytteFor .yearlyTSGevinstNytte
 
 
 analysePeriodeNytteFor accessor this state =
@@ -102,6 +108,7 @@ basicTiltakRecord specificStateFocus =
     , fields = \_ -> []
     , brukerNytte = brukerNytte
     , trafikantNytte = trafikantNytte
+    , tsGevinstNytte = tsGevinstNytte
     , kostUtenSkyggepris = kostUtenSkyggepris
     , nettoNytte = nettoNytte
     , nytte = nytte
@@ -109,6 +116,7 @@ basicTiltakRecord specificStateFocus =
     , skyggeprisHelper = skyggeprisHelper
     , yearlyBrukerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
+    , yearlyTSGevinstNytte = \_ _ -> Just 0
     , driftOgVedlihKost = \_ _ -> Nothing
     , investeringsKostInklRestverdi = \_ _ -> Nothing
     , graphId = \this -> sendTo this .domId |> (++) "c3graph"

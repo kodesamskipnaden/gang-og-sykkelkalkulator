@@ -44,14 +44,39 @@ yearlyBrukerNytte this ({ ledLys } as state) =
     Maybe.map firstCalc ledLys.sykkelturerPerYear.value
 
 
+yearlyTSGevinstNytte : StateCalculationMethod
+yearlyTSGevinstNytte this ({ ledLys } as state) =
+    let
+        verdisettinger =
+            GeneralForutsetninger.verdisettinger
+
+        nytteKalkulasjon antallSykkelturer lengde =
+            lengde * antallSykkelturer * verdisettinger.tsKostnadSykkel * verdisettinger.tsGevinstLEDLysSyklende
+    in
+    Maybe.map2
+        (\turerPerYear lengde ->
+            if lengde > ledTotalReiseDistanceKm then
+                nytteKalkulasjon turerPerYear ledTotalReiseDistanceKm
+
+            else
+                nytteKalkulasjon turerPerYear lengde
+        )
+        ledLys.sykkelturerPerYear.value
+        ledLys.lengdeSykkelveiKm.value
+
+
 ledTidsbesparelseMinutterPerTur : Float
 ledTidsbesparelseMinutterPerTur =
     0.5
 
 
+ledTotalReiseDistanceKm =
+    5
+
+
 levetid : number
 levetid =
-    25
+    40
 
 
 tiltak : Tiltak
@@ -65,6 +90,7 @@ tiltak =
             | title = \_ -> "LED-lys for syklende"
             , fields = \_ -> fields
             , yearlyBrukerNytte = yearlyBrukerNytte
+            , yearlyTSGevinstNytte = yearlyTSGevinstNytte
             , investeringsKostInklRestverdi =
                 \_ { ledLys } ->
                     BasicTiltak.investeringsKostInklRestverdi

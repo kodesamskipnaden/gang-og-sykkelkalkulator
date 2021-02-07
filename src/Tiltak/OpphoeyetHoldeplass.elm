@@ -39,8 +39,9 @@ yearlyBrukerNytte this ({ opphoeyetHoldeplass } as state) =
             GeneralForutsetninger.verdisettinger
 
         firstCalc sykkelturerPerYear =
-            sykkelturerPerYear * verdisettinger.opphoyetHoldeplass
+            sykkelturerPerYear * 3.14
 
+        -- verdisettinger.opphoyetHoldeplass
         first =
             Maybe.map firstCalc opphoeyetHoldeplass.sykkelturerPerYear.value
 

@@ -7,72 +7,14 @@ verdisettinger =
         -- VoT_Sykkel
         -- pr min pr syklist
         147.47 / 60
+    , tsKostnadSykkel = 3.50891113
+    , tsGevinstLEDLysSyklende = 1 -- 100 %
     , reisetidKollektivTransport =
         -- pr min pr passasjer
         1.29
     , reisetidBil =
         -- pr min pr bil
         2.46
-    , sitteplassPaaHpl =
-        -- pr kollektivreise
-        3.99
-    , leskurPaaBussholdeplassenUtenSitteplass =
-        -- pr kollektivreise
-        7.87
-    , leskurPaaBussholdeplassenMedSitteplass =
-        -- pr kollektivreise
-        10.08
-    , renholdPaaHpl =
-        -- pr kollektivreise
-        8.61
-    , fjerningAvIsSnoePaaHpl =
-        -- pr kollektivreise
-        12.67
-    , opphoyetHoldeplass =
-        -- pr kollektivreise
-        1.04
-    , rutekartPaaHpl =
-        -- pr kollektivreise
-        2.79
-    , lokalkartPaaHpl =
-        -- pr kollektivreise
-        4.09
-    , skiltingIBuss =
-        -- pr kollektivreise
-        5.05
-    , destinasjonsSkiltPaaBuss =
-        -- pr kollektivreise
-        0.76
-    , avviksinformasjonHoeyttaler =
-        -- pr kollektivreise
-        0.86
-    , hplOpprop =
-        -- pr kollektivreise
-        3.52
-    , bussrenhold =
-        -- pr kollektivreise
-        3.64
-    , belysning =
-        -- pr kollektivreise
-        6.93
-    , vektere =
-        -- pr kollektivreise
-        4.0
-    , alarmsystemPaaHpl =
-        -- pr kollektivreise
-        4.08
-    , lavgulvUtenTilpassetHoldeplass =
-        -- pr kollektivreise
-        2.08
-    , lavgulvMedTilpassetHoldeplass =
-        -- pr kollektivreise
-        2.17
-    , pakkeSkiltOgOppropBuss =
-        -- pr kollektivreise
-        5.24
-    , operatoerKostnad =
-        -- per minutt
-        7.81
     }
 
 
@@ -83,7 +25,7 @@ drente =
 
 vekstrate : Float
 vekstrate =
-    0.8 / 100
+    1.3 / 100
 
 
 drenteVekst : Float

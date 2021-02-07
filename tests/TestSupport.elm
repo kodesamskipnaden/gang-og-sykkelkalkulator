@@ -44,6 +44,7 @@ type alias ExpectedRecord =
     , brukerNytte : Float
     , skyggepris : Float
     , trafikantNytte : Float
+    , yearlyTSGevinstNytte : Float
     , yearlyBrukerNytte : Float
     , yearlyTrafikantNytte : Float
     }
@@ -73,6 +74,10 @@ tiltakSuite checkWithState expectedRecord =
                 "trafikantNytte"
                 .trafikantNytte
                 (closeTo expectedRecord.trafikantNytte 2)
+            , checkWithState
+                "yearlyTSGevinstNytte"
+                .yearlyTSGevinstNytte
+                (closeTo expectedRecord.yearlyTSGevinstNytte 2)
             , checkWithState
                 "nytte"
                 .nytte

@@ -30,11 +30,11 @@ type alias StateCalculationMethod =
 {-
     Some invariants
 
-   brukerNytte + trafikantNytte + operatoerNytte == nytte
+   brukerNytte + trafikantNytte + <annenNytte> == nytte
 
    nytte == (  yearlyBrukerNytte
              + yearlyTrafikantNytte
-             + yearlyOperatoerNytte) * afaktorVekst
+             + yearly<AnnenNytte>) * afaktorVekst
 
    nettoNytte = nytte + kost -- kost is negative
 
@@ -46,6 +46,7 @@ type alias TiltakRecord =
     , fields : Tiltak -> List Field
     , brukerNytte : StateCalculationMethod
     , trafikantNytte : StateCalculationMethod
+    , tsGevinstNytte : StateCalculationMethod
     , nytte : StateCalculationMethod
     , skyggepris : StateCalculationMethod
     , skyggeprisHelper : Tiltak -> TiltakStates -> Float -> Maybe Float
@@ -53,6 +54,7 @@ type alias TiltakRecord =
     , nettoNytte : StateCalculationMethod
     , yearlyBrukerNytte : StateCalculationMethod
     , yearlyTrafikantNytte : StateCalculationMethod
+    , yearlyTSGevinstNytte : StateCalculationMethod
     , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
     , graphId : Tiltak -> String

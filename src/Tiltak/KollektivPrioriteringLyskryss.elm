@@ -58,7 +58,9 @@ yearlyOperatoerNytte this ({ kollektivPrioriteringLyskryss } as state) =
         calculation passerendeAvganger =
             passerendeAvganger
                 * (tidsbesparelsePerAvgangSeconds / 60)
-                * verdisettinger.operatoerKostnad
+                * 3.14
+
+        -- verdisettinger.operatoerKostnad
     in
     kollektivPrioriteringLyskryss.antallPasserendeAvgangerPerYear.value
         |> Maybe.map calculation

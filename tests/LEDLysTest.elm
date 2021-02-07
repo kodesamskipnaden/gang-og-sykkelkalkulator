@@ -28,9 +28,10 @@ suite =
         expectedRecord =
             { yearlyBrukerNytte = 18433.75
             , yearlyTrafikantNytte = 0
-            , brukerNytte = 414317
+            , yearlyTSGevinstNytte = 52633.67
+            , brukerNytte = 414317.28
             , trafikantNytte = 0
-            , nytte = 1735321
+            , nytte = 1735321.1
             , investeringsKostInklRestverdi = -2.44
             , driftOgVedlihKost = -39.59
             , kostUtenSkyggepris = -42.03
@@ -49,4 +50,5 @@ suite =
                         |> checkMaybe expectation
     in
     describe "LEDLys tiltakSuite"
-        [ tiltakSuite checkWithState expectedRecord ]
+        [ tiltakSuite checkWithState expectedRecord
+        ]
