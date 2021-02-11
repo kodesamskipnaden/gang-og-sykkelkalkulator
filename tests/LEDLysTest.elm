@@ -29,14 +29,14 @@ suite =
             { yearlyBrukerNytte = 18433.75
             , yearlyTrafikantNytte = 0
             , yearlyTSGevinstNytte = 52633.67
-            , brukerNytte = 414317.28
+            , brukerNytte = 450114.51
             , trafikantNytte = 0
             , nytte = 1735321.1
-            , investeringsKostInklRestverdi = -2.44
-            , driftOgVedlihKost = -39.59
-            , kostUtenSkyggepris = -42.03
-            , skyggepris = -8.4052
-            , nettoNytte = 1547.75
+            , investeringsKostInklRestverdi = -1.0e6
+            , driftOgVedlihKost = 0
+            , kostUtenSkyggepris = -1.0e6
+            , skyggepris = -2.0e5
+            , nettoNytte = 535321.1
             }
 
         checkWithState : CheckWithStateFunction

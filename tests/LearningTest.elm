@@ -3,6 +3,7 @@ module LearningTest exposing (..)
 import Expect
 import GeneralForutsetninger exposing (afaktor, afaktorVekst)
 import Test exposing (Test, describe, test)
+import TestSupport
 
 
 suite =
@@ -10,8 +11,8 @@ suite =
         [ test "afaktorVekst" <|
             \() ->
                 afaktorVekst
-                    |> Expect.equal 24.418
+                    |> TestSupport.closeTo 24.418 3
         , test "afaktor" <|
             \() ->
-                afaktor |> Expect.equal 19.7928
+                afaktor |> TestSupport.closeTo 19.7928 4
         ]
