@@ -50,6 +50,21 @@ nytte this state =
         (f .tsGevinstNytte)
 
 
+nytteInklOverfoert : StateCalculationMethod
+nytteInklOverfoert this state =
+    let
+        f accessor =
+            sendTo this accessor state
+    in
+    Maybe.map3
+        (\a b c ->
+            a + b + c
+        )
+        (f .brukerNytteInklOverfoert)
+        (f .trafikantNytteInklOverfoert)
+        (f .tsGevinstNytteInklOverfoert)
+
+
 nettoNytte : StateCalculationMethod
 nettoNytte this state =
     let
@@ -62,9 +77,26 @@ nettoNytte this state =
         (f .skyggepris)
 
 
+nettoNytteInklOverfoert : StateCalculationMethod
+nettoNytteInklOverfoert this state =
+    let
+        f =
+            bindTiltak this state
+    in
+    Maybe.map3 (\a b c -> a + b + c)
+        (f .nytteInklOverfoert)
+        (f .kostUtenSkyggepris)
+        (f .skyggepris)
+
+
 brukerNytte : StateCalculationMethod
 brukerNytte =
     analysePeriodeNytteFor .yearlyBrukerNytte
+
+
+brukerNytteInklOverfoert : StateCalculationMethod
+brukerNytteInklOverfoert =
+    analysePeriodeNytteFor .yearlyBrukerNytteInklOverfoert
 
 
 trafikantNytte : StateCalculationMethod
@@ -72,9 +104,19 @@ trafikantNytte =
     analysePeriodeNytteFor .yearlyTrafikantNytte
 
 
+trafikantNytteInklOverfoert : StateCalculationMethod
+trafikantNytteInklOverfoert =
+    analysePeriodeNytteFor .yearlyTrafikantNytteInklOverfoert
+
+
 tsGevinstNytte : StateCalculationMethod
 tsGevinstNytte =
     analysePeriodeNytteFor .yearlyTSGevinstNytte
+
+
+tsGevinstNytteInklOverfoert : StateCalculationMethod
+tsGevinstNytteInklOverfoert =
+    analysePeriodeNytteFor .yearlyTSGevinstNytteInklOverfoert
 
 
 analysePeriodeNytteFor accessor this state =
@@ -109,16 +151,26 @@ basicTiltakRecord specificStateFocus =
     , brukerNytte = brukerNytte
     , trafikantNytte = trafikantNytte
     , tsGevinstNytte = tsGevinstNytte
+    , brukerNytteInklOverfoert = brukerNytteInklOverfoert
+    , trafikantNytteInklOverfoert = trafikantNytteInklOverfoert
+    , tsGevinstNytteInklOverfoert = tsGevinstNytteInklOverfoert
+    , nytte = nytte
+    , nytteInklOverfoert = nytteInklOverfoert
     , kostUtenSkyggepris = kostUtenSkyggepris
     , nettoNytte = nettoNytte
-    , nytte = nytte
+    , nettoNytteInklOverfoert = nettoNytteInklOverfoert
     , skyggepris = \_ _ -> Nothing
-    , skyggeprisHelper = skyggeprisHelper
     , yearlyBrukerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
     , yearlyTSGevinstNytte = \_ _ -> Just 0
+    , yearlyBrukerNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyTrafikantNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyTSGevinstNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyHelsegevinstNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyEksterneEffekterNytteInklOverfoert = \_ _ -> Nothing
     , driftOgVedlihKost = \_ _ -> Nothing
     , investeringsKostInklRestverdi = \_ _ -> Nothing
+    , skyggeprisHelper = skyggeprisHelper
     , graphId = \this -> sendTo this .domId |> (++) "c3graph"
     , domId = \this -> sendTo this .title |> toDomId
     , preferredField = preferredField specificStateFocus

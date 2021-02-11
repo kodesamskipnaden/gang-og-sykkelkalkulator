@@ -13,7 +13,7 @@ import FormattedValue
         )
 import GeneralForutsetninger
 import SpecificStates exposing (LEDLysState)
-import Tiltak exposing (StateCalculationMethod, Tiltak(..), sendTo)
+import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
 specificState :
@@ -42,6 +42,18 @@ yearlyBrukerNytte this ({ ledLys } as state) =
             sykkelturerPerYear * verdisettinger.reisetidSykkel * ledTidsbesparelseMinutterPerTur
     in
     Maybe.map firstCalc ledLys.sykkelturerPerYear.value
+
+
+yearlyBrukerNytteInklOverfoert : StateCalculationMethod
+yearlyBrukerNytteInklOverfoert this ({ ledLys } as state) =
+    let
+        nytte =
+            Just 0
+
+        f =
+            bindTiltak this state
+    in
+    Maybe.map2 (+) (f .yearlyBrukerNytte) nytte
 
 
 yearlyTSGevinstNytte : StateCalculationMethod
@@ -91,6 +103,7 @@ tiltak =
             , fields = \_ -> fields
             , yearlyBrukerNytte = yearlyBrukerNytte
             , yearlyTSGevinstNytte = yearlyTSGevinstNytte
+            , yearlyBrukerNytteInklOverfoert = yearlyBrukerNytteInklOverfoert
             , investeringsKostInklRestverdi =
                 \_ { ledLys } ->
                     BasicTiltak.investeringsKostInklRestverdi

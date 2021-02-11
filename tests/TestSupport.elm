@@ -36,24 +36,24 @@ checkMaybe expectation maybeValue =
 
 
 type alias ExpectedRecord =
-    { driftOgVedlihKost : Float
+    { brukerNytte : Float
+    , trafikantNytte : Float
+    , nytte : Float
+    , nytteInklOverfoert : Float
+    , driftOgVedlihKost : Float
     , investeringsKostInklRestverdi : Float
+    , skyggepris : Float
     , kostUtenSkyggepris : Float
     , nettoNytte : Float
-    , nytte : Float
-    , brukerNytte : Float
-    , skyggepris : Float
-    , trafikantNytte : Float
-    , yearlyTSGevinstNytte : Float
+    , nettoNytteInklOverfoert : Float
     , yearlyBrukerNytte : Float
     , yearlyBrukerNytteInklOverfoert : Float
     , yearlyTrafikantNytte : Float
     , yearlyTrafikantNytteInklOverfoert : Float
-    , yearlyHelsegevinstNytteInklOverfoert : Float
+    , yearlyTSGevinstNytte : Float
     , yearlyTSGevinstNytteInklOverfoert : Float
+    , yearlyHelsegevinstNytteInklOverfoert : Float
     , yearlyEksterneEffekterNytteInklOverfoert : Float
-    , nytteInklOverfoert : Float
-    , nettoNytteInklOverfoert : Float
     }
 
 
@@ -70,25 +70,53 @@ tiltakSuite checkWithState expectedRecord =
                 .yearlyBrukerNytte
                 (closeTo expectedRecord.yearlyBrukerNytte 2)
             , checkWithState
-                "brukerNytte"
-                .brukerNytte
-                (closeTo expectedRecord.brukerNytte 2)
+                "yearlyBrukerNytteInklOverfoert"
+                .yearlyBrukerNytteInklOverfoert
+                (closeTo expectedRecord.yearlyBrukerNytteInklOverfoert 2)
             , checkWithState
                 "yearlyTrafikantNytte"
                 .yearlyTrafikantNytte
                 (closeTo expectedRecord.yearlyTrafikantNytte 2)
             , checkWithState
+                "yearlyTrafikantNytteInklOverfoert"
+                .yearlyTrafikantNytteInklOverfoert
+                (closeTo expectedRecord.yearlyTrafikantNytteInklOverfoert 2)
+            , checkWithState
+                "brukerNytte"
+                .brukerNytte
+                (closeTo expectedRecord.brukerNytte 2)
+            , checkWithState
                 "trafikantNytte"
                 .trafikantNytte
                 (closeTo expectedRecord.trafikantNytte 2)
+            , checkWithState
+                "yearlyHelsegevinstNytteInklOverfoert"
+                .yearlyHelsegevinstNytteInklOverfoert
+                (closeTo expectedRecord.yearlyHelsegevinstNytteInklOverfoert 2)
             , checkWithState
                 "yearlyTSGevinstNytte"
                 .yearlyTSGevinstNytte
                 (closeTo expectedRecord.yearlyTSGevinstNytte 2)
             , checkWithState
+                "yearlyTSGevinstNytteInklOverfoert"
+                .yearlyTSGevinstNytteInklOverfoert
+                (closeTo expectedRecord.yearlyTSGevinstNytteInklOverfoert 2)
+            , checkWithState
+                "yearlyEksterneEffekterNytteInklOverfoert"
+                .yearlyEksterneEffekterNytteInklOverfoert
+                (closeTo expectedRecord.yearlyEksterneEffekterNytteInklOverfoert 2)
+            , checkWithState
                 "nytte"
                 .nytte
                 (closeTo expectedRecord.nytte 2)
+            , checkWithState
+                "nytteInklOverfoert"
+                .nytteInklOverfoert
+                (closeTo expectedRecord.nytteInklOverfoert 2)
+            , checkWithState
+                "nettoNytteInklOverfoert"
+                .nettoNytteInklOverfoert
+                (closeTo expectedRecord.nettoNytteInklOverfoert 2)
             ]
         , describe "kost calculations"
             [ checkWithState

@@ -47,16 +47,26 @@ type alias TiltakRecord =
     , brukerNytte : StateCalculationMethod
     , trafikantNytte : StateCalculationMethod
     , tsGevinstNytte : StateCalculationMethod
+    , brukerNytteInklOverfoert : StateCalculationMethod
+    , trafikantNytteInklOverfoert : StateCalculationMethod
+    , tsGevinstNytteInklOverfoert : StateCalculationMethod
     , nytte : StateCalculationMethod
+    , nytteInklOverfoert : StateCalculationMethod
+    , driftOgVedlihKost : StateCalculationMethod
+    , investeringsKostInklRestverdi : StateCalculationMethod
     , skyggepris : StateCalculationMethod
-    , skyggeprisHelper : Tiltak -> TiltakStates -> Float -> Maybe Float
     , kostUtenSkyggepris : StateCalculationMethod
     , nettoNytte : StateCalculationMethod
+    , nettoNytteInklOverfoert : StateCalculationMethod
     , yearlyBrukerNytte : StateCalculationMethod
     , yearlyTrafikantNytte : StateCalculationMethod
     , yearlyTSGevinstNytte : StateCalculationMethod
-    , driftOgVedlihKost : StateCalculationMethod
-    , investeringsKostInklRestverdi : StateCalculationMethod
+    , yearlyBrukerNytteInklOverfoert : StateCalculationMethod
+    , yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
+    , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
+    , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
+    , yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
+    , skyggeprisHelper : Tiltak -> TiltakStates -> Float -> Maybe Float
     , graphId : Tiltak -> String
     , domId : Tiltak -> String
     , preferredField : Tiltak -> TiltakStates -> Maybe Field
