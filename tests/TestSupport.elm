@@ -46,7 +46,14 @@ type alias ExpectedRecord =
     , trafikantNytte : Float
     , yearlyTSGevinstNytte : Float
     , yearlyBrukerNytte : Float
+    , yearlyBrukerNytteInklOverfoert : Float
     , yearlyTrafikantNytte : Float
+    , yearlyTrafikantNytteInklOverfoert : Float
+    , yearlyHelsegevinstNytteInklOverfoert : Float
+    , yearlyTSGevinstNytteInklOverfoert : Float
+    , yearlyEksterneEffekterNytteInklOverfoert : Float
+    , nytteInklOverfoert : Float
+    , nettoNytteInklOverfoert : Float
     }
 
 

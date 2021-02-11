@@ -27,16 +27,23 @@ suite =
 
         expectedRecord =
             { yearlyBrukerNytte = 18433.75
+            , yearlyBrukerNytteInklOverfoert = 18894.59
             , yearlyTrafikantNytte = 0
+            , yearlyTrafikantNytteInklOverfoert = 3133.55
+            , yearlyHelsegevinstNytteInklOverfoert = 85500
             , yearlyTSGevinstNytte = 52633.67
+            , yearlyTSGevinstNytteInklOverfoert = 53045.98
+            , yearlyEksterneEffekterNytteInklOverfoert = 942.83
             , brukerNytte = 450114.51
             , trafikantNytte = 0
             , nytte = 1735321.1
+            , nytteInklOverfoert = 3943913.91
             , investeringsKostInklRestverdi = -1.0e6
             , driftOgVedlihKost = 0
             , kostUtenSkyggepris = -1.0e6
             , skyggepris = -2.0e5
             , nettoNytte = 535321.1
+            , nettoNytteInklOverfoert = 2743913.91
             }
 
         checkWithState : CheckWithStateFunction
