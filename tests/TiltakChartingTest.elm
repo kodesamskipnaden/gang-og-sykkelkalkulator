@@ -4,7 +4,7 @@ import Expect exposing (Expectation)
 import FormattedValue exposing (formattedValue)
 import Test exposing (Test, describe, only, skip, test)
 import Tiltak exposing (TiltakAccessor, sendTo)
-import Tiltak.OpphoeyetHoldeplass as OpphoeyetHoldeplass exposing (tiltak)
+import Tiltak.LEDLys as LEDLys exposing (tiltak)
 import TiltakAndGroupData
 import TiltakCharting
 
@@ -19,12 +19,14 @@ suite =
 
                 state =
                     { initialState
-                        | opphoeyetHoldeplass =
+                        | ledLys =
                             { installationCost = Just 100 |> formattedValue
                             , yearlyMaintenance = Just 200 |> formattedValue
                             , sykkelturerPerYear = Nothing |> formattedValue
-                            , beleggForbiPassasjererPerBuss = Just 20 |> formattedValue
-                            , yearlyTidsbesparelseMinutter = Just 30 |> formattedValue
+
+                            --                            , beleggForbiPassasjererPerBuss = Just 20 |> formattedValue
+                            --                            , yearlyTidsbesparelseMinutter = Just 30 |> formattedValue
+                            , lengdeSykkelveiKm = Just 1 |> formattedValue
                             , preferredToGraph = "sykkelturerPerYear"
                             }
                     }
@@ -63,13 +65,13 @@ suite =
                 , test "all fields are valid chooses the last chosen field" <|
                     \() ->
                         let
-                            opphoeyetHoldeplassFelt =
-                                state.opphoeyetHoldeplass
+                            ledLysFelt =
+                                state.ledLys
 
                             modifiedState =
                                 { state
-                                    | opphoeyetHoldeplass =
-                                        { opphoeyetHoldeplassFelt
+                                    | ledLys =
+                                        { ledLysFelt
                                             | sykkelturerPerYear = Just 10 |> formattedValue
                                         }
                                 }
@@ -79,13 +81,13 @@ suite =
                 , test "two fields are invalid" <|
                     \() ->
                         let
-                            opphoeyetHoldeplassFelt =
-                                state.opphoeyetHoldeplass
+                            ledLysFelt =
+                                state.ledLys
 
                             modifiedState =
                                 { state
-                                    | opphoeyetHoldeplass =
-                                        { opphoeyetHoldeplassFelt
+                                    | ledLys =
+                                        { ledLysFelt
                                             | yearlyMaintenance =
                                                 Nothing
                                                     |> formattedValue

@@ -2,9 +2,7 @@ module TiltakAndGroupData exposing (..)
 
 import Models exposing (..)
 import Tiltak exposing (Tiltak)
-import Tiltak.KollektivPrioriteringLyskryss as KollektivPrioriteringLyskryss
 import Tiltak.LEDLys as LEDLys
-import Tiltak.OpphoeyetHoldeplass as OpphoeyetHoldeplass
 
 
 alleTyper : List Group
@@ -30,7 +28,5 @@ tiltakForGroup gruppeType =
 
 
 initialTiltakStates =
-    { kollektivPrioriteringLyskryss = KollektivPrioriteringLyskryss.initialState
-    , opphoeyetHoldeplass = OpphoeyetHoldeplass.initialState
-    , ledLys = LEDLys.initialState
+    { ledLys = LEDLys.initialState
     }

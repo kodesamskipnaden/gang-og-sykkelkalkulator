@@ -4,7 +4,5 @@ import SpecificStates exposing (..)
 
 
 type alias TiltakStates =
-    { kollektivPrioriteringLyskryss : KollektivPrioriteringLyskryssState
-    , opphoeyetHoldeplass : OpphoeyetHoldeplassState
-    , ledLys : LEDLysState
+    { ledLys : LEDLysState
     }

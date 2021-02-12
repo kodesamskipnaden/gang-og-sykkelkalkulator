@@ -4,7 +4,7 @@ import FormattedValue exposing (formattedValue)
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
 import Tiltak exposing (TiltakAccessor, sendTo)
-import Tiltak.LEDLys as LEDLys exposing (tiltak)
+import Tiltak.LEDLys as LEDLys exposing (tiltak, yearlyOverfoerteSykkelturer)
 import TiltakAndGroupData
 
 
@@ -58,4 +58,7 @@ suite =
     in
     describe "LEDLys tiltakSuite"
         [ tiltakSuite checkWithState expectedRecord
+        , test "flupps" <|
+            \() ->
+                yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
         ]

@@ -8,13 +8,21 @@ verdisettinger =
         -- pr min pr syklist
         147.47 / 60
     , tsKostnadSykkel = 3.50891113
-    , tsGevinstLEDLysSyklende = 1 -- 100 %
-    , reisetidKollektivTransport =
-        -- pr min pr passasjer
-        1.29
-    , reisetidBil =
-        -- pr min pr bil
-        2.46
+    , tsKostnadBil = 0.2639315
+    , tsKostnadKollektiv = 0.0125062
+    , tsKostnadGange = 5.2089111
+    , tsGevinstLEDLysSyklende = 100 / 100
+    , sykkelBedreBelysningLED = 5 / 100
+    , andelNyeSyklisterFraBil = 40 / 100
+    , andelNyeSyklisterFraKollektivtransport = 35 / 100
+    , andelNyeSyklisterFraGange = 0
+    , andelNyeSyklisterGenererte = 25 / 100
+
+    -- kr pr km per bil
+    , koekostnadBiler = 2.0890356
+
+    -- kr pr km syklet
+    , helseTSGevinstSykkel = 22.8
     }
 
 
