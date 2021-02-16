@@ -2,7 +2,7 @@
 
 Nytte- og kostnadsanalyse verktøy for gang og sykkelvei tiltak
 
-Author: Syver Enstad, Knut Aksel Røisland, Svend Børge Vullum
+Author: Syver Enstad, Knut Aksel Røysland, Svend Børge Vullum
 
 # Installering
 
