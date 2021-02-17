@@ -103,19 +103,19 @@ analyse tiltak tiltakStates =
         f =
             bindTiltak tiltak tiltakStates
     in
-    { brukerNytte = f .brukerNytte
+    { brukerNytte = f .brukerNytteInklOverfoert
     , analysePeriode = 40
     , kostUtenSkyggepris = f .kostUtenSkyggepris
     , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
-    , trafikantNytte = f .trafikantNytte
+    , trafikantNytte = f .trafikantNytteInklOverfoert
     , nytte = f .nytte
     , skyggepris = f .skyggepris
-    , nettoNytte = f .nettoNytte
+    , nettoNytte = f .nettoNytteInklOverfoert
     , nettoNyttePerBudsjettKrone =
         Maybe.map2
             (\nettoNytte kostUtenSkyggepris ->
                 nettoNytte / negate kostUtenSkyggepris
             )
-            (f .nettoNytte)
+            (f .nettoNytteInklOverfoert)
             (f .kostUtenSkyggepris)
     }

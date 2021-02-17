@@ -1,13 +1,9 @@
 module Field exposing (..)
 
-import Focus exposing (Focus, (=>))
-
-
--- import TiltakStates exposing (TiltakStates)
-
-import FormattedValue exposing (FormattedValue, Editable(..), state, value)
-import TiltakStates exposing (TiltakStates)
+import Focus exposing ((=>), Focus)
+import FormattedValue exposing (Editable(..), FormattedValue, state, value)
 import Models
+import TiltakStates exposing (TiltakStates)
 
 
 type alias Field =
@@ -55,5 +51,5 @@ transformToFields fieldDefinitions =
             , value = Focus.get (simpleField.focus => value)
             }
     in
-        fieldDefinitions
-            |> List.map toRealField
+    fieldDefinitions
+        |> List.map toRealField
