@@ -11,7 +11,7 @@ import FormattedValue
         , value
         , yearlyMaintenance
         )
-import GeneralForutsetninger
+import GeneralForutsetninger exposing (verdisettinger)
 import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
@@ -208,7 +208,20 @@ yearlyTSGevinstNytteInklOverfoert this ({ ledLys } as state) =
 
 yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
 yearlyEksterneEffekterNytteInklOverfoert this ({ ledLys } as state) =
-    Just 0
+    let
+        verdisettinger =
+            GeneralForutsetninger.verdisettinger
+
+        nytte nyeSykkelturerFraBil nyeSykkelturerFraKollektiv =
+            ledTotalReiseDistanceKm * (nyeSykkelturerFraBil * (verdisettinger.eksterneKostnaderBil - verdisettinger.eksterneKostnaderSykkel) + nyeSykkelturerFraKollektiv * (verdisettinger.eksterneKostnaderKollektiv - verdisettinger.eksterneKostnaderSykkel))
+
+        nyeSykkelturerFraBilMaybe =
+            nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraBil
+
+        nyeSykkelturerFraKollektivMaybe =
+            nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraKollektivtransport
+    in
+    Maybe.map2 nytte nyeSykkelturerFraBilMaybe nyeSykkelturerFraKollektivMaybe
 
 
 yearlyOverfoerteSykkelturer : StateCalculationMethod

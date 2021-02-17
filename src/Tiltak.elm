@@ -32,6 +32,8 @@ type alias StateCalculationMethod =
 
    brukerNytte + trafikantNytte + <annenNytte> == nytte
 
+   <enEllerAnnenNytte> == yearly<EnEllerAnnenNytte> * afaktorVekst
+
    nytte == (  yearlyBrukerNytte
              + yearlyTrafikantNytte
              + yearly<AnnenNytte>) * afaktorVekst
@@ -49,7 +51,9 @@ type alias TiltakRecord =
     , tsGevinstNytte : StateCalculationMethod
     , brukerNytteInklOverfoert : StateCalculationMethod
     , trafikantNytteInklOverfoert : StateCalculationMethod
+    , helseGevinstNytteInklOverfoert : StateCalculationMethod
     , tsGevinstNytteInklOverfoert : StateCalculationMethod
+    , eksterneEffekterNytteInklOverfoert : StateCalculationMethod
     , nytte : StateCalculationMethod
     , nytteInklOverfoert : StateCalculationMethod
     , driftOgVedlihKost : StateCalculationMethod

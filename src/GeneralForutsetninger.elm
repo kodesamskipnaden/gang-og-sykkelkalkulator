@@ -17,12 +17,21 @@ verdisettinger =
     , andelNyeSyklisterFraKollektivtransport = 35 / 100
     , andelNyeSyklisterFraGange = 0
     , andelNyeSyklisterGenererte = 25 / 100
-
-    -- kr pr km per bil
-    , koekostnadBiler = 2.0890356
-
-    -- kr pr km syklet
-    , helseTSGevinstSykkel = 22.8
+    , koekostnadBiler =
+        -- kr pr km per bil
+        2.0890356
+    , eksterneKostnaderBil =
+        -- kr pr P-km
+        0.4428013
+    , eksterneKostnaderSykkel =
+        -- kr pr P-km
+        0
+    , eksterneKostnaderKollektiv =
+        -- kr pr P-km
+        0.2122847
+    , helseTSGevinstSykkel =
+        -- kr pr km syklet
+        22.8
     }
 
 

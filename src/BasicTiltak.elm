@@ -56,13 +56,15 @@ nytteInklOverfoert this state =
         f accessor =
             sendTo this accessor state
     in
-    Maybe.map3
-        (\a b c ->
-            a + b + c
+    Maybe.map5
+        (\a b c d e ->
+            a + b + c + d + e
         )
         (f .brukerNytteInklOverfoert)
         (f .trafikantNytteInklOverfoert)
+        (f .helseGevinstNytteInklOverfoert)
         (f .tsGevinstNytteInklOverfoert)
+        (f .eksterneEffekterNytteInklOverfoert)
 
 
 nettoNytte : StateCalculationMethod
@@ -109,6 +111,10 @@ trafikantNytteInklOverfoert =
     analysePeriodeNytteFor .yearlyTrafikantNytteInklOverfoert
 
 
+helseGevinstNytteInklOverfoert =
+    analysePeriodeNytteFor .yearlyHelsegevinstNytteInklOverfoert
+
+
 tsGevinstNytte : StateCalculationMethod
 tsGevinstNytte =
     analysePeriodeNytteFor .yearlyTSGevinstNytte
@@ -117,6 +123,10 @@ tsGevinstNytte =
 tsGevinstNytteInklOverfoert : StateCalculationMethod
 tsGevinstNytteInklOverfoert =
     analysePeriodeNytteFor .yearlyTSGevinstNytteInklOverfoert
+
+
+eksterneEffekterNytteInklOverfoert =
+    analysePeriodeNytteFor .yearlyEksterneEffekterNytteInklOverfoert
 
 
 analysePeriodeNytteFor accessor this state =
@@ -154,6 +164,8 @@ basicTiltakRecord specificStateFocus =
     , brukerNytteInklOverfoert = brukerNytteInklOverfoert
     , trafikantNytteInklOverfoert = trafikantNytteInklOverfoert
     , tsGevinstNytteInklOverfoert = tsGevinstNytteInklOverfoert
+    , helseGevinstNytteInklOverfoert = helseGevinstNytteInklOverfoert
+    , eksterneEffekterNytteInklOverfoert = eksterneEffekterNytteInklOverfoert
     , nytte = nytte
     , nytteInklOverfoert = nytteInklOverfoert
     , kostUtenSkyggepris = kostUtenSkyggepris
