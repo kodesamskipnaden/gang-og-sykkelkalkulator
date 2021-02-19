@@ -10,7 +10,8 @@ Author: Syver Enstad, Knut Aksel Røysland, Svend Børge Vullum
     $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 In a new terminal:
     $ nvm install v14
-    $ npm install -g elm@0.18.0
+    $ npm install -g elm@0.18
+    $ npm install -g elm-test@0.18
     $ npm install
 ```
 
@@ -21,13 +22,6 @@ In a new terminal:
 ```
 
 # Kjøring av test
-
-Installering av testrammeverk
-
-```
-    $ cd tests && elm-package install
-```
-
 
 ```
     $ npm test
