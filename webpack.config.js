@@ -49,7 +49,7 @@ const makeConfig = (isDevelopment) => {
               loader:  'elm-webpack-loader',
               options: {
                 verbose: true,
-                warn: true,
+                warn: false,
                 debug: isDevelopment,
               }
             }
