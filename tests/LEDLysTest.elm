@@ -65,6 +65,7 @@ sykkelSuite =
                 yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
         ]
 
+
 gangOgSykkelSuite : Test
 gangOgSykkelSuite =
     let
@@ -77,7 +78,7 @@ gangOgSykkelSuite =
                     { installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
-                    , gangturerPerYear = Just 2e4 |> formattedValue
+                    , gangturerPerYear = Just 2.0e4 |> formattedValue
                     , lengdeSykkelveiKm = Just 1 |> formattedValue
                     , preferredToGraph = ""
                     }
@@ -88,9 +89,9 @@ gangOgSykkelSuite =
             , yearlySyklistNytteInklOverfoert = 18894.59
             , yearlyTrafikantNytte = 0
             , yearlyTrafikantNytteInklOverfoert =
-                  3133.55 + 1671.23
+                3133.55 + 1671.23
             , yearlyHelsegevinstNytteInklOverfoert =
-                  85500 + 119800
+                85500 + 119800
             , yearlyTSGevinstNytte = 52633.67
             , yearlyTSGevinstNytteInklOverfoert = 53045.98
             , yearlyEksterneEffekterNytteInklOverfoert = 942.83
@@ -123,6 +124,7 @@ gangOgSykkelSuite =
             \() ->
                 yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
         ]
+
 
 gangSykkelveiTiltakSuite checkWithState expectedRecord =
     Test.concat
@@ -196,4 +198,54 @@ gangSykkelveiTiltakSuite checkWithState expectedRecord =
                 .nettoNytte
                 (closeTo expectedRecord.nettoNytte 2)
             ]
+        ]
+
+
+ifLengdeLongerThanAverageTrip : Test
+ifLengdeLongerThanAverageTrip =
+    let
+        initialState =
+            TiltakAndGroupData.initialTiltakStates
+
+        stateLengdeLargest =
+            { initialState
+                | ledLys =
+                    { installationCost = Just 1.0e6 |> formattedValue
+                    , yearlyMaintenance = Just 0 |> formattedValue
+                    , sykkelturerPerYear = Just 1.5e4 |> formattedValue
+                    , gangturerPerYear = Just 0 |> formattedValue
+                    , lengdeSykkelveiKm = Just 6 |> formattedValue
+                    , preferredToGraph = ""
+                    }
+            }
+
+        stateTotalLargest =
+            { initialState
+                | ledLys =
+                    { installationCost = Just 1.0e6 |> formattedValue
+                    , yearlyMaintenance = Just 0 |> formattedValue
+                    , sykkelturerPerYear = Just 1.5e4 |> formattedValue
+                    , gangturerPerYear = Just 0 |> formattedValue
+                    , lengdeSykkelveiKm = Just 1 |> formattedValue
+                    , preferredToGraph = ""
+                    }
+            }
+    in
+    describe "iffing"
+        [ test "lengdeLargest"
+            (\() ->
+                sendTo
+                    tiltak
+                    .yearlyTSGevinstNytteInklOverfoert
+                    stateLengdeLargest
+                    |> checkMaybe (closeTo 263580.65 2)
+            )
+        , test "totalLargest"
+            (\() ->
+                sendTo
+                    tiltak
+                    .yearlyTSGevinstNytteInklOverfoert
+                    stateTotalLargest
+                    |> checkMaybe (closeTo 53045.98 2)
+            )
         ]
