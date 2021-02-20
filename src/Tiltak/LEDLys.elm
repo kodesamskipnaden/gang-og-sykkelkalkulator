@@ -303,6 +303,7 @@ initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = formattedValueDefault
+    , gangturerPerYear = formattedValueDefault
     , lengdeSykkelveiKm = formattedValueDefault
     , preferredToGraph = ""
     }
