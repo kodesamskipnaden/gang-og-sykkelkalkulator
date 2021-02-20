@@ -1,0 +1,36 @@
+* Oppdeling i prosenter fra og prosenter til
+  Er dette virkelig nyttig. Burde man ikke heller bare korte ned veien? Snakk med Nils
+
+* Syklende og gående
+  Implementeres f.eks som radio gangvei, sykkelvei, gang- og sykkelvei.
+
+* Analyse view
+  Må kunne se alle komponenter av nytten (evt. summere sammen noen med forklarende tekst)
+
+  Man kunne tenke seg (når både syklister og gående har nytte) at man
+  viser en komponent for hver av brukerne (syklister og gående). Vi
+  summerer opp de forskjellige andre nyttene (Øvrige trafikanter, TS gevinst, Helsegevinst).
+
+* LEDLys
+** Lengde på tiltakssykkelvei vs. total lengden på turen
+   Hvis fram brekkpunkt og diskuter dette med Nils
+
+** Årlige drifts- og vedlikeholdskostnader
+   Dette feltet skal være endring i årlige drifts og vedlikeholdskostnader.
+
+   Ide: Ha et felt for originale kostnader og et for nye kostnader (vi regner ut differansen og bruker den i analysen).
+** Fra ingenting eller eldre belysning
+   Velges med radio eller som separat tiltaksside
+   
+   
+
+* Grafing
+** Hvilket utsnitt vil vi vise av grafen
+*** Sentrert på skjæringspunktet
+*** Hva burde oppløsninen på X-aksen være?
+    Jeg tror det er hardkodet 
+
+*** Det er IF er i utregningene
+    Dette gjør at vi har et utfordringe med å finne null punktet.
+
+    
