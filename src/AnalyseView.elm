@@ -54,7 +54,7 @@ view data =
     let
         titleAndValueList =
             [ ( "Brukerenes nytte over " ++ toString data.analysePeriode ++ " år"
-              , data.brukerNytte |> NumberFormat.maybePretty
+              , data.syklistNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av brukerenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
             , ( "Øvrige trafikanters nytte over " ++ toString data.analysePeriode ++ " år"

@@ -70,7 +70,7 @@ createTiltak simpleTiltak =
                         .skyggeprisHelper
                         state
                         (Focus.get simpleTiltak.focus state).bompengeAndel
-            , yearlyBrukerNytte =
+            , yearlySyklistNytte =
                 \_ state ->
                     state
                         |> Focus.get (simpleTiltak.focus => sykkelturerPerYear => value)

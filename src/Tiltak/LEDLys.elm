@@ -68,8 +68,8 @@ specificState =
         )
 
 
-yearlyBrukerNytte : StateCalculationMethod
-yearlyBrukerNytte this ({ ledLys } as state) =
+yearlySyklistNytte : StateCalculationMethod
+yearlySyklistNytte this ({ ledLys } as state) =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
@@ -80,8 +80,8 @@ yearlyBrukerNytte this ({ ledLys } as state) =
     Maybe.map firstCalc ledLys.sykkelturerPerYear.value
 
 
-yearlyBrukerNytteInklOverfoert : StateCalculationMethod
-yearlyBrukerNytteInklOverfoert this ({ ledLys } as state) =
+yearlySyklistNytteInklOverfoert : StateCalculationMethod
+yearlySyklistNytteInklOverfoert this ({ ledLys } as state) =
     let
         f =
             bindTiltak this state
@@ -95,7 +95,7 @@ yearlyBrukerNytteInklOverfoert this ({ ledLys } as state) =
                 (Just ledTidsbesparelseMinutterPerTur)
                 (Just verdisettinger.reisetidSykkel)
     in
-    Maybe.map2 (+) (f .yearlyBrukerNytte) overfoertNytte
+    Maybe.map2 (+) (f .yearlySyklistNytte) overfoertNytte
 
 
 yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
@@ -273,9 +273,9 @@ tiltak =
         { basicTiltakRecord
             | title = \_ -> "LED-lys for syklende"
             , fields = \_ -> fields
-            , yearlyBrukerNytte = yearlyBrukerNytte
+            , yearlySyklistNytte = yearlySyklistNytte
             , yearlyTSGevinstNytte = yearlyTSGevinstNytte
-            , yearlyBrukerNytteInklOverfoert = yearlyBrukerNytteInklOverfoert
+            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
             , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
             , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert

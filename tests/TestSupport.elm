@@ -36,7 +36,7 @@ checkMaybe expectation maybeValue =
 
 
 type alias ExpectedRecord =
-    { brukerNytte : Float
+    { syklistNytte : Float
     , trafikantNytte : Float
     , nytte : Float
     , nytteInklOverfoert : Float
@@ -46,8 +46,8 @@ type alias ExpectedRecord =
     , kostUtenSkyggepris : Float
     , nettoNytte : Float
     , nettoNytteInklOverfoert : Float
-    , yearlyBrukerNytte : Float
-    , yearlyBrukerNytteInklOverfoert : Float
+    , yearlySyklistNytte : Float
+    , yearlySyklistNytteInklOverfoert : Float
     , yearlyTrafikantNytte : Float
     , yearlyTrafikantNytteInklOverfoert : Float
     , yearlyTSGevinstNytte : Float
@@ -66,13 +66,13 @@ tiltakSuite checkWithState expectedRecord =
     Test.concat
         [ describe "nytte calculcations"
             [ checkWithState
-                "yearlyBrukerNytte"
-                .yearlyBrukerNytte
-                (closeTo expectedRecord.yearlyBrukerNytte 2)
+                "yearlySyklistNytte"
+                .yearlySyklistNytte
+                (closeTo expectedRecord.yearlySyklistNytte 2)
             , checkWithState
-                "yearlyBrukerNytteInklOverfoert"
-                .yearlyBrukerNytteInklOverfoert
-                (closeTo expectedRecord.yearlyBrukerNytteInklOverfoert 2)
+                "yearlySyklistNytteInklOverfoert"
+                .yearlySyklistNytteInklOverfoert
+                (closeTo expectedRecord.yearlySyklistNytteInklOverfoert 2)
             , checkWithState
                 "yearlyTrafikantNytte"
                 .yearlyTrafikantNytte
@@ -82,9 +82,9 @@ tiltakSuite checkWithState expectedRecord =
                 .yearlyTrafikantNytteInklOverfoert
                 (closeTo expectedRecord.yearlyTrafikantNytteInklOverfoert 2)
             , checkWithState
-                "brukerNytte"
-                .brukerNytte
-                (closeTo expectedRecord.brukerNytte 2)
+                "syklistNytte"
+                .syklistNytte
+                (closeTo expectedRecord.syklistNytte 2)
             , checkWithState
                 "trafikantNytte"
                 .trafikantNytte

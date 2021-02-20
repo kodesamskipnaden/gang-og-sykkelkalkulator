@@ -45,7 +45,7 @@ nytte this state =
         (\a b c ->
             a + b + c
         )
-        (f .brukerNytte)
+        (f .syklistNytte)
         (f .trafikantNytte)
         (f .tsGevinstNytte)
 
@@ -60,7 +60,7 @@ nytteInklOverfoert this state =
         (\a b c d e ->
             a + b + c + d + e
         )
-        (f .brukerNytteInklOverfoert)
+        (f .syklistNytteInklOverfoert)
         (f .trafikantNytteInklOverfoert)
         (f .helseGevinstNytteInklOverfoert)
         (f .tsGevinstNytteInklOverfoert)
@@ -91,14 +91,14 @@ nettoNytteInklOverfoert this state =
         (f .skyggepris)
 
 
-brukerNytte : StateCalculationMethod
-brukerNytte =
-    analysePeriodeNytteFor .yearlyBrukerNytte
+syklistNytte : StateCalculationMethod
+syklistNytte =
+    analysePeriodeNytteFor .yearlySyklistNytte
 
 
-brukerNytteInklOverfoert : StateCalculationMethod
-brukerNytteInklOverfoert =
-    analysePeriodeNytteFor .yearlyBrukerNytteInklOverfoert
+syklistNytteInklOverfoert : StateCalculationMethod
+syklistNytteInklOverfoert =
+    analysePeriodeNytteFor .yearlySyklistNytteInklOverfoert
 
 
 trafikantNytte : StateCalculationMethod
@@ -158,10 +158,10 @@ skyggeprisHelper this state bompengeAndel =
 basicTiltakRecord specificStateFocus =
     { title = \_ -> "Basic tiltak"
     , fields = \_ -> []
-    , brukerNytte = brukerNytte
+    , syklistNytte = syklistNytte
     , trafikantNytte = trafikantNytte
     , tsGevinstNytte = tsGevinstNytte
-    , brukerNytteInklOverfoert = brukerNytteInklOverfoert
+    , syklistNytteInklOverfoert = syklistNytteInklOverfoert
     , trafikantNytteInklOverfoert = trafikantNytteInklOverfoert
     , tsGevinstNytteInklOverfoert = tsGevinstNytteInklOverfoert
     , helseGevinstNytteInklOverfoert = helseGevinstNytteInklOverfoert
@@ -172,10 +172,10 @@ basicTiltakRecord specificStateFocus =
     , nettoNytte = nettoNytte
     , nettoNytteInklOverfoert = nettoNytteInklOverfoert
     , skyggepris = \_ _ -> Nothing
-    , yearlyBrukerNytte = \_ _ -> Nothing
+    , yearlySyklistNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
     , yearlyTSGevinstNytte = \_ _ -> Just 0
-    , yearlyBrukerNytteInklOverfoert = \_ _ -> Nothing
+    , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTSGevinstNytteInklOverfoert = \_ _ -> Nothing
     , yearlyHelsegevinstNytteInklOverfoert = \_ _ -> Nothing

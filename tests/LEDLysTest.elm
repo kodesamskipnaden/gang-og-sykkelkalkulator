@@ -26,15 +26,15 @@ suite =
             }
 
         expectedRecord =
-            { yearlyBrukerNytte = 18433.75
-            , yearlyBrukerNytteInklOverfoert = 18894.59
+            { yearlySyklistNytte = 18433.75
+            , yearlySyklistNytteInklOverfoert = 18894.59
             , yearlyTrafikantNytte = 0
             , yearlyTrafikantNytteInklOverfoert = 3133.55
             , yearlyHelsegevinstNytteInklOverfoert = 85500
             , yearlyTSGevinstNytte = 52633.67
             , yearlyTSGevinstNytteInklOverfoert = 53045.98
             , yearlyEksterneEffekterNytteInklOverfoert = 942.83
-            , brukerNytte = 450114.51
+            , syklistNytte = 450114.51
             , trafikantNytte = 0
             , nytte = 1735321.1
             , nytteInklOverfoert = 3943913.91

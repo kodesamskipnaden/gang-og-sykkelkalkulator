@@ -6,7 +6,7 @@ import TiltakStates exposing (TiltakStates)
 
 
 type alias AnalyseData =
-    { brukerNytte : Maybe Float
+    { syklistNytte : Maybe Float
     , kostUtenSkyggepris : Maybe Float
     , analysePeriode : Float
     , isProfitable : Maybe Bool
@@ -30,11 +30,11 @@ type alias StateCalculationMethod =
 {-
     Some invariants
 
-   brukerNytte + trafikantNytte + <annenNytte> == nytte
+   syklistNytte + trafikantNytte + <annenNytte> == nytte
 
    <enEllerAnnenNytte> == yearly<EnEllerAnnenNytte> * afaktorVekst
 
-   nytte == (  yearlyBrukerNytte
+   nytte == (  yearlySyklistNytte
              + yearlyTrafikantNytte
              + yearly<AnnenNytte>) * afaktorVekst
 
@@ -46,10 +46,10 @@ type alias StateCalculationMethod =
 type alias TiltakRecord =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
-    , brukerNytte : StateCalculationMethod
+    , syklistNytte : StateCalculationMethod
     , trafikantNytte : StateCalculationMethod
     , tsGevinstNytte : StateCalculationMethod
-    , brukerNytteInklOverfoert : StateCalculationMethod
+    , syklistNytteInklOverfoert : StateCalculationMethod
     , trafikantNytteInklOverfoert : StateCalculationMethod
     , helseGevinstNytteInklOverfoert : StateCalculationMethod
     , tsGevinstNytteInklOverfoert : StateCalculationMethod
@@ -62,10 +62,10 @@ type alias TiltakRecord =
     , kostUtenSkyggepris : StateCalculationMethod
     , nettoNytte : StateCalculationMethod
     , nettoNytteInklOverfoert : StateCalculationMethod
-    , yearlyBrukerNytte : StateCalculationMethod
+    , yearlySyklistNytte : StateCalculationMethod
     , yearlyTrafikantNytte : StateCalculationMethod
     , yearlyTSGevinstNytte : StateCalculationMethod
-    , yearlyBrukerNytteInklOverfoert : StateCalculationMethod
+    , yearlySyklistNytteInklOverfoert : StateCalculationMethod
     , yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
     , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
     , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
@@ -103,7 +103,7 @@ analyse tiltak tiltakStates =
         f =
             bindTiltak tiltak tiltakStates
     in
-    { brukerNytte = f .brukerNytteInklOverfoert
+    { syklistNytte = f .syklistNytteInklOverfoert
     , analysePeriode = 40
     , kostUtenSkyggepris = f .kostUtenSkyggepris
     , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
