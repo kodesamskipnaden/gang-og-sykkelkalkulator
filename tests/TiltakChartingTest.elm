@@ -9,7 +9,7 @@ import TiltakAndGroupData
 import TiltakCharting
 
 suite : Test
-suite = test "Tautology" (\() -> Expect.equal 0 0)
+suite = test "Tautology" (\() -> Expect.pass)
 
 -- suite : Test
 -- suite =

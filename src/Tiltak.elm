@@ -47,6 +47,7 @@ type alias TiltakRecord =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
     , syklistNytte : StateCalculationMethod
+    , fotgjengerNytte : StateCalculationMethod
     , trafikantNytte : StateCalculationMethod
     , tsGevinstNytte : StateCalculationMethod
     , syklistNytteInklOverfoert : StateCalculationMethod

@@ -95,6 +95,9 @@ syklistNytte : StateCalculationMethod
 syklistNytte =
     analysePeriodeNytteFor .yearlySyklistNytte
 
+fotgjengerNytte : StateCalculationMethod
+fotgjengerNytte this state =
+    Just 0
 
 syklistNytteInklOverfoert : StateCalculationMethod
 syklistNytteInklOverfoert =
@@ -159,6 +162,7 @@ basicTiltakRecord specificStateFocus =
     { title = \_ -> "Basic tiltak"
     , fields = \_ -> []
     , syklistNytte = syklistNytte
+    , fotgjengerNytte = fotgjengerNytte
     , trafikantNytte = trafikantNytte
     , tsGevinstNytte = tsGevinstNytte
     , syklistNytteInklOverfoert = syklistNytteInklOverfoert

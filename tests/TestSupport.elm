@@ -37,6 +37,7 @@ checkMaybe expectation maybeValue =
 
 type alias ExpectedRecord =
     { syklistNytte : Float
+    , fotgjengerNytte: Float
     , trafikantNytte : Float
     , nytte : Float
     , nytteInklOverfoert : Float
@@ -85,6 +86,10 @@ tiltakSuite checkWithState expectedRecord =
                 "syklistNytte"
                 .syklistNytte
                 (closeTo expectedRecord.syklistNytte 2)
+            , checkWithState
+                "fotgjengerNytte"
+                .fotgjengerNytte
+                (closeTo expectedRecord.fotgjengerNytte 2)
             , checkWithState
                 "trafikantNytte"
                 .trafikantNytte
