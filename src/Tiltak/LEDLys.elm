@@ -155,8 +155,7 @@ yearlyTSGevinstNytte this ({ ledLys } as state) =
         ledLys.sykkelturerPerYear.value
         ledLys.lengdeSykkelveiKm.value
 
-
-yearlyHelsegevinstNytteInklOverfoert this state =
+syklistYearlyHelsegevinstNytteInklOverfoert this state =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
@@ -170,6 +169,26 @@ yearlyHelsegevinstNytteInklOverfoert this state =
         (Just syklistLEDTotalReiseDistanceKm)
         (Just verdisettinger.helseTSGevinstSykkel)
 
+
+fotgjengerYearlyHelsegevinstNytteInklOverfoert this state =
+    let
+        verdisettinger =
+            GeneralForutsetninger.verdisettinger
+    in
+    Maybe.map3
+        (\a b c -> a * b * c)
+        (Maybe.map2 (\a b -> a - b)
+            (yearlyOverfoerteGangturer this state)
+            (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraSykkel)
+        )
+        (Just fotgjengerLEDTotalReiseDistanceKm)
+        (Just verdisettinger.helseTSGevinstGange)
+
+
+yearlyHelsegevinstNytteInklOverfoert this state =
+    Maybe.map2 (+)
+        (syklistYearlyHelsegevinstNytteInklOverfoert this state)
+        (fotgjengerYearlyHelsegevinstNytteInklOverfoert this state)
 
 yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
     let
@@ -256,6 +275,17 @@ yearlyOverfoerteSykkelturer this state =
         (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraGange)
         (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterGenererte)
 
+yearlyOverfoerteGangturer : StateCalculationMethod
+yearlyOverfoerteGangturer this state =
+    let
+        verdisettinger =
+            GeneralForutsetninger.verdisettinger
+    in
+    Maybe.map4 (\a b c d -> a + b + c + d)
+        (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraBil)
+        (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraKollektivtransport)
+        (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraSykkel)
+        (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereGenererte)
 
 nyeSykkelturerFra this ({ ledLys } as state) prosentAndel =
     let

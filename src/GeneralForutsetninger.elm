@@ -19,6 +19,9 @@ verdisettinger =
     , andelNyeSyklisterFraGange = 0
     , andelNyeSyklisterGenererte = 25 / 100
     , andelNyeFotgjengereFraBil = 40 / 100
+    , andelNyeFotgjengereFraKollektivtransport = 35 / 100
+    , andelNyeFotgjengereFraSykkel = 0
+    , andelNyeFotgjengereGenererte = 25 / 100
     , koekostnadBiler =
         -- kr pr km per bil
         2.0890356
@@ -34,6 +37,9 @@ verdisettinger =
     , helseTSGevinstSykkel =
         -- kr pr km syklet
         22.8
+    , helseTSGevinstGange =
+        -- kr pr km gange
+        59.9
     }
 
 

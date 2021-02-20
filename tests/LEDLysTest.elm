@@ -87,8 +87,10 @@ gangOgSykkelSuite =
             { yearlySyklistNytte = 18433.75
             , yearlySyklistNytteInklOverfoert = 18894.59
             , yearlyTrafikantNytte = 0
-            , yearlyTrafikantNytteInklOverfoert = 3133.55 + 1671.23
-            , yearlyHelsegevinstNytteInklOverfoert = 85500
+            , yearlyTrafikantNytteInklOverfoert =
+                  3133.55 + 1671.23
+            , yearlyHelsegevinstNytteInklOverfoert =
+                  85500 + 119800
             , yearlyTSGevinstNytte = 52633.67
             , yearlyTSGevinstNytteInklOverfoert = 53045.98
             , yearlyEksterneEffekterNytteInklOverfoert = 942.83
