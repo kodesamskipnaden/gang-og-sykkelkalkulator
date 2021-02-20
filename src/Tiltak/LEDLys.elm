@@ -114,6 +114,7 @@ syklistYearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
     in
     Maybe.map2 (+) (f .yearlyTrafikantNytte) overfoertNytte
 
+
 fotgjengerYearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
     let
         f =
@@ -130,10 +131,12 @@ fotgjengerYearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
     in
     Maybe.map2 (+) (f .yearlyTrafikantNytte) overfoertNytte
 
+
 yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
     Maybe.map2 (+)
         (syklistYearlyTrafikantNytteInklOverfoert this state)
         (fotgjengerYearlyTrafikantNytteInklOverfoert this state)
+
 
 yearlyTSGevinstNytte : StateCalculationMethod
 yearlyTSGevinstNytte this ({ ledLys } as state) =
@@ -154,6 +157,7 @@ yearlyTSGevinstNytte this ({ ledLys } as state) =
         )
         ledLys.sykkelturerPerYear.value
         ledLys.lengdeSykkelveiKm.value
+
 
 syklistYearlyHelsegevinstNytteInklOverfoert this state =
     let
@@ -189,6 +193,7 @@ yearlyHelsegevinstNytteInklOverfoert this state =
     Maybe.map2 (+)
         (syklistYearlyHelsegevinstNytteInklOverfoert this state)
         (fotgjengerYearlyHelsegevinstNytteInklOverfoert this state)
+
 
 yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
     let
@@ -275,6 +280,7 @@ yearlyOverfoerteSykkelturer this state =
         (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraGange)
         (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterGenererte)
 
+
 yearlyOverfoerteGangturer : StateCalculationMethod
 yearlyOverfoerteGangturer this state =
     let
@@ -287,6 +293,7 @@ yearlyOverfoerteGangturer this state =
         (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraSykkel)
         (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereGenererte)
 
+
 nyeSykkelturerFra this ({ ledLys } as state) prosentAndel =
     let
         verdisettinger =
@@ -297,6 +304,7 @@ nyeSykkelturerFra this ({ ledLys } as state) prosentAndel =
         ledLys.sykkelturerPerYear.value
         (Just verdisettinger.sykkelBedreBelysningLED)
         (Just prosentAndel)
+
 
 nyeGangturerFra this ({ ledLys } as state) prosentAndel =
     let
@@ -309,6 +317,7 @@ nyeGangturerFra this ({ ledLys } as state) prosentAndel =
         (Just verdisettinger.fotgjengerBedreBelysningLED)
         (Just prosentAndel)
 
+
 ledTidsbesparelseMinutterPerTur : Float
 ledTidsbesparelseMinutterPerTur =
     0.5
@@ -317,8 +326,10 @@ ledTidsbesparelseMinutterPerTur =
 syklistLEDTotalReiseDistanceKm =
     5
 
+
 fotgjengerLEDTotalReiseDistanceKm =
     2
+
 
 levetid : number
 levetid =
