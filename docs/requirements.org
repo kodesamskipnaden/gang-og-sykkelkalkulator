@@ -4,6 +4,12 @@
 * Syklende og gående
   Implementeres f.eks som radio gangvei, sykkelvei, gang- og sykkelvei.
 
+  VIKTIG: Vi ser at sykkelanalysen og ganganalysen må være uavhengige
+  for at vi skal kunne kombinere dem i i et tiltak.  Pga. at
+  overføring mellom sykkel og gange er 0 så ser det ut som at dette
+  kan fungere, men må dobbeltsjekkes Nils.
+
+
 * Analyse view
   Må kunne se alle komponenter av nytten (evt. summere sammen noen med forklarende tekst)
 
