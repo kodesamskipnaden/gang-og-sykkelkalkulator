@@ -18,12 +18,12 @@ import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
 -- nytteSkisse =
---     if lengdeSykkelveiKm > ledTotalReiseDistanceKm then
---         ledTotalReiseDistanceKm
+--     if lengdeSykkelveiKm > syklistLEDTotalReiseDistanceKm then
+--         syklistLEDTotalReiseDistanceKm
 --             * antallSykkelturer
 --             * tsKostnadSykkel
 --             * tsGevinstLEDLysSyklende
---             + ledTotalReiseDistanceKm
+--             + syklistLEDTotalReiseDistanceKm
 --             * (nyeSykkelturerFraBil
 --                 * (tsKostnadBil - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
 --                 + nyeSykkelturerFraKollektiv
@@ -39,7 +39,7 @@ import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 --             * antallSykkelturer
 --             * tsKostnadSykkel
 --             * tsGevinstLEDLysSyklende
---             + ledTotalReiseDistanceKm
+--             + syklistLEDTotalReiseDistanceKm
 --             * (nyeSykkelturerFraBil
 --                 * (tsKostnadBil - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
 --                 + nyeSykkelturerFraKollektiv
@@ -98,7 +98,7 @@ yearlySyklistNytteInklOverfoert this ({ ledLys } as state) =
     Maybe.map2 (+) (f .yearlySyklistNytte) overfoertNytte
 
 
-yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
+syklistYearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
     let
         f =
             bindTiltak this state
@@ -108,12 +108,32 @@ yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
 
         overfoertNytte =
             Maybe.map3 (\a b c -> a * b * c)
-                (Just ledTotalReiseDistanceKm)
+                (Just syklistLEDTotalReiseDistanceKm)
                 (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraBil)
                 (Just verdisettinger.koekostnadBiler)
     in
     Maybe.map2 (+) (f .yearlyTrafikantNytte) overfoertNytte
 
+fotgjengerYearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
+    let
+        f =
+            bindTiltak this state
+
+        verdisettinger =
+            GeneralForutsetninger.verdisettinger
+
+        overfoertNytte =
+            Maybe.map3 (\a b c -> a * b * c)
+                (Just fotgjengerLEDTotalReiseDistanceKm)
+                (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraBil)
+                (Just verdisettinger.koekostnadBiler)
+    in
+    Maybe.map2 (+) (f .yearlyTrafikantNytte) overfoertNytte
+
+yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
+    Maybe.map2 (+)
+        (syklistYearlyTrafikantNytteInklOverfoert this state)
+        (fotgjengerYearlyTrafikantNytteInklOverfoert this state)
 
 yearlyTSGevinstNytte : StateCalculationMethod
 yearlyTSGevinstNytte this ({ ledLys } as state) =
@@ -126,8 +146,8 @@ yearlyTSGevinstNytte this ({ ledLys } as state) =
     in
     Maybe.map2
         (\turerPerYear lengde ->
-            if lengde > ledTotalReiseDistanceKm then
-                nytteKalkulasjon turerPerYear ledTotalReiseDistanceKm
+            if lengde > syklistLEDTotalReiseDistanceKm then
+                nytteKalkulasjon turerPerYear syklistLEDTotalReiseDistanceKm
 
             else
                 nytteKalkulasjon turerPerYear lengde
@@ -147,7 +167,7 @@ yearlyHelsegevinstNytteInklOverfoert this state =
             (yearlyOverfoerteSykkelturer this state)
             (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraGange)
         )
-        (Just ledTotalReiseDistanceKm)
+        (Just syklistLEDTotalReiseDistanceKm)
         (Just verdisettinger.helseTSGevinstSykkel)
 
 
@@ -189,7 +209,7 @@ yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
                 * (1 - verdisettinger.tsGevinstLEDLysSyklende)
     in
     Maybe.map2 (*)
-        (Just ledTotalReiseDistanceKm)
+        (Just syklistLEDTotalReiseDistanceKm)
         (Maybe.map4
             helper
             nyeSykkelturerFraBilMaybe
@@ -213,7 +233,7 @@ yearlyEksterneEffekterNytteInklOverfoert this ({ ledLys } as state) =
             GeneralForutsetninger.verdisettinger
 
         nytte nyeSykkelturerFraBil nyeSykkelturerFraKollektiv =
-            ledTotalReiseDistanceKm * (nyeSykkelturerFraBil * (verdisettinger.eksterneKostnaderBil - verdisettinger.eksterneKostnaderSykkel) + nyeSykkelturerFraKollektiv * (verdisettinger.eksterneKostnaderKollektiv - verdisettinger.eksterneKostnaderSykkel))
+            syklistLEDTotalReiseDistanceKm * (nyeSykkelturerFraBil * (verdisettinger.eksterneKostnaderBil - verdisettinger.eksterneKostnaderSykkel) + nyeSykkelturerFraKollektiv * (verdisettinger.eksterneKostnaderKollektiv - verdisettinger.eksterneKostnaderSykkel))
 
         nyeSykkelturerFraBilMaybe =
             nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraBil
@@ -248,15 +268,27 @@ nyeSykkelturerFra this ({ ledLys } as state) prosentAndel =
         (Just verdisettinger.sykkelBedreBelysningLED)
         (Just prosentAndel)
 
+nyeGangturerFra this ({ ledLys } as state) prosentAndel =
+    let
+        verdisettinger =
+            GeneralForutsetninger.verdisettinger
+    in
+    Maybe.map3
+        (\a b c -> a * b * c)
+        ledLys.gangturerPerYear.value
+        (Just verdisettinger.fotgjengerBedreBelysningLED)
+        (Just prosentAndel)
 
 ledTidsbesparelseMinutterPerTur : Float
 ledTidsbesparelseMinutterPerTur =
     0.5
 
 
-ledTotalReiseDistanceKm =
+syklistLEDTotalReiseDistanceKm =
     5
 
+fotgjengerLEDTotalReiseDistanceKm =
+    2
 
 levetid : number
 levetid =

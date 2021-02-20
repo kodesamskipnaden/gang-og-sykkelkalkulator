@@ -13,10 +13,12 @@ verdisettinger =
     , tsKostnadGange = 5.2089111
     , tsGevinstLEDLysSyklende = 100 / 100
     , sykkelBedreBelysningLED = 5 / 100
+    , fotgjengerBedreBelysningLED = 5 / 100
     , andelNyeSyklisterFraBil = 40 / 100
     , andelNyeSyklisterFraKollektivtransport = 35 / 100
     , andelNyeSyklisterFraGange = 0
     , andelNyeSyklisterGenererte = 25 / 100
+    , andelNyeFotgjengereFraBil = 40 / 100
     , koekostnadBiler =
         -- kr pr km per bil
         2.0890356
