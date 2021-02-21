@@ -168,20 +168,20 @@ yearlyHelsegevinstNytteInklOverfoert this state =
         (fotgjengerYearlyHelsegevinstNytteInklOverfoert this state)
 
 
+syklistForutsetninger ledLys =
+    { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
+    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
+    , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
+    , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
+    , tsKostnad = verdisettinger.tsKostnadSykkel
+    , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
+    , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
+    , brukerBedreBelysningLED = verdisettinger.sykkelBedreBelysningLED
+    }
+
+
 yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
-    let
-        syklistForutsetninger =
-            { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
-            , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
-            , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
-            , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
-            , tsKostnad = verdisettinger.tsKostnadSykkel
-            , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
-            , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
-            , brukerBedreBelysningLED = verdisettinger.sykkelBedreBelysningLED
-            }
-    in
-    yearlyTSGevinstNytteOverfoertForBrukere this state syklistForutsetninger
+    syklistForutsetninger ledLys |> yearlyTSGevinstNytteOverfoertForBrukere this state
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this ({ ledLys } as state) brukerForutsetninger =
@@ -231,15 +231,7 @@ yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
 
 yearlyTSGevinstNytte : StateCalculationMethod
 yearlyTSGevinstNytte this ({ ledLys } as state) =
-    let
-        syklistForutsetninger =
-            { tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
-            , tsKostnad = verdisettinger.tsKostnadSykkel
-            , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
-            , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
-            }
-    in
-    yearlyTSGevinstNytteForBrukere this state syklistForutsetninger
+    syklistForutsetninger ledLys |> yearlyTSGevinstNytteForBrukere this state
 
 
 yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
