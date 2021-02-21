@@ -139,20 +139,12 @@ yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
 
 
 yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
-    let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-
-        nytteKalkulasjon antallTurer lengde =
-            lengde * antallTurer * brukerForutsetninger.tsKostnad * brukerForutsetninger.tsGevinstLEDLys
-    in
     Maybe.map2
         (\turerPerYear lengde ->
-            if lengde > brukerForutsetninger.totalReiseDistanceKm then
-                nytteKalkulasjon turerPerYear brukerForutsetninger.totalReiseDistanceKm
-
-            else
-                nytteKalkulasjon turerPerYear lengde
+            min lengde brukerForutsetninger.totalReiseDistanceKm
+                * turerPerYear
+                * brukerForutsetninger.tsKostnad
+                * brukerForutsetninger.tsGevinstLEDLys
         )
         brukerForutsetninger.turerPerYearMaybe
         ledLys.lengdeVeiKm.value
