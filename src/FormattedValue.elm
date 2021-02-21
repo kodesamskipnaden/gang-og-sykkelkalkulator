@@ -62,6 +62,15 @@ sykkelturerPerYear =
         )
 
 
+gangturerPerYear : Focus { specificState | gangturerPerYear : a } a
+gangturerPerYear =
+    Focus.create
+        .gangturerPerYear
+        (\f specificState ->
+            { specificState | gangturerPerYear = f specificState.gangturerPerYear }
+        )
+
+
 installationCost : Focus { specificState | installationCost : a } a
 installationCost =
     Focus.create

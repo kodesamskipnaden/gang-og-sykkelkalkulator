@@ -5,7 +5,9 @@ import Field exposing (Field, SimpleField)
 import Focus exposing ((=>), Focus)
 import FormattedValue
     exposing
-        ( formattedValueDefault
+        ( formattedValue
+        , formattedValueDefault
+        , gangturerPerYear
         , installationCost
         , sykkelturerPerYear
         , value
@@ -341,8 +343,8 @@ initialState : LEDLysState
 initialState =
     { installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
-    , sykkelturerPerYear = formattedValueDefault
-    , gangturerPerYear = formattedValueDefault
+    , sykkelturerPerYear = Just 0 |> formattedValue
+    , gangturerPerYear = Just 0 |> formattedValue
     , lengdeVeiKm = formattedValueDefault
     , preferredToGraph = ""
     }
@@ -366,14 +368,14 @@ fieldDefinitions =
       , stepSize = 50000
       }
     , { name = "yearlyMaintenance"
-      , title = "Årlige drifts- og vedlikeholdskostnader"
+      , title = "Økte årlige drifts- og vedlikeholdskostnader"
       , placeholder = BasicTiltak.yearlyMaintenancePlaceholder
       , focus = specificState => yearlyMaintenance
       , stepSize = 5000
       }
     , { name = "lengdeVeiKm"
-      , title = "Sykkelvei lengde i kilometer"
-      , placeholder = "Lengde sykkelvei (km)"
+      , title = "Veilengde i kilometer"
+      , placeholder = "Lengde vei (km)"
       , focus = specificState => lengdeVeiKm
       , stepSize = 5
       }
@@ -381,6 +383,12 @@ fieldDefinitions =
       , title = "Antall sykkelturer per år"
       , placeholder = "Turer på mørke tider som får nytte av tiltaket"
       , focus = specificState => sykkelturerPerYear
+      , stepSize = 50
+      }
+    , { name = "gangturerPerYear"
+      , title = "Antall gangturer per år"
+      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
+      , focus = specificState => gangturerPerYear
       , stepSize = 50
       }
     ]
