@@ -12,6 +12,7 @@ verdisettinger =
     , tsKostnadKollektiv = 0.0125062
     , tsKostnadGange = 5.2089111
     , tsGevinstLEDLysSyklende = 100 / 100
+    , tsGevinstLEDLysGaaende = 0 / 100
     , sykkelBedreBelysningLED = 5 / 100
     , fotgjengerBedreBelysningLED = 5 / 100
     , andelNyeSyklisterFraBil = 40 / 100
