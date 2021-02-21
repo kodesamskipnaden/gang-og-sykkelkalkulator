@@ -41,7 +41,7 @@ type alias OpphoeyetHoldeplassState =
 
 type alias LEDLysStatePartial a =
     { a
-        | lengdeSykkelveiKm : FormattedValue Float
+        | lengdeVeiKm : FormattedValue Float
     }
 
 

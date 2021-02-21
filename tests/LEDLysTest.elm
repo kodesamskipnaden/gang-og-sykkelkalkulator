@@ -21,7 +21,7 @@ sykkelSuite =
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
-                    , lengdeSykkelveiKm = Just 1 |> formattedValue
+                    , lengdeVeiKm = Just 1 |> formattedValue
                     , preferredToGraph = ""
                     }
             }
@@ -79,7 +79,7 @@ gangOgSykkelSuite =
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 2.0e4 |> formattedValue
-                    , lengdeSykkelveiKm = Just 1 |> formattedValue
+                    , lengdeVeiKm = Just 1 |> formattedValue
                     , preferredToGraph = ""
                     }
             }
@@ -214,7 +214,7 @@ ifLengdeLongerThanAverageTrip =
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
-                    , lengdeSykkelveiKm = Just 6 |> formattedValue
+                    , lengdeVeiKm = Just 6 |> formattedValue
                     , preferredToGraph = ""
                     }
             }
@@ -226,7 +226,7 @@ ifLengdeLongerThanAverageTrip =
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
-                    , lengdeSykkelveiKm = Just 1 |> formattedValue
+                    , lengdeVeiKm = Just 1 |> formattedValue
                     , preferredToGraph = ""
                     }
             }

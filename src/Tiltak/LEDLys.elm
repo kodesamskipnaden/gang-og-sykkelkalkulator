@@ -18,7 +18,7 @@ import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
 -- nytteSkisse =
---     if lengdeSykkelveiKm > syklistLEDTotalReiseDistanceKm then
+--     if lengdeVeiKm > syklistLEDTotalReiseDistanceKm then
 --         syklistLEDTotalReiseDistanceKm
 --             * antallSykkelturer
 --             * tsKostnadSykkel
@@ -35,7 +35,7 @@ import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 --                 * (1 - tsGevinstLEDLysSyklende)
 --               )
 --     else
---         lengdeSykkelveiKm
+--         lengdeVeiKm
 --             * antallSykkelturer
 --             * tsKostnadSykkel
 --             * tsGevinstLEDLysSyklende
@@ -155,7 +155,7 @@ yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
                 nytteKalkulasjon turerPerYear lengde
         )
         brukerForutsetninger.turerPerYearMaybe
-        ledLys.lengdeSykkelveiKm.value
+        ledLys.lengdeVeiKm.value
 
 
 yearlyTSGevinstNytte : StateCalculationMethod
@@ -389,7 +389,7 @@ initialState =
     , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = formattedValueDefault
     , gangturerPerYear = formattedValueDefault
-    , lengdeSykkelveiKm = formattedValueDefault
+    , lengdeVeiKm = formattedValueDefault
     , preferredToGraph = ""
     }
 
@@ -397,11 +397,11 @@ initialState =
 fieldDefinitions : List SimpleField
 fieldDefinitions =
     let
-        lengdeSykkelveiKm =
-            Focus.create .lengdeSykkelveiKm
+        lengdeVeiKm =
+            Focus.create .lengdeVeiKm
                 (\f specificState ->
                     { specificState
-                        | lengdeSykkelveiKm = f specificState.lengdeSykkelveiKm
+                        | lengdeVeiKm = f specificState.lengdeVeiKm
                     }
                 )
     in
@@ -417,10 +417,10 @@ fieldDefinitions =
       , focus = specificState => yearlyMaintenance
       , stepSize = 5000
       }
-    , { name = "lengdeSykkelveiKm"
+    , { name = "lengdeVeiKm"
       , title = "Sykkelvei lengde i kilometer"
       , placeholder = "Lengde sykkelvei (km)"
-      , focus = specificState => lengdeSykkelveiKm
+      , focus = specificState => lengdeVeiKm
       , stepSize = 5
       }
     , { name = "sykkelturerPerYear"

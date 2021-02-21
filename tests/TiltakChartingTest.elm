@@ -8,8 +8,12 @@ import Tiltak.LEDLys as LEDLys exposing (tiltak)
 import TiltakAndGroupData
 import TiltakCharting
 
+
 suite : Test
-suite = test "Tautology" (\() -> Expect.pass)
+suite =
+    test "Tautology" (\() -> Expect.pass)
+
+
 
 -- suite : Test
 -- suite =
@@ -18,7 +22,6 @@ suite = test "Tautology" (\() -> Expect.pass)
 --             (let
 --                 initialState =
 --                     TiltakAndGroupData.initialTiltakStates
-
 --                 state =
 --                     { initialState
 --                         | ledLys =
@@ -26,22 +29,18 @@ suite = test "Tautology" (\() -> Expect.pass)
 --                             , yearlyMaintenance = Just 200 |> formattedValue
 --                             , sykkelturerPerYear = Nothing |> formattedValue
 --                             , gangturerPerYear = Nothing |> formattedValue
-
 --                             --                            , beleggForbiPassasjererPerBuss = Just 20 |> formattedValue
 --                             --                            , yearlyTidsbesparelseMinutter = Just 30 |> formattedValue
---                             , lengdeSykkelveiKm = Just 1 |> formattedValue
+--                             , lengdeVeiKm = Just 1 |> formattedValue
 --                             , preferredToGraph = "sykkelturerPerYear"
 --                             }
 --                     }
-
 --                 maybeField =
 --                     sendTo tiltak .fields |> List.filter (\field -> field.name == "sykkelturerPerYear") |> List.head
-
 --                 sykkelturerPerYear =
 --                     case maybeField of
 --                         Just value ->
 --                             value
-
 --                         Nothing ->
 --                             Debug.crash "TODO"
 --              in
@@ -70,7 +69,6 @@ suite = test "Tautology" (\() -> Expect.pass)
 --                         let
 --                             ledLysFelt =
 --                                 state.ledLys
-
 --                             modifiedState =
 --                                 { state
 --                                     | ledLys =
@@ -86,7 +84,6 @@ suite = test "Tautology" (\() -> Expect.pass)
 --                         let
 --                             ledLysFelt =
 --                                 state.ledLys
-
 --                             modifiedState =
 --                                 { state
 --                                     | ledLys =
