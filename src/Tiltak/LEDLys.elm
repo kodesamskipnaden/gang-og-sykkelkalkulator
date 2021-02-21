@@ -173,6 +173,12 @@ yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
         syklistForutsetninger =
             { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
             , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
+            , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
+            , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
+            , tsKostnad = verdisettinger.tsKostnadSykkel
+            , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
+            , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
+            , brukerBedreBelysningLED = verdisettinger.sykkelBedreBelysningLED
             }
     in
     yearlyTSGevinstNytteOverfoertForBrukere this state syklistForutsetninger
@@ -183,37 +189,31 @@ yearlyTSGevinstNytteOverfoertForBrukere this ({ ledLys } as state) brukerForutse
         verdisettinger =
             GeneralForutsetninger.verdisettinger
 
-        nyeSykkelturerFraBilMaybe =
-            nyeSykkelturerFra this state brukerForutsetninger.andelNyeBrukereFraBil
+        nyeTurerFunc =
+            nyeTurerFra this state brukerForutsetninger
 
-        nyeSykkelturerFraKollektivMaybe =
-            nyeSykkelturerFra this state brukerForutsetninger.andelNyeBrukereFraKollektivtransport
-
-        nyeSykkelturerFraGenererteMaybe =
-            nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterGenererte
-
-        helper nyeSykkelturerFraBil nyeSykkelturerFraKollektiv nyeSykkelturerFraGenererte =
-            nyeSykkelturerFraBil
+        beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
+            nyeTurerFraBil
                 * (verdisettinger.tsKostnadBil
-                    - verdisettinger.tsKostnadSykkel
-                    * (1 - verdisettinger.tsGevinstLEDLysSyklende)
+                    - brukerForutsetninger.tsKostnad
+                    * (1 - brukerForutsetninger.tsGevinstLEDLys)
                   )
-                + nyeSykkelturerFraKollektiv
+                + nyeTurerFraKollektiv
                 * (verdisettinger.tsKostnadKollektiv
-                    - verdisettinger.tsKostnadSykkel
-                    * (1 - verdisettinger.tsGevinstLEDLysSyklende)
+                    - brukerForutsetninger.tsKostnad
+                    * (1 - brukerForutsetninger.tsGevinstLEDLys)
                   )
-                - nyeSykkelturerFraGenererte
-                * verdisettinger.tsKostnadSykkel
-                * (1 - verdisettinger.tsGevinstLEDLysSyklende)
+                - nyeTurerFraGenererte
+                * brukerForutsetninger.tsKostnad
+                * (1 - brukerForutsetninger.tsGevinstLEDLys)
     in
     Maybe.map2 (*)
-        (Just syklistLEDTotalReiseDistanceKm)
+        (Just brukerForutsetninger.totalReiseDistanceKm)
         (Maybe.map3
-            helper
-            nyeSykkelturerFraBilMaybe
-            nyeSykkelturerFraKollektivMaybe
-            nyeSykkelturerFraGenererteMaybe
+            beregning
+            (nyeTurerFunc .andelNyeBrukereFraBil)
+            (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
+            (nyeTurerFunc .andelNyeBrukereGenererte)
         )
 
 
@@ -289,6 +289,14 @@ yearlyOverfoerteGangturer this state =
         (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraBil)
         (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereFraKollektivtransport)
         (nyeGangturerFra this state verdisettinger.andelNyeFotgjengereGenererte)
+
+
+nyeTurerFra this ({ ledLys } as state) brukerForutsetninger andelsAccessor =
+    Maybe.map3
+        (\a b c -> a * b * c)
+        brukerForutsetninger.turerPerYearMaybe
+        (Just brukerForutsetninger.brukerBedreBelysningLED)
+        (andelsAccessor brukerForutsetninger |> Just)
 
 
 nyeSykkelturerFra this ({ ledLys } as state) prosentAndel =
