@@ -138,25 +138,37 @@ yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
         (fotgjengerYearlyTrafikantNytteInklOverfoert this state)
 
 
-yearlyTSGevinstNytte : StateCalculationMethod
-yearlyTSGevinstNytte this ({ ledLys } as state) =
+yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
 
-        nytteKalkulasjon antallSykkelturer lengde =
-            lengde * antallSykkelturer * verdisettinger.tsKostnadSykkel * verdisettinger.tsGevinstLEDLysSyklende
+        nytteKalkulasjon antallTurer lengde =
+            lengde * antallTurer * brukerForutsetninger.tsKostnad * brukerForutsetninger.tsGevinstLEDLys
     in
     Maybe.map2
         (\turerPerYear lengde ->
-            if lengde > syklistLEDTotalReiseDistanceKm then
-                nytteKalkulasjon turerPerYear syklistLEDTotalReiseDistanceKm
+            if lengde > brukerForutsetninger.totalReiseDistanceKm then
+                nytteKalkulasjon turerPerYear brukerForutsetninger.totalReiseDistanceKm
 
             else
                 nytteKalkulasjon turerPerYear lengde
         )
-        ledLys.sykkelturerPerYear.value
+        brukerForutsetninger.turerPerYearMaybe
         ledLys.lengdeSykkelveiKm.value
+
+
+yearlyTSGevinstNytte : StateCalculationMethod
+yearlyTSGevinstNytte this ({ ledLys } as state) =
+    let
+        syklistForutsetninger =
+            { tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
+            , tsKostnad = verdisettinger.tsKostnadSykkel
+            , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
+            , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
+            }
+    in
+    yearlyTSGevinstNytteForBrukere this state syklistForutsetninger
 
 
 syklistYearlyHelsegevinstNytteInklOverfoert this state =
