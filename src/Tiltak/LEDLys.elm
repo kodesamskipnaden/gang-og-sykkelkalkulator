@@ -91,7 +91,7 @@ yearlySyklistNytteInklOverfoert this ({ ledLys } as state) =
 
         overfoertNytte =
             Maybe.map3 (\a b c -> (a * b * c) / 2)
-                (yearlyOverfoerteSykkelturer this state)
+                (syklistForutsetninger ledLys |> yearlyOverfoerteTurer this state)
                 (Just ledTidsbesparelseMinutterPerTur)
                 (Just verdisettinger.reisetidSykkel)
     in
@@ -250,14 +250,7 @@ yearlyEksterneEffekterNytteInklOverfoert this ({ ledLys } as state) =
 
 yearlyOverfoerteSykkelturer : StateCalculationMethod
 yearlyOverfoerteSykkelturer this state =
-    let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-    in
-    Maybe.map3 (\a b c -> a + b + c)
-        (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraBil)
-        (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraKollektivtransport)
-        (nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterGenererte)
+    syklistForutsetninger state.ledLys |> yearlyOverfoerteTurer this state
 
 
 yearlyOverfoerteTurer this state brukerForutsetninger =
