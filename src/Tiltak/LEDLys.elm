@@ -19,41 +19,6 @@ import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
 
--- nytteSkisse =
---     if lengdeVeiKm > syklistLEDTotalReiseDistanceKm then
---         syklistLEDTotalReiseDistanceKm
---             * antallSykkelturer
---             * tsKostnadSykkel
---             * tsGevinstLEDLysSyklende
---             + syklistLEDTotalReiseDistanceKm
---             * (nyeSykkelturerFraBil
---                 * (tsKostnadBil - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
---                 + nyeSykkelturerFraKollektiv
---                 * (tsKostnadKollektiv - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
---                 + nyeSykkelturerFraGange
---                 * (tsKostnadGange - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
---                 - nyeSykkelturerFraGenererte
---                 * tsKostnadSykkel
---                 * (1 - tsGevinstLEDLysSyklende)
---               )
---     else
---         lengdeVeiKm
---             * antallSykkelturer
---             * tsKostnadSykkel
---             * tsGevinstLEDLysSyklende
---             + syklistLEDTotalReiseDistanceKm
---             * (nyeSykkelturerFraBil
---                 * (tsKostnadBil - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
---                 + nyeSykkelturerFraKollektiv
---                 * (tsKostnadKollektiv - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
---                 + nyeSykkelturerFraGange
---                 * (tsKostnadGange - tsKostnadSykkel * (1 - tsGevinstLEDLysSyklende))
---                 - nyeSykkelturerFraGenererte
---                 * tsKostnadSykkel
---                 * (1 - tsGevinstLEDLysSyklende)
---               )
-
-
 specificState :
     Focus
         { tiltakStates
@@ -172,7 +137,9 @@ fotgjengerForutsetninger ledLys =
 
 
 yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
-    syklistForutsetninger ledLys |> yearlyTSGevinstNytteOverfoertForBrukere this state
+    Maybe.map2 (+)
+        (syklistForutsetninger ledLys |> yearlyTSGevinstNytteOverfoertForBrukere this state)
+        (fotgjengerForutsetninger ledLys |> yearlyTSGevinstNytteOverfoertForBrukere this state)
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this ({ ledLys } as state) brukerForutsetninger =
@@ -222,7 +189,9 @@ yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
 
 yearlyTSGevinstNytte : StateCalculationMethod
 yearlyTSGevinstNytte this ({ ledLys } as state) =
-    syklistForutsetninger ledLys |> yearlyTSGevinstNytteForBrukere this state
+    Maybe.map2 (+)
+        (syklistForutsetninger ledLys |> yearlyTSGevinstNytteForBrukere this state)
+        (fotgjengerForutsetninger ledLys |> yearlyTSGevinstNytteForBrukere this state)
 
 
 yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
