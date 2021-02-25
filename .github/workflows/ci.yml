@@ -34,7 +34,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
     - name: Download dist folder
-    - uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v2
       with:
         name: dist
     - name: Deploy
