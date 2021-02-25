@@ -39,6 +39,8 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: dist
+    - name: Debug content
+      run: ls -l
     - name: Deploy
       uses: reggionick/s3-deploy@v3
       with:
