@@ -71,7 +71,7 @@ type alias TiltakRecord =
     , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
     , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
     , yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
-    , skyggeprisHelper : Tiltak -> TiltakStates -> Float -> Maybe Float
+    , skyggeprisHelper : StateCalculationMethod
     , graphId : Tiltak -> String
     , domId : Tiltak -> String
     , preferredField : Tiltak -> TiltakStates -> Maybe Field

@@ -18,6 +18,118 @@ import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
+ledTidsbesparelseMinutterPerTur : Float
+ledTidsbesparelseMinutterPerTur =
+    0.5
+
+
+syklistLEDTotalReiseDistanceKm =
+    5
+
+
+fotgjengerLEDTotalReiseDistanceKm =
+    2
+
+
+levetid : number
+levetid =
+    40
+
+
+tiltak : Tiltak
+tiltak =
+    let
+        basicTiltakRecord =
+            BasicTiltak.basicTiltakRecord specificState
+    in
+    Tiltak
+        { basicTiltakRecord
+            | title = \_ -> "LED-lys for syklende"
+            , fields = \_ -> fields
+            , yearlySyklistNytte = yearlySyklistNytte
+            , yearlyTSGevinstNytte = yearlyTSGevinstNytte
+            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
+            , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
+            , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
+            , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
+            , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
+            , investeringsKostInklRestverdi =
+                \_ { ledLys } ->
+                    BasicTiltak.investeringsKostInklRestverdi
+                        ledLys
+                        levetid
+            , driftOgVedlihKost =
+                \_ { ledLys } ->
+                    BasicTiltak.driftOgVedlihKost ledLys
+            , skyggepris =
+                \this ({ ledLys } as state) ->
+                    sendTo
+                        this
+                        .skyggeprisHelper
+                        state
+        }
+
+
+initialState : LEDLysState
+initialState =
+    { installationCost = formattedValueDefault
+    , yearlyMaintenance = formattedValueDefault
+    , sykkelturerPerYear = Just 0 |> formattedValue
+    , gangturerPerYear = Just 0 |> formattedValue
+    , lengdeVeiKm = formattedValueDefault
+    , preferredToGraph = ""
+    }
+
+
+fieldDefinitions : List SimpleField
+fieldDefinitions =
+    let
+        lengdeVeiKm =
+            Focus.create .lengdeVeiKm
+                (\f specificState ->
+                    { specificState
+                        | lengdeVeiKm = f specificState.lengdeVeiKm
+                    }
+                )
+    in
+    [ { name = "installationCost"
+      , title = "Installasjonskostnad"
+      , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"
+      , focus = specificState => installationCost
+      , stepSize = 50000
+      }
+    , { name = "yearlyMaintenance"
+      , title = "Økte årlige drifts- og vedlikeholdskostnader"
+      , placeholder = BasicTiltak.yearlyMaintenancePlaceholder
+      , focus = specificState => yearlyMaintenance
+      , stepSize = 5000
+      }
+    , { name = "lengdeVeiKm"
+      , title = "Veilengde i kilometer"
+      , placeholder = "Lengde vei (km)"
+      , focus = specificState => lengdeVeiKm
+      , stepSize = 5
+      }
+    , { name = "sykkelturerPerYear"
+      , title = "Antall sykkelturer per år"
+      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
+      , focus = specificState => sykkelturerPerYear
+      , stepSize = 50
+      }
+    , { name = "gangturerPerYear"
+      , title = "Antall gangturer per år"
+      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
+      , focus = specificState => gangturerPerYear
+      , stepSize = 50
+      }
+    ]
+
+
+fields : List Field
+fields =
+    fieldDefinitions
+        |> Field.transformToFields
+
 
 specificState :
     Focus
@@ -33,6 +145,34 @@ specificState =
                 | ledLys = f tiltakStates.ledLys
             }
         )
+
+
+syklistForutsetninger ledLys =
+    { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
+    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
+    , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
+    , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
+    , tsKostnad = verdisettinger.tsKostnadSykkel
+    , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
+    , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
+    , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
+    , brukerBedreBelysningLED = verdisettinger.sykkelBedreBelysningLED
+    , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    }
+
+
+fotgjengerForutsetninger ledLys =
+    { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
+    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
+    , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
+    , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysGaaende
+    , tsKostnad = verdisettinger.tsKostnadGange
+    , eksterneKostnader = verdisettinger.eksterneKostnaderGange
+    , turerPerYearMaybe = ledLys.gangturerPerYear.value
+    , totalReiseDistanceKm = fotgjengerLEDTotalReiseDistanceKm
+    , brukerBedreBelysningLED = verdisettinger.fotgjengerBedreBelysningLED
+    , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
+    }
 
 
 yearlySyklistNytte : StateCalculationMethod
@@ -110,32 +250,6 @@ yearlyHelsegevinstNytteInklOverfoert this state =
         )
 
 
-syklistForutsetninger ledLys =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
-    , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
-    , tsKostnad = verdisettinger.tsKostnadSykkel
-    , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
-    , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
-    , brukerBedreBelysningLED = verdisettinger.sykkelBedreBelysningLED
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
-    }
-
-
-fotgjengerForutsetninger ledLys =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
-    , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysGaaende
-    , tsKostnad = verdisettinger.tsKostnadGange
-    , turerPerYearMaybe = ledLys.gangturerPerYear.value
-    , totalReiseDistanceKm = fotgjengerLEDTotalReiseDistanceKm
-    , brukerBedreBelysningLED = verdisettinger.fotgjengerBedreBelysningLED
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
-    }
-
-
 yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
     Maybe.map2 (+)
         (syklistForutsetninger ledLys |> yearlyTSGevinstNytteOverfoertForBrukere this state)
@@ -201,22 +315,39 @@ yearlyTSGevinstNytteInklOverfoert this ({ ledLys } as state) =
         (yearlyTSGevinstNytteOverfoert this state)
 
 
-yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
-yearlyEksterneEffekterNytteInklOverfoert this ({ ledLys } as state) =
+yearlyEksterneEffekterNytteInklOverfoertForBruker this ({ ledLys } as state) brukerForutsetninger =
     let
         verdisettinger =
             GeneralForutsetninger.verdisettinger
 
-        nytte nyeSykkelturerFraBil nyeSykkelturerFraKollektiv =
-            syklistLEDTotalReiseDistanceKm * (nyeSykkelturerFraBil * (verdisettinger.eksterneKostnaderBil - verdisettinger.eksterneKostnaderSykkel) + nyeSykkelturerFraKollektiv * (verdisettinger.eksterneKostnaderKollektiv - verdisettinger.eksterneKostnaderSykkel))
+        nyeTurer =
+            nyeTurerFra this state brukerForutsetninger
 
-        nyeSykkelturerFraBilMaybe =
-            nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraBil
+        overfoertFraBilNyttePerKm nyeTurerFraBil =
+            nyeTurerFraBil
+                * (verdisettinger.eksterneKostnaderBil
+                    - brukerForutsetninger.eksterneKostnader
+                  )
 
-        nyeSykkelturerFraKollektivMaybe =
-            nyeSykkelturerFra this state verdisettinger.andelNyeSyklisterFraKollektivtransport
+        overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv =
+            nyeTurerFraKollektiv
+                * (verdisettinger.eksterneKostnaderKollektiv
+                    - brukerForutsetninger.eksterneKostnader
+                  )
+
+        nytte nyeTurerFraBil nyeTurerFraKollektiv =
+            brukerForutsetninger.totalReiseDistanceKm
+                * (overfoertFraBilNyttePerKm nyeTurerFraBil + overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv)
     in
-    Maybe.map2 nytte nyeSykkelturerFraBilMaybe nyeSykkelturerFraKollektivMaybe
+    Maybe.map2 nytte
+        (nyeTurer .andelNyeBrukereFraBil)
+        (nyeTurer .andelNyeBrukereFraKollektivtransport)
+
+
+yearlyEksterneEffekterNytteInklOverfoert this ({ ledLys } as state) =
+    Maybe.map2 (+)
+        (syklistForutsetninger ledLys |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
+        (fotgjengerForutsetninger ledLys |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
 
 
 yearlyOverfoerteSykkelturer : StateCalculationMethod
@@ -253,117 +384,3 @@ nyeSykkelturerFra this ({ ledLys } as state) prosentAndel =
         ledLys.sykkelturerPerYear.value
         (Just verdisettinger.sykkelBedreBelysningLED)
         (Just prosentAndel)
-
-
-ledTidsbesparelseMinutterPerTur : Float
-ledTidsbesparelseMinutterPerTur =
-    0.5
-
-
-syklistLEDTotalReiseDistanceKm =
-    5
-
-
-fotgjengerLEDTotalReiseDistanceKm =
-    2
-
-
-levetid : number
-levetid =
-    40
-
-
-tiltak : Tiltak
-tiltak =
-    let
-        basicTiltakRecord =
-            BasicTiltak.basicTiltakRecord specificState
-    in
-    Tiltak
-        { basicTiltakRecord
-            | title = \_ -> "LED-lys for syklende"
-            , fields = \_ -> fields
-            , yearlySyklistNytte = yearlySyklistNytte
-            , yearlyTSGevinstNytte = yearlyTSGevinstNytte
-            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
-            , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
-            , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
-            , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
-            , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
-            , investeringsKostInklRestverdi =
-                \_ { ledLys } ->
-                    BasicTiltak.investeringsKostInklRestverdi
-                        ledLys
-                        levetid
-            , driftOgVedlihKost =
-                \_ { ledLys } ->
-                    BasicTiltak.driftOgVedlihKost ledLys
-            , skyggepris =
-                \this ({ ledLys } as state) ->
-                    sendTo
-                        this
-                        .skyggeprisHelper
-                        state
-                        0
-        }
-
-
-initialState : LEDLysState
-initialState =
-    { installationCost = formattedValueDefault
-    , yearlyMaintenance = formattedValueDefault
-    , sykkelturerPerYear = Just 0 |> formattedValue
-    , gangturerPerYear = Just 0 |> formattedValue
-    , lengdeVeiKm = formattedValueDefault
-    , preferredToGraph = ""
-    }
-
-
-fieldDefinitions : List SimpleField
-fieldDefinitions =
-    let
-        lengdeVeiKm =
-            Focus.create .lengdeVeiKm
-                (\f specificState ->
-                    { specificState
-                        | lengdeVeiKm = f specificState.lengdeVeiKm
-                    }
-                )
-    in
-    [ { name = "installationCost"
-      , title = "Installasjonskostnad"
-      , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"
-      , focus = specificState => installationCost
-      , stepSize = 50000
-      }
-    , { name = "yearlyMaintenance"
-      , title = "Økte årlige drifts- og vedlikeholdskostnader"
-      , placeholder = BasicTiltak.yearlyMaintenancePlaceholder
-      , focus = specificState => yearlyMaintenance
-      , stepSize = 5000
-      }
-    , { name = "lengdeVeiKm"
-      , title = "Veilengde i kilometer"
-      , placeholder = "Lengde vei (km)"
-      , focus = specificState => lengdeVeiKm
-      , stepSize = 5
-      }
-    , { name = "sykkelturerPerYear"
-      , title = "Antall sykkelturer per år"
-      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
-      , focus = specificState => sykkelturerPerYear
-      , stepSize = 50
-      }
-    , { name = "gangturerPerYear"
-      , title = "Antall gangturer per år"
-      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
-      , focus = specificState => gangturerPerYear
-      , stepSize = 50
-      }
-    ]
-
-
-fields : List Field
-fields =
-    fieldDefinitions
-        |> Field.transformToFields

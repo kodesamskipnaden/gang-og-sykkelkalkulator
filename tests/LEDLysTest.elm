@@ -84,6 +84,15 @@ gangOgSykkelSuite =
                     }
             }
 
+        expectedNytteFraFotgjengerAnalyse =
+            2729345.084689
+
+        expectedNytteFraSyklistAnalyse =
+            3943913.9087
+
+        expectedKostInklSkyggepris =
+            -1.0e6 + -2.0e5
+
         expectedRecord =
             { yearlySyklistNytte = 18433.75
             , yearlySyklistNytteInklOverfoert = 18894.59
@@ -92,20 +101,23 @@ gangOgSykkelSuite =
                 3133.55 + 1671.23
             , yearlyHelsegevinstNytteInklOverfoert =
                 85500 + 119800
-            , yearlyTSGevinstNytte = 52633.67 
+            , yearlyTSGevinstNytte = 52633.67
             , yearlyTSGevinstNytteInklOverfoert = 53045.98 - 10197.92
             , yearlyEksterneEffekterNytteInklOverfoert = 942.83 + 502.84
             , syklistNytte = 450114.51
             , fotgjengerNytte = 0
             , trafikantNytte = 0
-            , nytte = 1735321.1 + 2729345.08
-            , nytteInklOverfoert = 3943913.91
+            , nytte = 1735321.1
+            , nytteInklOverfoert = expectedNytteFraSyklistAnalyse + expectedNytteFraFotgjengerAnalyse
             , investeringsKostInklRestverdi = -1.0e6
             , driftOgVedlihKost = 0
             , kostUtenSkyggepris = -1.0e6
             , skyggepris = -2.0e5
             , nettoNytte = 535321.1
-            , nettoNytteInklOverfoert = 2743913.91
+            , nettoNytteInklOverfoert =
+                expectedNytteFraSyklistAnalyse
+                    + expectedNytteFraFotgjengerAnalyse
+                    + expectedKostInklSkyggepris
             }
 
         checkWithState : CheckWithStateFunction

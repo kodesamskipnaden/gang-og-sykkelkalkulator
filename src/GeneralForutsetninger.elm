@@ -34,6 +34,9 @@ verdisettinger =
     , eksterneKostnaderSykkel =
         -- kr pr P-km
         0
+    , eksterneKostnaderGange =
+        -- kr pr P-km
+        0
     , eksterneKostnaderKollektiv =
         -- kr pr P-km
         0.2122847

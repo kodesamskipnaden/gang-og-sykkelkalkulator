@@ -95,9 +95,11 @@ syklistNytte : StateCalculationMethod
 syklistNytte =
     analysePeriodeNytteFor .yearlySyklistNytte
 
+
 fotgjengerNytte : StateCalculationMethod
 fotgjengerNytte this state =
     Just 0
+
 
 syklistNytteInklOverfoert : StateCalculationMethod
 syklistNytteInklOverfoert =
@@ -147,12 +149,10 @@ kostUtenSkyggepris this state =
         (f .driftOgVedlihKost)
 
 
-skyggeprisHelper this state bompengeAndel =
+skyggeprisHelper this state =
     let
         calculation kostUtenSkyggepris =
-            (1 - bompengeAndel)
-                * kostUtenSkyggepris
-                * GeneralForutsetninger.skyggepris
+            kostUtenSkyggepris * GeneralForutsetninger.skyggepris
     in
     sendTo this .kostUtenSkyggepris state
         |> Maybe.map calculation
