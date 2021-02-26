@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "gang- og sykkelvegkalkulator",
-    "repository": "https://github.com/kodesamskipnaden/gang-og-sykkelkalkulator.git",
+    "repository": "https://github.com/user/project.git",
     "license": "MIT",
     "source-directories": [
         "src"
