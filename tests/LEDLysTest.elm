@@ -1,9 +1,11 @@
 module LEDLysTest exposing (..)
 
+import Expect
 import FormattedValue exposing (formattedValue)
+import Maybe.Extra
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
-import Tiltak exposing (TiltakAccessor, sendTo)
+import Tiltak exposing (analyse, sendTo)
 import Tiltak.LEDLys as LEDLys exposing (tiltak, yearlyOverfoerteSykkelturer)
 import TiltakAndGroupData
 
@@ -84,6 +86,9 @@ gangOgSykkelSuite =
                     }
             }
 
+        tiltakReceiver =
+            Tiltak.bindTiltak tiltak state
+
         expectedNytteFraFotgjengerAnalyse =
             2729345.084689
 
@@ -124,17 +129,50 @@ gangOgSykkelSuite =
         checkWithState description accessor expectation =
             test description <|
                 \() ->
-                    sendTo
-                        tiltak
-                        accessor
-                        state
+                    tiltakReceiver accessor
                         |> checkMaybe expectation
+
+        expectedAnalyse =
+            { analysePeriode = 40
+            , isProfitable = Just True
+            , syklistNytte = Just 461367.3704234241
+            , fotgjengerNytte = Just 0
+            , trafikantNytte = Just 117322.9554847516
+            , helseGevinstNytte = Just 5013006.4928190885
+            , tsGevinstNytte = Just 1046261.9706246123
+            , eksterneEffekterNytte = Just 35300.2084146674
+            , nytte = Just 6673258.997766544
+            , skyggepris = Just -200000
+            , nettoNytte = Just 5473258.997766544
+            , kostUtenSkyggepris = Just -1000000
+            , nettoNyttePerBudsjettKrone = Just 5.4732589977665445
+            }
+
+        actualAnalyse =
+            Tiltak.analyse tiltak state
     in
     describe "LEDLys gang og sykkelvei"
         [ tiltakSuite checkWithState expectedRecord
         , test "flupps" <|
             \() ->
                 yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
+        , test "analyse" <|
+            \() ->
+                actualAnalyse
+                    |> Expect.equal
+                        expectedAnalyse
+        , test "sum av nytte elementer" <|
+            \() ->
+                Maybe.Extra.combine
+                    [ actualAnalyse.syklistNytte
+                    , actualAnalyse.fotgjengerNytte
+                    , actualAnalyse.trafikantNytte
+                    , actualAnalyse.helseGevinstNytte
+                    , actualAnalyse.tsGevinstNytte
+                    , actualAnalyse.eksterneEffekterNytte
+                    ]
+                    |> Maybe.map List.sum
+                    |> Expect.equal actualAnalyse.nytte
         ]
 
 

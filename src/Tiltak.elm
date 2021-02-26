@@ -7,11 +7,15 @@ import TiltakStates exposing (TiltakStates)
 
 type alias AnalyseData =
     { syklistNytte : Maybe Float
+    , fotgjengerNytte : Maybe Float
+    , trafikantNytte : Maybe Float
+    , helseGevinstNytte : Maybe Float
+    , tsGevinstNytte : Maybe Float
+    , eksterneEffekterNytte : Maybe Float
+    , nytte : Maybe Float
     , kostUtenSkyggepris : Maybe Float
     , analysePeriode : Float
     , isProfitable : Maybe Bool
-    , trafikantNytte : Maybe Float
-    , nytte : Maybe Float
     , skyggepris : Maybe Float
     , nettoNytte : Maybe Float
     , nettoNyttePerBudsjettKrone : Maybe Float
@@ -104,14 +108,18 @@ analyse tiltak tiltakStates =
         f =
             bindTiltak tiltak tiltakStates
     in
-    { syklistNytte = f .syklistNytteInklOverfoert
-    , analysePeriode = 40
-    , kostUtenSkyggepris = f .kostUtenSkyggepris
+    { analysePeriode = 40
     , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
+    , syklistNytte = f .syklistNytteInklOverfoert
+    , fotgjengerNytte = f .fotgjengerNytte
     , trafikantNytte = f .trafikantNytteInklOverfoert
-    , nytte = f .nytte
+    , helseGevinstNytte = f .helseGevinstNytteInklOverfoert
+    , tsGevinstNytte = f .tsGevinstNytteInklOverfoert
+    , eksterneEffekterNytte = f .eksterneEffekterNytteInklOverfoert
+    , nytte = f .nytteInklOverfoert
     , skyggepris = f .skyggepris
     , nettoNytte = f .nettoNytteInklOverfoert
+    , kostUtenSkyggepris = f .kostUtenSkyggepris
     , nettoNyttePerBudsjettKrone =
         Maybe.map2
             (\nettoNytte kostUtenSkyggepris ->

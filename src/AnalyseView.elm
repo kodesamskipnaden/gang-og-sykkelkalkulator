@@ -53,13 +53,29 @@ view : AnalyseData -> List (Html Msg)
 view data =
     let
         titleAndValueList =
-            [ ( "Brukerenes nytte over " ++ toString data.analysePeriode ++ " år"
+            [ ( "Syklistenes nytte over " ++ toString data.analysePeriode ++ " år"
               , data.syklistNytte |> NumberFormat.maybePretty
-              , text "Verdien i dag av brukerenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
+              , text "Verdien i dag av syklistenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
+              )
+            , ( "Fotgjengernes nytte over " ++ toString data.analysePeriode ++ " år"
+              , data.fotgjengerNytte |> NumberFormat.maybePretty
+              , text "Verdien i dag av fotgjengernes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
             , ( "Øvrige trafikanters nytte over " ++ toString data.analysePeriode ++ " år"
               , data.trafikantNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
+              )
+            , ( "Helsegevinst over " ++ toString data.analysePeriode ++ " år"
+              , data.helseGevinstNytte |> NumberFormat.maybePretty
+              , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
+              )
+            , ( "TS gevinst over " ++ toString data.analysePeriode ++ " år"
+              , data.tsGevinstNytte |> NumberFormat.maybePretty
+              , text "Verdien i dag av TS-gevinster, over hele analyseperioden"
+              )
+            , ( "Øvrige eksterne effekter over " ++ toString data.analysePeriode ++ " år"
+              , data.tsGevinstNytte |> NumberFormat.maybePretty
+              , text "Verdien i dag av eksterne effekter, over hele analyseperioden"
               )
             , ( "Sum nytteelementer over " ++ toString data.analysePeriode ++ " år"
               , data.nytte |> NumberFormat.maybePretty
