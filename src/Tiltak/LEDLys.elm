@@ -44,7 +44,7 @@ tiltak =
     in
     Tiltak
         { basicTiltakRecord
-            | title = \_ -> "LED-lys for syklende"
+            | title = \_ -> "LED-lys for syklende og eller gående"
             , fields = \_ -> fields
             , yearlySyklistNytte = yearlySyklistNytte
             , yearlyTSGevinstNytte = yearlyTSGevinstNytte
