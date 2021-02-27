@@ -10,52 +10,27 @@ type alias BasicState =
     }
 
 
-type alias SuperSimpleCommonPartial a =
-    { a | yearlyMaintenance : FormattedValue Float }
-
-
-type alias SuperSimpleCommonState =
-    SuperSimpleCommonPartial BasicState
-
-
 type alias SimpleCommonPartial a =
     { a
-        | installationCost : FormattedValue Float
+        | yearlyMaintenance : FormattedValue Float
+        , installationCost : FormattedValue Float
+        , lengdeVeiKm : FormattedValue Float
     }
 
 
 type alias SimpleCommonState =
-    SimpleCommonPartial SuperSimpleCommonState
-
-
-type alias OpphoeyetHoldeplassStatePartial a =
-    { a
-        | beleggForbiPassasjererPerBuss : FormattedValue Float
-        , yearlyTidsbesparelseMinutter : FormattedValue Float
-    }
-
-
-type alias OpphoeyetHoldeplassState =
-    OpphoeyetHoldeplassStatePartial SimpleCommonState
-
-
-type alias LEDLysStatePartial a =
-    { a
-        | lengdeVeiKm : FormattedValue Float
-    }
+    SimpleCommonPartial BasicState
 
 
 type alias LEDLysState =
-    LEDLysStatePartial SimpleCommonState
+    SimpleCommonState
 
 
-type alias KollektivPrioriteringLyskryssStatePartial a =
+type alias GsB_GsAStatePartial a =
     { a
-        | antallBilerForsinketPerAvgang : FormattedValue Float
-        , forsinkelsePerBilSeconds : FormattedValue Float
-        , antallPasserendeAvgangerPerYear : FormattedValue Float
+        | oppetidPercent : FormattedValue Float
     }
 
 
-type alias KollektivPrioriteringLyskryssState =
-    KollektivPrioriteringLyskryssStatePartial SimpleCommonState
+type alias GsB_GsAState =
+    GsB_GsAStatePartial SimpleCommonState

@@ -2,6 +2,7 @@ module TiltakAndGroupData exposing (..)
 
 import Models exposing (..)
 import Tiltak exposing (Tiltak)
+import Tiltak.GsB_GsA as GsB_GsA
 import Tiltak.LEDLys as LEDLys
 
 
@@ -24,7 +25,7 @@ tiltakForGroup gruppeType =
             [ LEDLys.tiltak ]
 
         Vedlikehold ->
-            []
+            [ GsB_GsA.tiltak ]
 
 
 initialTiltakStates =

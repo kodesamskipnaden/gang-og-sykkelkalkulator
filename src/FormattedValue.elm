@@ -53,6 +53,14 @@ yearlyMaintenance =
         )
 
 
+lengdeVeiKm =
+    Focus.create
+        .lengdeVeiKm
+        (\f specificState ->
+            { specificState | lengdeVeiKm = f specificState.lengdeVeiKm }
+        )
+
+
 sykkelturerPerYear : Focus { specificState | sykkelturerPerYear : a } a
 sykkelturerPerYear =
     Focus.create
