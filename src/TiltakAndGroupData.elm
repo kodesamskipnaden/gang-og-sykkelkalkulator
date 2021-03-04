@@ -30,4 +30,5 @@ tiltakForGroup gruppeType =
 
 initialTiltakStates =
     { ledLys = LEDLys.initialState
+    , gsB_GsA = GsB_GsA.initialState
     }

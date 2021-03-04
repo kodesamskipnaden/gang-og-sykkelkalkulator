@@ -21,17 +21,29 @@ import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 specificState :
     Focus
         { tiltakStates
-            | gsA_GsB : GsB_GsAState
+            | gsB_GsA : GsB_GsAState
         }
         GsB_GsAState
 specificState =
     Focus.create
-        .gsA_GsB
+        .gsB_GsA
         (\f tiltakStates ->
             { tiltakStates
-                | gsA_GsB = f tiltakStates.gsA_GsB
+                | gsB_GsA = f tiltakStates.gsB_GsA
             }
         )
+
+
+initialState : GsB_GsAState
+initialState =
+    { installationCost = formattedValueDefault
+    , yearlyMaintenance = formattedValueDefault
+    , sykkelturerPerYear = Just 0 |> formattedValue
+    , gangturerPerYear = Just 0 |> formattedValue
+    , lengdeVeiKm = formattedValueDefault
+    , oppetidPercent = Just 80 |> formattedValue
+    , preferredToGraph = ""
+    }
 
 
 fieldDefinitions : List SimpleField
@@ -101,7 +113,7 @@ tiltak =
     in
     Tiltak
         { basicTiltakRecord
-            | title = \_ -> "LED-lys for syklende og eller gående"
+            | title = \_ -> "GsB til GsA"
             , fields = \_ -> fields
             , yearlySyklistNytte = yearlySyklistNytte
             , yearlyTSGevinstNytte = yearlyTSGevinstNytte
@@ -111,17 +123,45 @@ tiltak =
             , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
             , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
             , investeringsKostInklRestverdi =
-                \_ { ledLys } ->
+                \_ { gsB_GsA } ->
                     BasicTiltak.investeringsKostInklRestverdi
-                        ledLys
+                        gsB_GsA
                         levetid
             , driftOgVedlihKost =
-                \_ { ledLys } ->
-                    BasicTiltak.driftOgVedlihKost ledLys
+                \_ { gsB_GsA } ->
+                    BasicTiltak.driftOgVedlihKost gsB_GsA
             , skyggepris =
-                \this ({ ledLys } as state) ->
+                \this state ->
                     sendTo
                         this
                         .skyggeprisHelper
                         state
         }
+
+
+yearlySyklistNytte this state =
+    Nothing
+
+
+yearlyTSGevinstNytte this state =
+    Nothing
+
+
+yearlySyklistNytteInklOverfoert this state =
+    Nothing
+
+
+yearlyTrafikantNytteInklOverfoert this state =
+    Nothing
+
+
+yearlyHelsegevinstNytteInklOverfoert this state =
+    Nothing
+
+
+yearlyTSGevinstNytteInklOverfoert this state =
+    Nothing
+
+
+yearlyEksterneEffekterNytteInklOverfoert this state =
+    Nothing
