@@ -37,7 +37,7 @@ checkMaybe expectation maybeValue =
 
 type alias ExpectedRecord =
     { syklistNytte : Float
-    , fotgjengerNytte: Float
+    , fotgjengerNytte : Float
     , trafikantNytte : Float
     , nytte : Float
     , nytteInklOverfoert : Float
@@ -83,18 +83,6 @@ tiltakSuite checkWithState expectedRecord =
                 .yearlyTrafikantNytteInklOverfoert
                 (closeTo expectedRecord.yearlyTrafikantNytteInklOverfoert 2)
             , checkWithState
-                "syklistNytte"
-                .syklistNytte
-                (closeTo expectedRecord.syklistNytte 2)
-            , checkWithState
-                "fotgjengerNytte"
-                .fotgjengerNytte
-                (closeTo expectedRecord.fotgjengerNytte 2)
-            , checkWithState
-                "trafikantNytte"
-                .trafikantNytte
-                (closeTo expectedRecord.trafikantNytte 2)
-            , checkWithState
                 "yearlyHelsegevinstNytteInklOverfoert"
                 .yearlyHelsegevinstNytteInklOverfoert
                 (closeTo expectedRecord.yearlyHelsegevinstNytteInklOverfoert 2)
@@ -110,6 +98,18 @@ tiltakSuite checkWithState expectedRecord =
                 "yearlyEksterneEffekterNytteInklOverfoert"
                 .yearlyEksterneEffekterNytteInklOverfoert
                 (closeTo expectedRecord.yearlyEksterneEffekterNytteInklOverfoert 2)
+            , checkWithState
+                "syklistNytte"
+                .syklistNytte
+                (closeTo expectedRecord.syklistNytte 2)
+            , checkWithState
+                "fotgjengerNytte"
+                .fotgjengerNytte
+                (closeTo expectedRecord.fotgjengerNytte 2)
+            , checkWithState
+                "trafikantNytte"
+                .trafikantNytte
+                (closeTo expectedRecord.trafikantNytte 2)
             , checkWithState
                 "nytte"
                 .nytte

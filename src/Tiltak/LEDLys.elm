@@ -175,16 +175,13 @@ fotgjengerForutsetninger ledLys =
     }
 
 
+yearlySyklistNyttePerTur antallTurer =
+    antallTurer * verdisettinger.reisetidSykkel * ledTidsbesparelseMinutterPerTur
+
+
 yearlySyklistNytte : StateCalculationMethod
 yearlySyklistNytte this ({ ledLys } as state) =
-    let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-
-        firstCalc sykkelturerPerYear =
-            sykkelturerPerYear * verdisettinger.reisetidSykkel * ledTidsbesparelseMinutterPerTur
-    in
-    Maybe.map firstCalc ledLys.sykkelturerPerYear.value
+    Maybe.map yearlySyklistNyttePerTur ledLys.sykkelturerPerYear.value
 
 
 yearlySyklistNytteInklOverfoert : StateCalculationMethod
@@ -193,14 +190,9 @@ yearlySyklistNytteInklOverfoert this ({ ledLys } as state) =
         f =
             bindTiltak this state
 
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-
         overfoertNytte =
-            Maybe.map3 (\a b c -> (a * b * c) / 2)
+            Maybe.map (\a -> yearlySyklistNyttePerTur a / 2)
                 (syklistForutsetninger ledLys |> yearlyOverfoerteTurer this state)
-                (Just ledTidsbesparelseMinutterPerTur)
-                (Just verdisettinger.reisetidSykkel)
     in
     Maybe.map2 (+) (f .yearlySyklistNytte) overfoertNytte
 
@@ -256,11 +248,8 @@ yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
         (fotgjengerForutsetninger ledLys |> yearlyTSGevinstNytteOverfoertForBrukere this state)
 
 
-yearlyTSGevinstNytteOverfoertForBrukere this ({ ledLys } as state) brukerForutsetninger =
+yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
     let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-
         nyeTurerFunc =
             nyeTurerFra this state brukerForutsetninger
 
@@ -309,7 +298,7 @@ yearlyTSGevinstNytte this ({ ledLys } as state) =
 
 
 yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
-yearlyTSGevinstNytteInklOverfoert this ({ ledLys } as state) =
+yearlyTSGevinstNytteInklOverfoert this state =
     Maybe.map2 (+)
         (yearlyTSGevinstNytte this state)
         (yearlyTSGevinstNytteOverfoert this state)

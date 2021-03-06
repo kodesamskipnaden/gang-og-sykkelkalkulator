@@ -13,8 +13,12 @@ verdisettinger =
     , tsKostnadGange = 5.2089111
     , tsGevinstLEDLysSyklende = 100 / 100
     , tsGevinstLEDLysGaaende = 0 / 100
+    , tsGevinstGsB_GsASyklende = 1 / 100
+
+    -- Etterspørselseffekter
     , sykkelBedreBelysningLED = 5 / 100
     , fotgjengerBedreBelysningLED = 5 / 100
+    , sykkelGsB_GsA = 5 / 100
     , andelNyeSyklisterFraBil = 40 / 100
     , andelNyeSyklisterFraKollektivtransport = 35 / 100
 
@@ -46,6 +50,8 @@ verdisettinger =
     , helseTSGevinstGange =
         -- kr pr km gange
         59.9
+    , syklistTotalReiseDistanceKm = 5
+    , fotgjenerTotalReiseDistanceKm = 2
     }
 
 
