@@ -106,7 +106,7 @@ tiltakSuite checkWithState expectedRecord =
             , checkWithState
                 "nettoNytteInklOverfoert"
                 .nettoNytteInklOverfoert
-                (closeTo expectedRecord.nettoNytteInklOverfoert 2)
+                (closeTo expectedRecord.nettoNytteInklOverfoert 1)
             ]
         , describe "kost calculations"
             [ checkWithState

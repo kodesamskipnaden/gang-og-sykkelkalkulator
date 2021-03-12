@@ -5,20 +5,28 @@ verdisettinger =
     -- alle verdier i NOK
     { reisetidSykkel =
         -- VoT_Sykkel
-        -- pr min pr syklist
+        -- kr. pr min pr syklist
         147.47 / 60
+    , reisetidGange =
+        -- VoT_Gange
+        -- kr pr. min pr. gangtur
+        2.77293673883309
     , tsKostnadSykkel = 3.50891113
     , tsKostnadBil = 0.2639315
     , tsKostnadKollektiv = 0.0125062
     , tsKostnadGange = 5.2089111
+
+    -- skadereduksjon %
     , tsGevinstLEDLysSyklende = 100 / 100
     , tsGevinstLEDLysGaaende = 0 / 100
     , tsGevinstGsB_GsASyklende = 1 / 100
+    , tsGevinstGsB_GsAGaaende = 20 / 100
 
     -- Etterspørselseffekter
     , sykkelBedreBelysningLED = 5 / 100
     , fotgjengerBedreBelysningLED = 5 / 100
     , sykkelGsB_GsA = 5 / 100
+    , fotgjengerGsB_GsA = 5 / 100
     , andelNyeSyklisterFraBil = 40 / 100
     , andelNyeSyklisterFraKollektivtransport = 35 / 100
 
@@ -51,7 +59,7 @@ verdisettinger =
         -- kr pr km gange
         59.9
     , syklistTotalReiseDistanceKm = 5
-    , fotgjenerTotalReiseDistanceKm = 2
+    , fotgjengerTotalReiseDistanceKm = 2
     }
 
 

@@ -9,6 +9,7 @@ import FormattedValue
         , value
         )
 import GeneralForutsetninger
+import Maybe.Extra
 import Regex
 import Tiltak exposing (..)
 
@@ -41,11 +42,12 @@ nytte this state =
         f accessor =
             sendTo this accessor state
     in
-    Maybe.map3
-        (\a b c ->
-            a + b + c
+    Maybe.map4
+        (\a b c d ->
+            a + b + c + d
         )
         (f .syklistNytte)
+        (f .fotgjengerNytte)
         (f .trafikantNytte)
         (f .tsGevinstNytte)
 
@@ -56,15 +58,15 @@ nytteInklOverfoert this state =
         f accessor =
             sendTo this accessor state
     in
-    Maybe.map5
-        (\a b c d e ->
-            a + b + c + d + e
-        )
-        (f .syklistNytteInklOverfoert)
-        (f .trafikantNytteInklOverfoert)
-        (f .helseGevinstNytteInklOverfoert)
-        (f .tsGevinstNytteInklOverfoert)
-        (f .eksterneEffekterNytteInklOverfoert)
+    Maybe.Extra.combine
+        [ f .syklistNytteInklOverfoert
+        , f .fotgjengerNytteInklOverfoert
+        , f .trafikantNytteInklOverfoert
+        , f .helseGevinstNytteInklOverfoert
+        , f .tsGevinstNytteInklOverfoert
+        , f .eksterneEffekterNytteInklOverfoert
+        ]
+        |> Maybe.map List.sum
 
 
 nettoNytte : StateCalculationMethod
@@ -97,13 +99,17 @@ syklistNytte =
 
 
 fotgjengerNytte : StateCalculationMethod
-fotgjengerNytte this state =
-    Just 0
+fotgjengerNytte =
+    analysePeriodeNytteFor .yearlyFotgjengerNytte
 
 
 syklistNytteInklOverfoert : StateCalculationMethod
 syklistNytteInklOverfoert =
     analysePeriodeNytteFor .yearlySyklistNytteInklOverfoert
+
+
+fotgjengerNytteInklOverfoert =
+    analysePeriodeNytteFor .yearlyFotgjengerNytteInklOverfoert
 
 
 trafikantNytte : StateCalculationMethod
@@ -166,6 +172,7 @@ basicTiltakRecord specificStateFocus =
     , trafikantNytte = trafikantNytte
     , tsGevinstNytte = tsGevinstNytte
     , syklistNytteInklOverfoert = syklistNytteInklOverfoert
+    , fotgjengerNytteInklOverfoert = fotgjengerNytteInklOverfoert
     , trafikantNytteInklOverfoert = trafikantNytteInklOverfoert
     , tsGevinstNytteInklOverfoert = tsGevinstNytteInklOverfoert
     , helseGevinstNytteInklOverfoert = helseGevinstNytteInklOverfoert
@@ -177,9 +184,11 @@ basicTiltakRecord specificStateFocus =
     , nettoNytteInklOverfoert = nettoNytteInklOverfoert
     , skyggepris = \_ _ -> Nothing
     , yearlySyklistNytte = \_ _ -> Nothing
+    , yearlyFotgjengerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
     , yearlyTSGevinstNytte = \_ _ -> Just 0
     , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTSGevinstNytteInklOverfoert = \_ _ -> Nothing
     , yearlyHelsegevinstNytteInklOverfoert = \_ _ -> Nothing

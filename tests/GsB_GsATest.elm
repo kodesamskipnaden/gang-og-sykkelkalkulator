@@ -104,3 +104,52 @@ sykkelSuite =
             \() ->
                 yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
         ]
+
+
+fotgjengerSuite : Test
+fotgjengerSuite =
+    let
+        state =
+            { initialState
+                | gsB_GsA =
+                    { installationCost = Just 0 |> formattedValue
+                    , yearlyMaintenance = Just 2.22e5 |> formattedValue
+                    , sykkelturerPerYear = Just 0 |> formattedValue
+                    , gangturerPerYear = Just 5.0e4 |> formattedValue
+                    , lengdeVeiKm = Just 1 |> formattedValue
+                    , oppetidPercent = Just 0.8 |> formattedValue
+                    , preferredToGraph = ""
+                    }
+            }
+
+        expectedRecord =
+            { yearlySyklistNytte = 0
+            , yearlySyklistNytteInklOverfoert = 0
+            , yearlyTrafikantNytte = 0
+            , yearlyTrafikantNytteInklOverfoert = 3342.46
+            , yearlyHelsegevinstNytteInklOverfoert = 239600
+            , yearlyTSGevinstNytte = 41671.29
+            , yearlyTSGevinstNytteInklOverfoert = 21275.44
+            , yearlyEksterneEffekterNytteInklOverfoert = 1005.68
+            , nytte = 2371716.7
+            , nytteInklOverfoert = 7864261.6
+            , driftOgVedlihKost = -4393995.8
+            , investeringsKostInklRestverdi = 0
+            , kostUtenSkyggepris = -4393995.8
+            , skyggepris = -878799.16
+            , nettoNytte = -2901078.26
+            , nettoNytteInklOverfoert = 2591466.64
+            }
+
+        checkWithState : CheckWithStateFunction
+        checkWithState description accessor expectation =
+            test description <|
+                \() ->
+                    sendTo
+                        tiltak
+                        accessor
+                        state
+                        |> checkMaybe expectation
+    in
+    describe "GsB_GsA fotgjengervei"
+        [ tiltakSuite checkWithState expectedRecord ]

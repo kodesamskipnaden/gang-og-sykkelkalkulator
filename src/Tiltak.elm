@@ -55,6 +55,7 @@ type alias TiltakRecord =
     , trafikantNytte : StateCalculationMethod
     , tsGevinstNytte : StateCalculationMethod
     , syklistNytteInklOverfoert : StateCalculationMethod
+    , fotgjengerNytteInklOverfoert : StateCalculationMethod
     , trafikantNytteInklOverfoert : StateCalculationMethod
     , helseGevinstNytteInklOverfoert : StateCalculationMethod
     , tsGevinstNytteInklOverfoert : StateCalculationMethod
@@ -68,9 +69,11 @@ type alias TiltakRecord =
     , nettoNytte : StateCalculationMethod
     , nettoNytteInklOverfoert : StateCalculationMethod
     , yearlySyklistNytte : StateCalculationMethod
+    , yearlyFotgjengerNytte : StateCalculationMethod
     , yearlyTrafikantNytte : StateCalculationMethod
     , yearlyTSGevinstNytte : StateCalculationMethod
     , yearlySyklistNytteInklOverfoert : StateCalculationMethod
+    , yearlyFotgjengerNytteInklOverfoert : StateCalculationMethod
     , yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
     , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
     , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod

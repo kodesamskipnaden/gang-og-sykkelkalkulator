@@ -23,14 +23,6 @@ ledTidsbesparelseMinutterPerTur =
     0.5
 
 
-syklistLEDTotalReiseDistanceKm =
-    5
-
-
-fotgjengerLEDTotalReiseDistanceKm =
-    2
-
-
 levetid : number
 levetid =
     40
@@ -47,8 +39,10 @@ tiltak =
             | title = \_ -> "LED-lys for syklende og eller gående"
             , fields = \_ -> fields
             , yearlySyklistNytte = yearlySyklistNytte
+            , yearlyFotgjengerNytte = \_ _ -> Just 0
             , yearlyTSGevinstNytte = yearlyTSGevinstNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
+            , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
             , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
             , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
             , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
@@ -155,7 +149,7 @@ syklistForutsetninger ledLys =
     , tsKostnad = verdisettinger.tsKostnadSykkel
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
-    , totalReiseDistanceKm = syklistLEDTotalReiseDistanceKm
+    , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
     , brukerBedreBelysningLED = verdisettinger.sykkelBedreBelysningLED
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
     }
@@ -169,7 +163,7 @@ fotgjengerForutsetninger ledLys =
     , tsKostnad = verdisettinger.tsKostnadGange
     , eksterneKostnader = verdisettinger.eksterneKostnaderGange
     , turerPerYearMaybe = ledLys.gangturerPerYear.value
-    , totalReiseDistanceKm = fotgjengerLEDTotalReiseDistanceKm
+    , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
     , brukerBedreBelysningLED = verdisettinger.fotgjengerBedreBelysningLED
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
     }
@@ -221,10 +215,6 @@ yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
-    let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-    in
     Maybe.map3
         (\a b c -> a * b * c)
         (yearlyOverfoerteTurer this state brukerForutsetninger)
