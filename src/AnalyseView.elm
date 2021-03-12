@@ -74,7 +74,7 @@ view data =
               , text "Verdien i dag av TS-gevinster, over hele analyseperioden"
               )
             , ( "Øvrige eksterne effekter over " ++ toString data.analysePeriode ++ " år"
-              , data.tsGevinstNytte |> NumberFormat.maybePretty
+              , data.eksterneEffekterNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av eksterne effekter, over hele analyseperioden"
               )
             , ( "Sum nytteelementer over " ++ toString data.analysePeriode ++ " år"

@@ -37,7 +37,7 @@ specificState =
 
 initialState : GsB_GsAState
 initialState =
-    { installationCost = formattedValueDefault
+    { installationCost = Just 0 |> formattedValue
     , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue
@@ -91,7 +91,7 @@ fieldDefinitions =
       , title = "Tiltakets oppetid, prosent"
       , placeholder = "Andel av aktuell tidsperiode hvor nivået GsA oppfylles (mindre enn 100% pga f.eks. at det tar tid fra nedbør skjer, til GsA-standard er gjenopprettet)"
       , focus = specificState => oppetidPercent
-      , stepSize = 1
+      , stepSize = 0.1
       }
     ]
 
@@ -114,7 +114,7 @@ tiltak =
     in
     Tiltak
         { basicTiltakRecord
-            | title = \_ -> "WIP GsB til GsA"
+            | title = \_ -> "GsB til GsA"
             , fields = \_ -> fields
             , yearlySyklistNytte = yearlySyklistNytte
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
