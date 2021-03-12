@@ -306,9 +306,6 @@ yearlyTSGevinstNytteInklOverfoert this state =
 
 yearlyEksterneEffekterNytteInklOverfoertForBruker this ({ ledLys } as state) brukerForutsetninger =
     let
-        verdisettinger =
-            GeneralForutsetninger.verdisettinger
-
         nyeTurer =
             nyeTurerFra this state brukerForutsetninger
 

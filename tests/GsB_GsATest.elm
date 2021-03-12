@@ -6,7 +6,7 @@ import Maybe.Extra
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
 import Tiltak exposing (analyse, sendTo)
-import Tiltak.GsB_GsA as GsB_GsA exposing (tiltak)
+import Tiltak.GsB_GsA as GsB_GsA exposing (tiltak, yearlyOverfoerteSykkelturer)
 import TiltakAndGroupData
 
 
@@ -41,11 +41,10 @@ tiltakSuiteInProgress checkWithState expectedRecord =
                 "yearlyTSGevinstNytteInklOverfoert"
                 .yearlyTSGevinstNytteInklOverfoert
                 (closeTo expectedRecord.yearlyTSGevinstNytteInklOverfoert 2)
-
-            -- , checkWithState
-            --     "yearlyEksterneEffekterNytteInklOverfoert"
-            --     .yearlyEksterneEffekterNytteInklOverfoert
-            --     (closeTo expectedRecord.yearlyEksterneEffekterNytteInklOverfoert 2)
+            , checkWithState
+                "yearlyEksterneEffekterNytteInklOverfoert"
+                .yearlyEksterneEffekterNytteInklOverfoert
+                (closeTo expectedRecord.yearlyEksterneEffekterNytteInklOverfoert 2)
             ]
         ]
 
@@ -78,6 +77,15 @@ sykkelSuite =
             , yearlyHelsegevinstNytteInklOverfoert = 228000
             , yearlyTSGevinstNytte = 1403.56
             , yearlyTSGevinstNytteInklOverfoert = -32586.05
+            , yearlyEksterneEffekterNytteInklOverfoert = 2514.2
+            , driftOgVedlihKost = -4393995.8
+            , investeringsKostInklRestverdi = 0
+            , kostUtenSkyggepris = -4393995.8
+            , nettoNytte = -4038217.4327044
+            , nettoNytteInklOverfoert = 994558.98
+            , nytte = 1234577.53
+            , nytteInklOverfoert = 6267353.95
+            , skyggepris = -878799.16
             }
 
         checkWithState : CheckWithStateFunction
@@ -91,5 +99,8 @@ sykkelSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA sykkelvei"
-        [ tiltakSuiteInProgress checkWithState expectedRecord
+        [ tiltakSuite checkWithState expectedRecord
+        , test "overfoerteSykkelturer" <|
+            \() ->
+                yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
         ]
