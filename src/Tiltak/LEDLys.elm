@@ -132,16 +132,13 @@ tidsbesparelseMinutterPerTur =
 
 
 syklistForutsetninger ledLys =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
-    , tsGevinstTiltak = verdisettinger.tsGevinstLEDLysSyklende
-    , tsKostnad = verdisettinger.tsKostnadSykkel
-    , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
-    , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
-    , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
-    , etterspoerselsEffekt = verdisettinger.sykkelBedreBelysningLED
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    let
+        basic =
+            BasicTiltak.basicSyklistForutsetninger ledLys.sykkelturerPerYear.value
+    in
+    { basic
+        | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysSyklende
+        , etterspoerselsEffekt = verdisettinger.sykkelBedreBelysningLED
     }
 
 

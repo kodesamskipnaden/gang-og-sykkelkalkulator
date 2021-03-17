@@ -8,7 +8,7 @@ import FormattedValue
         , installationCost
         , value
         )
-import GeneralForutsetninger
+import GeneralForutsetninger exposing (verdisettinger)
 import Maybe.Extra
 import Regex
 import Tiltak exposing (..)
@@ -248,3 +248,17 @@ driftOgVedlihKost specificState =
 yearlyMaintenancePlaceholder : String
 yearlyMaintenancePlaceholder =
     "Årlige (økninger i) kostnader til drift og vedlikehold som knytter seg til dette tiltaket"
+
+
+basicSyklistForutsetninger sykkelturerPerYearMaybe =
+    { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
+    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
+    , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
+    , tsKostnad = verdisettinger.tsKostnadSykkel
+    , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
+    , turerPerYearMaybe = sykkelturerPerYearMaybe
+    , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
+    , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    , tsGevinstTiltak = 0
+    , etterspoerselsEffekt = 0
+    }

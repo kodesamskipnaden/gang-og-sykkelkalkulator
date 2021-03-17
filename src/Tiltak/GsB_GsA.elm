@@ -147,16 +147,13 @@ tidsbesparelseMinutterPerTur =
 
 
 syklistForutsetninger gsB_GsA =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
-    , tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsASyklende
-    , tsKostnad = verdisettinger.tsKostnadSykkel
-    , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
-    , turerPerYearMaybe = gsB_GsA.sykkelturerPerYear.value
-    , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
-    , etterspoerselsEffekt = verdisettinger.sykkelGsB_GsA
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    let
+        basic =
+            BasicTiltak.basicSyklistForutsetninger gsB_GsA.sykkelturerPerYear.value
+    in
+    { basic
+        | tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsASyklende
+        , etterspoerselsEffekt = verdisettinger.sykkelGsB_GsA
     }
 
 
