@@ -200,6 +200,7 @@ basicTiltakRecord specificStateFocus =
     , domId = \this -> sendTo this .title |> toDomId
     , preferredField = preferredField specificStateFocus
     , preferredToGraphFocus = specificStateFocus => preferredToGraph
+    , yearlyTrafikantNytteInklOverfoertForBruker = \_ _ _ -> Nothing
     }
 
 

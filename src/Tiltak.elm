@@ -30,6 +30,24 @@ type alias StateCalculationMethod =
     Tiltak -> TiltakStates -> Maybe Float
 
 
+type alias BrukerForutsetninger =
+    { andelNyeBrukereFraBil : Float
+    , andelNyeBrukereFraKollektivtransport : Float
+    , andelNyeBrukereGenererte : Float
+    , tsGevinstTiltak : Float
+    , tsKostnad : Float
+    , eksterneKostnader : Float
+    , turerPerYearMaybe : Maybe Float
+    , totalReiseDistanceKm : Float
+    , etterspoerselsEffekt : Float
+    , helseTSGevinstBruker : Float
+    }
+
+
+type alias BrukerforutsetningStateCalculationMethod =
+    Tiltak -> TiltakStates -> BrukerForutsetninger -> Maybe Float
+
+
 
 {-
     Some invariants
@@ -83,6 +101,7 @@ type alias TiltakRecord =
     , domId : Tiltak -> String
     , preferredField : Tiltak -> TiltakStates -> Maybe Field
     , preferredToGraphFocus : Focus TiltakStates String
+    , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
     }
 
 

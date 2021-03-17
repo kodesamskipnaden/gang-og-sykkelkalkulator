@@ -52,6 +52,7 @@ tiltak =
                         this
                         .skyggeprisHelper
                         state
+            , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
         }
 
 
@@ -195,10 +196,14 @@ yearlyTrafikantNytteInklOverfoertForBruker this ({ ledLys } as state) brukerForu
     Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
 
 
-yearlyTrafikantNytteInklOverfoert this ({ ledLys } as state) =
+yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) ({ ledLys } as state) =
+    let
+        nytte =
+            object.yearlyTrafikantNytteInklOverfoertForBruker this state
+    in
     Maybe.map2 (+)
-        (syklistForutsetninger ledLys |> yearlyTrafikantNytteInklOverfoertForBruker this state)
-        (fotgjengerForutsetninger ledLys |> yearlyTrafikantNytteInklOverfoertForBruker this state)
+        (syklistForutsetninger ledLys |> nytte)
+        (fotgjengerForutsetninger ledLys |> nytte)
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
