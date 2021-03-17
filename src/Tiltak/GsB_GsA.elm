@@ -23,7 +23,11 @@ tiltak : Tiltak
 tiltak =
     let
         basicTiltakRecord =
-            BasicTiltak.basicTiltakRecord specificState
+            BasicTiltak.basicTiltakRecord
+                { specificStateFocus = specificState
+                , syklistForutsetninger = syklistForutsetninger
+                , fotgjengerForutsetninger = fotgjengerForutsetninger
+                }
     in
     Tiltak
         { basicTiltakRecord

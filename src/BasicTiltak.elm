@@ -164,7 +164,7 @@ skyggeprisHelper this state =
         |> Maybe.map calculation
 
 
-basicTiltakRecord specificStateFocus =
+basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutsetninger } =
     { title = \_ -> "Basic tiltak"
     , fields = \_ -> []
     , syklistNytte = syklistNytte
