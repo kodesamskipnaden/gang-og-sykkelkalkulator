@@ -164,6 +164,16 @@ skyggeprisHelper this state =
         |> Maybe.map calculation
 
 
+yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) state =
+    let
+        nytte =
+            object.yearlyTrafikantNytteInklOverfoertForBruker this state
+    in
+    Maybe.map2 (+)
+        (object.syklistForutsetninger state |> nytte)
+        (object.fotgjengerForutsetninger state |> nytte)
+
+
 basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutsetninger } =
     { title = \_ -> "Basic tiltak"
     , fields = \_ -> []
@@ -189,7 +199,7 @@ basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutse
     , yearlyTSGevinstNytte = \_ _ -> Just 0
     , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
     , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
-    , yearlyTrafikantNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
     , yearlyTSGevinstNytteInklOverfoert = \_ _ -> Nothing
     , yearlyHelsegevinstNytteInklOverfoert = \_ _ -> Nothing
     , yearlyEksterneEffekterNytteInklOverfoert = \_ _ -> Nothing

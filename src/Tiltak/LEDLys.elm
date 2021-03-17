@@ -38,7 +38,6 @@ tiltak =
             , yearlyTSGevinstNytte = yearlyTSGevinstNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
-            , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
             , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
             , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
             , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
@@ -198,16 +197,6 @@ yearlyTrafikantNytteInklOverfoertForBruker this ({ ledLys } as state) brukerForu
                 (Just verdisettinger.koekostnadBiler)
     in
     Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
-
-
-yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) ({ ledLys } as state) =
-    let
-        nytte =
-            object.yearlyTrafikantNytteInklOverfoertForBruker this state
-    in
-    Maybe.map2 (+)
-        (syklistForutsetninger state |> nytte)
-        (fotgjengerForutsetninger state |> nytte)
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
