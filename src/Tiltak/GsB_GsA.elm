@@ -83,6 +83,12 @@ specificState =
         )
 
 
+fields : List Field
+fields =
+    fieldDefinitions
+        |> Field.transformToFields
+
+
 fieldDefinitions : List SimpleField
 fieldDefinitions =
     let
@@ -136,14 +142,7 @@ levetid =
     40
 
 
-fields : List Field
-fields =
-    fieldDefinitions
-        |> Field.transformToFields
-
-
-tidsbesparelsePerTur =
-    -- minutter
+tidsbesparelseMinutterPerTur =
     0.5
 
 
@@ -151,13 +150,13 @@ syklistForutsetninger gsB_GsA =
     { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
     , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
     , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
+    , tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsASyklende
     , tsKostnad = verdisettinger.tsKostnadSykkel
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = gsB_GsA.sykkelturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
-    , brukerGsB_GsA = verdisettinger.sykkelGsB_GsA
+    , etterspoerselsEffekt = verdisettinger.sykkelGsB_GsA
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
-    , tsGevinstGsB_GsA = verdisettinger.tsGevinstGsB_GsASyklende
     }
 
 
@@ -165,18 +164,18 @@ fotgjengerForutsetninger gsB_GsA =
     { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
     , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
     , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
+    , tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsAGaaende
     , tsKostnad = verdisettinger.tsKostnadGange
     , eksterneKostnader = verdisettinger.eksterneKostnaderGange
     , turerPerYearMaybe = gsB_GsA.gangturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
-    , brukerGsB_GsA = verdisettinger.fotgjengerGsB_GsA
+    , etterspoerselsEffekt = verdisettinger.fotgjengerGsB_GsA
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
-    , tsGevinstGsB_GsA = verdisettinger.tsGevinstGsB_GsAGaaende
     }
 
 
 yearlySyklistNyttePerTur antallTurer =
-    antallTurer * verdisettinger.reisetidSykkel * tidsbesparelsePerTur
+    antallTurer * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur
 
 
 yearlySyklistNytte this ({ gsB_GsA } as state) =
@@ -209,7 +208,7 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
 
 
 yearlyFotgjengerNyttePerTur antallTurer =
-    antallTurer * verdisettinger.reisetidGange * tidsbesparelsePerTur
+    antallTurer * verdisettinger.reisetidGange * tidsbesparelseMinutterPerTur
 
 
 yearlyFotgjengerNytte this ({ gsB_GsA } as state) =
@@ -294,7 +293,7 @@ yearlyTSGevinstNytteForBrukere this ({ gsB_GsA } as state) brukerForutsetninger 
             min lengde brukerForutsetninger.totalReiseDistanceKm
                 * turerPerYear
                 * brukerForutsetninger.tsKostnad
-                * brukerForutsetninger.tsGevinstGsB_GsA
+                * brukerForutsetninger.tsGevinstTiltak
                 * oppetidPercent
         )
         gsB_GsA.lengdeVeiKm.value
@@ -394,5 +393,5 @@ nyeTurerFra this ({ gsB_GsA } as state) brukerForutsetninger andelsAccessor =
     Maybe.map3
         (\a b c -> a * b * c)
         brukerForutsetninger.turerPerYearMaybe
-        (Just brukerForutsetninger.brukerGsB_GsA)
+        (Just brukerForutsetninger.etterspoerselsEffekt)
         (andelsAccessor brukerForutsetninger |> Just)

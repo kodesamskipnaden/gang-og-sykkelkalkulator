@@ -66,14 +66,26 @@ initialState =
     }
 
 
-ledTidsbesparelseMinutterPerTur : Float
-ledTidsbesparelseMinutterPerTur =
-    0.5
+specificState :
+    Focus
+        { tiltakStates
+            | ledLys : LEDLysState
+        }
+        LEDLysState
+specificState =
+    Focus.create
+        .ledLys
+        (\f tiltakStates ->
+            { tiltakStates
+                | ledLys = f tiltakStates.ledLys
+            }
+        )
 
 
-levetid : number
-levetid =
-    40
+fields : List Field
+fields =
+    fieldDefinitions
+        |> Field.transformToFields
 
 
 fieldDefinitions : List SimpleField
@@ -111,38 +123,24 @@ fieldDefinitions =
     ]
 
 
-fields : List Field
-fields =
-    fieldDefinitions
-        |> Field.transformToFields
+levetid =
+    40
 
 
-specificState :
-    Focus
-        { tiltakStates
-            | ledLys : LEDLysState
-        }
-        LEDLysState
-specificState =
-    Focus.create
-        .ledLys
-        (\f tiltakStates ->
-            { tiltakStates
-                | ledLys = f tiltakStates.ledLys
-            }
-        )
+tidsbesparelseMinutterPerTur =
+    0.5
 
 
 syklistForutsetninger ledLys =
     { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
     , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
     , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
-    , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysSyklende
+    , tsGevinstTiltak = verdisettinger.tsGevinstLEDLysSyklende
     , tsKostnad = verdisettinger.tsKostnadSykkel
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = ledLys.sykkelturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
-    , brukerBedreBelysningLED = verdisettinger.sykkelBedreBelysningLED
+    , etterspoerselsEffekt = verdisettinger.sykkelBedreBelysningLED
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
     }
 
@@ -151,18 +149,18 @@ fotgjengerForutsetninger ledLys =
     { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
     , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
     , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
-    , tsGevinstLEDLys = verdisettinger.tsGevinstLEDLysGaaende
+    , tsGevinstTiltak = verdisettinger.tsGevinstLEDLysGaaende
     , tsKostnad = verdisettinger.tsKostnadGange
     , eksterneKostnader = verdisettinger.eksterneKostnaderGange
     , turerPerYearMaybe = ledLys.gangturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
-    , brukerBedreBelysningLED = verdisettinger.fotgjengerBedreBelysningLED
+    , etterspoerselsEffekt = verdisettinger.fotgjengerBedreBelysningLED
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
     }
 
 
 yearlySyklistNyttePerTur antallTurer =
-    antallTurer * verdisettinger.reisetidSykkel * ledTidsbesparelseMinutterPerTur
+    antallTurer * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur
 
 
 yearlySyklistNytte : StateCalculationMethod
@@ -239,16 +237,16 @@ yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
             nyeTurerFraBil
                 * (verdisettinger.tsKostnadBil
                     - brukerForutsetninger.tsKostnad
-                    * (1 - brukerForutsetninger.tsGevinstLEDLys)
+                    * (1 - brukerForutsetninger.tsGevinstTiltak)
                   )
                 + nyeTurerFraKollektiv
                 * (verdisettinger.tsKostnadKollektiv
                     - brukerForutsetninger.tsKostnad
-                    * (1 - brukerForutsetninger.tsGevinstLEDLys)
+                    * (1 - brukerForutsetninger.tsGevinstTiltak)
                   )
                 - nyeTurerFraGenererte
                 * brukerForutsetninger.tsKostnad
-                * (1 - brukerForutsetninger.tsGevinstLEDLys)
+                * (1 - brukerForutsetninger.tsGevinstTiltak)
     in
     Maybe.map2 (*)
         (Just brukerForutsetninger.totalReiseDistanceKm)
@@ -266,7 +264,7 @@ yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
             min lengde brukerForutsetninger.totalReiseDistanceKm
                 * turerPerYear
                 * brukerForutsetninger.tsKostnad
-                * brukerForutsetninger.tsGevinstLEDLys
+                * brukerForutsetninger.tsGevinstTiltak
         )
         brukerForutsetninger.turerPerYearMaybe
         ledLys.lengdeVeiKm.value
@@ -338,7 +336,7 @@ nyeTurerFra this ({ ledLys } as state) brukerForutsetninger andelsAccessor =
     Maybe.map3
         (\a b c -> a * b * c)
         brukerForutsetninger.turerPerYearMaybe
-        (Just brukerForutsetninger.brukerBedreBelysningLED)
+        (Just brukerForutsetninger.etterspoerselsEffekt)
         (andelsAccessor brukerForutsetninger |> Just)
 
 
