@@ -201,6 +201,8 @@ basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutse
     , preferredField = preferredField specificStateFocus
     , preferredToGraphFocus = specificStateFocus => preferredToGraph
     , yearlyTrafikantNytteInklOverfoertForBruker = \_ _ _ -> Nothing
+    , syklistForutsetninger = syklistForutsetninger
+    , fotgjengerForutsetninger = fotgjengerForutsetninger
     }
 
 

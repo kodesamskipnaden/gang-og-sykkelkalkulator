@@ -48,6 +48,10 @@ type alias BrukerforutsetningStateCalculationMethod =
     Tiltak -> TiltakStates -> BrukerForutsetninger -> Maybe Float
 
 
+type alias CreateBrukerforutsetninger =
+    TiltakStates -> BrukerForutsetninger
+
+
 
 {-
     Some invariants
@@ -102,6 +106,8 @@ type alias TiltakRecord =
     , preferredField : Tiltak -> TiltakStates -> Maybe Field
     , preferredToGraphFocus : Focus TiltakStates String
     , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+    , syklistForutsetninger : CreateBrukerforutsetninger
+    , fotgjengerForutsetninger : CreateBrukerforutsetninger
     }
 
 
