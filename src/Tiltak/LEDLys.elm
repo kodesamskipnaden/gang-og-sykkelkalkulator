@@ -9,6 +9,7 @@ import FormattedValue
         , formattedValueDefault
         , gangturerPerYear
         , installationCost
+        , lengdeVeiKm
         , sykkelturerPerYear
         , value
         , yearlyMaintenance
@@ -16,16 +17,6 @@ import FormattedValue
 import GeneralForutsetninger exposing (verdisettinger)
 import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
-
-
-ledTidsbesparelseMinutterPerTur : Float
-ledTidsbesparelseMinutterPerTur =
-    0.5
-
-
-levetid : number
-levetid =
-    40
 
 
 tiltak : Tiltak
@@ -75,17 +66,18 @@ initialState =
     }
 
 
+ledTidsbesparelseMinutterPerTur : Float
+ledTidsbesparelseMinutterPerTur =
+    0.5
+
+
+levetid : number
+levetid =
+    40
+
+
 fieldDefinitions : List SimpleField
 fieldDefinitions =
-    let
-        lengdeVeiKm =
-            Focus.create .lengdeVeiKm
-                (\f specificState ->
-                    { specificState
-                        | lengdeVeiKm = f specificState.lengdeVeiKm
-                    }
-                )
-    in
     [ { name = "installationCost"
       , title = "Installasjonskostnad"
       , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"

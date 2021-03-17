@@ -19,6 +19,54 @@ import SpecificStates exposing (GsB_GsAState)
 import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
+tiltak : Tiltak
+tiltak =
+    let
+        basicTiltakRecord =
+            BasicTiltak.basicTiltakRecord specificState
+    in
+    Tiltak
+        { basicTiltakRecord
+            | title = \_ -> "GsB til GsA"
+            , fields = \_ -> fields
+            , yearlySyklistNytte = yearlySyklistNytte
+            , yearlyFotgjengerNytte = yearlyFotgjengerNytte
+            , yearlyTSGevinstNytte = yearlyTSGevinstNytte
+            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
+            , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
+            , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
+            , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
+            , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
+            , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
+            , investeringsKostInklRestverdi =
+                \_ { gsB_GsA } ->
+                    BasicTiltak.investeringsKostInklRestverdi
+                        gsB_GsA
+                        levetid
+            , driftOgVedlihKost =
+                \_ { gsB_GsA } ->
+                    BasicTiltak.driftOgVedlihKost gsB_GsA
+            , skyggepris =
+                \this state ->
+                    sendTo
+                        this
+                        .skyggeprisHelper
+                        state
+        }
+
+
+initialState : GsB_GsAState
+initialState =
+    { installationCost = Just 0 |> formattedValue
+    , yearlyMaintenance = formattedValueDefault
+    , sykkelturerPerYear = Just 0 |> formattedValue
+    , gangturerPerYear = Just 0 |> formattedValue
+    , lengdeVeiKm = formattedValueDefault
+    , oppetidPercent = Just 0.8 |> formattedValue
+    , preferredToGraph = ""
+    }
+
+
 specificState :
     Focus
         { tiltakStates
@@ -33,18 +81,6 @@ specificState =
                 | gsB_GsA = f tiltakStates.gsB_GsA
             }
         )
-
-
-initialState : GsB_GsAState
-initialState =
-    { installationCost = Just 0 |> formattedValue
-    , yearlyMaintenance = formattedValueDefault
-    , sykkelturerPerYear = Just 0 |> formattedValue
-    , gangturerPerYear = Just 0 |> formattedValue
-    , lengdeVeiKm = formattedValueDefault
-    , oppetidPercent = Just 0.8 |> formattedValue
-    , preferredToGraph = ""
-    }
 
 
 fieldDefinitions : List SimpleField
@@ -104,42 +140,6 @@ fields : List Field
 fields =
     fieldDefinitions
         |> Field.transformToFields
-
-
-tiltak : Tiltak
-tiltak =
-    let
-        basicTiltakRecord =
-            BasicTiltak.basicTiltakRecord specificState
-    in
-    Tiltak
-        { basicTiltakRecord
-            | title = \_ -> "GsB til GsA"
-            , fields = \_ -> fields
-            , yearlySyklistNytte = yearlySyklistNytte
-            , yearlyFotgjengerNytte = yearlyFotgjengerNytte
-            , yearlyTSGevinstNytte = yearlyTSGevinstNytte
-            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
-            , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
-            , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
-            , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
-            , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
-            , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
-            , investeringsKostInklRestverdi =
-                \_ { gsB_GsA } ->
-                    BasicTiltak.investeringsKostInklRestverdi
-                        gsB_GsA
-                        levetid
-            , driftOgVedlihKost =
-                \_ { gsB_GsA } ->
-                    BasicTiltak.driftOgVedlihKost gsB_GsA
-            , skyggepris =
-                \this state ->
-                    sendTo
-                        this
-                        .skyggeprisHelper
-                        state
-        }
 
 
 tidsbesparelsePerTur =
