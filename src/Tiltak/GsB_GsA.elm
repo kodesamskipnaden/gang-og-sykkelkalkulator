@@ -178,6 +178,7 @@ yearlySyklistNyttePerTur antallTurer =
     antallTurer * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur
 
 
+yearlySyklistNytte : StateCalculationMethod
 yearlySyklistNytte this ({ gsB_GsA } as state) =
     Maybe.map2
         (\a b -> a * yearlySyklistNyttePerTur b)
@@ -185,10 +186,7 @@ yearlySyklistNytte this ({ gsB_GsA } as state) =
         gsB_GsA.sykkelturerPerYear.value
 
 
-yearlyOverfoerteSykkelturer this ({ gsB_GsA } as state) =
-    syklistForutsetninger gsB_GsA |> yearlyOverfoerteTurer this state
-
-
+yearlySyklistNytteInklOverfoert : StateCalculationMethod
 yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
     let
         receiver =
@@ -199,45 +197,10 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\antallTurer oppetidPercent ->
                     oppetidPercent * (yearlySyklistNyttePerTur antallTurer / 2)
                 )
-                (syklistForutsetninger gsB_GsA |> yearlyOverfoerteTurer this state)
+                (syklistForutsetninger gsB_GsA |> yearlyOverfoerteTurer this)
                 gsB_GsA.oppetidPercent.value
     in
-    Maybe.map2 (+)
-        (receiver .yearlySyklistNytte)
-        overfoertNytte
-
-
-yearlyFotgjengerNyttePerTur antallTurer =
-    antallTurer * verdisettinger.reisetidGange * tidsbesparelseMinutterPerTur
-
-
-yearlyFotgjengerNytte this ({ gsB_GsA } as state) =
-    Maybe.map2
-        (\a b -> a * yearlyFotgjengerNyttePerTur b)
-        gsB_GsA.oppetidPercent.value
-        gsB_GsA.gangturerPerYear.value
-
-
-yearlyGangturer this ({ gsB_GsA } as state) =
-    fotgjengerForutsetninger gsB_GsA |> yearlyOverfoerteTurer this state
-
-
-yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
-    let
-        receiver =
-            bindTiltak this state
-
-        overfoertNytte =
-            Maybe.map2
-                (\antallTurer oppetidPercent ->
-                    oppetidPercent * (yearlyFotgjengerNyttePerTur antallTurer / 2)
-                )
-                (fotgjengerForutsetninger gsB_GsA |> yearlyOverfoerteTurer this state)
-                gsB_GsA.oppetidPercent.value
-    in
-    Maybe.map2 (+)
-        (receiver .yearlyFotgjengerNytte)
-        overfoertNytte
+    Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
 
 
 yearlyTrafikantNytteInklOverfoertForBruker this ({ gsB_GsA } as state) brukerForutsetninger =
@@ -249,7 +212,7 @@ yearlyTrafikantNytteInklOverfoertForBruker this ({ gsB_GsA } as state) brukerFor
             Maybe.map4 (\a b c d -> a * b * c * d)
                 gsB_GsA.oppetidPercent.value
                 (Just brukerForutsetninger.totalReiseDistanceKm)
-                (nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraBil)
+                (nyeTurerFra this brukerForutsetninger .andelNyeBrukereFraBil)
                 (Just verdisettinger.koekostnadBiler)
     in
     Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
@@ -257,27 +220,27 @@ yearlyTrafikantNytteInklOverfoertForBruker this ({ gsB_GsA } as state) brukerFor
 
 yearlyTrafikantNytteInklOverfoert this ({ gsB_GsA } as state) =
     Maybe.map2 (+)
-        (fotgjengerForutsetninger gsB_GsA |> yearlyTrafikantNytteInklOverfoertForBruker this state)
         (syklistForutsetninger gsB_GsA |> yearlyTrafikantNytteInklOverfoertForBruker this state)
-
-
-yearlyHelsegevinstNytteInklOverfoert this ({ gsB_GsA } as state) =
-    Maybe.map2 (+)
-        (fotgjengerForutsetninger gsB_GsA
-            |> yearlyHelsegevinstNytteInklOverfoertForBruker this state
-        )
-        (syklistForutsetninger gsB_GsA
-            |> yearlyHelsegevinstNytteInklOverfoertForBruker this state
-        )
+        (fotgjengerForutsetninger gsB_GsA |> yearlyTrafikantNytteInklOverfoertForBruker this state)
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this ({ gsB_GsA } as state) brukerForutsetninger =
     Maybe.map4
         (\a b c d -> a * b * c * d)
         gsB_GsA.oppetidPercent.value
-        (yearlyOverfoerteTurer this state brukerForutsetninger)
+        (yearlyOverfoerteTurer this brukerForutsetninger)
         (Just brukerForutsetninger.totalReiseDistanceKm)
         (Just brukerForutsetninger.helseTSGevinstBruker)
+
+
+yearlyHelsegevinstNytteInklOverfoert this state =
+    Maybe.map2 (+)
+        (syklistForutsetninger state.gsB_GsA
+            |> yearlyHelsegevinstNytteInklOverfoertForBruker this state
+        )
+        (fotgjengerForutsetninger state.gsB_GsA
+            |> yearlyHelsegevinstNytteInklOverfoertForBruker this state
+        )
 
 
 yearlyTSGevinstNytte : StateCalculationMethod
@@ -301,10 +264,23 @@ yearlyTSGevinstNytteForBrukere this ({ gsB_GsA } as state) brukerForutsetninger 
         gsB_GsA.oppetidPercent.value
 
 
+yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
+yearlyTSGevinstNytteInklOverfoert this state =
+    Maybe.map2 (+)
+        (yearlyTSGevinstNytte this state)
+        (yearlyTSGevinstNytteOverfoert this state)
+
+
+yearlyTSGevinstNytteOverfoert this ({ gsB_GsA } as state) =
+    Maybe.map2 (+)
+        (fotgjengerForutsetninger gsB_GsA |> yearlyTSGevinstNytteOverfoertForBrukere this state)
+        (syklistForutsetninger gsB_GsA |> yearlyTSGevinstNytteOverfoertForBrukere this state)
+
+
 yearlyTSGevinstNytteOverfoertForBrukere this ({ gsB_GsA } as state) brukerForutsetninger =
     let
         nyeTurerFunc =
-            nyeTurerFra this state brukerForutsetninger
+            nyeTurerFra this brukerForutsetninger
 
         beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
             nyeTurerFraBil
@@ -330,22 +306,10 @@ yearlyTSGevinstNytteOverfoertForBrukere this ({ gsB_GsA } as state) brukerForuts
         )
 
 
-yearlyTSGevinstNytteOverfoert this ({ gsB_GsA } as state) =
-    Maybe.map2 (+)
-        (fotgjengerForutsetninger gsB_GsA |> yearlyTSGevinstNytteOverfoertForBrukere this state)
-        (syklistForutsetninger gsB_GsA |> yearlyTSGevinstNytteOverfoertForBrukere this state)
-
-
-yearlyTSGevinstNytteInklOverfoert this state =
-    Maybe.map2 (+)
-        (yearlyTSGevinstNytte this state)
-        (yearlyTSGevinstNytteOverfoert this state)
-
-
 yearlyEksterneEffekterNytteInklOverfoertForBruker this ({ gsB_GsA } as state) brukerForutsetninger =
     let
         nyeTurer =
-            nyeTurerFra this state brukerForutsetninger
+            nyeTurerFra this brukerForutsetninger
 
         overfoertFraBilNyttePerKm nyeTurerFraBil =
             nyeTurerFraBil
@@ -374,14 +338,19 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker this ({ gsB_GsA } as state) br
 
 yearlyEksterneEffekterNytteInklOverfoert this ({ gsB_GsA } as state) =
     Maybe.map2 (+)
-        (fotgjengerForutsetninger gsB_GsA |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
         (syklistForutsetninger gsB_GsA |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
+        (fotgjengerForutsetninger gsB_GsA |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
 
 
-yearlyOverfoerteTurer this state brukerForutsetninger =
+yearlyOverfoerteSykkelturer : StateCalculationMethod
+yearlyOverfoerteSykkelturer this state =
+    syklistForutsetninger state.gsB_GsA |> yearlyOverfoerteTurer this
+
+
+yearlyOverfoerteTurer this brukerForutsetninger =
     let
         receiver =
-            nyeTurerFra this state brukerForutsetninger
+            nyeTurerFra this brukerForutsetninger
     in
     Maybe.map3 (\a b c -> a + b + c)
         (receiver .andelNyeBrukereFraBil)
@@ -389,9 +358,42 @@ yearlyOverfoerteTurer this state brukerForutsetninger =
         (receiver .andelNyeBrukereGenererte)
 
 
-nyeTurerFra this ({ gsB_GsA } as state) brukerForutsetninger andelsAccessor =
+nyeTurerFra this brukerForutsetninger andelsAccessor =
     Maybe.map3
         (\a b c -> a * b * c)
         brukerForutsetninger.turerPerYearMaybe
         (Just brukerForutsetninger.etterspoerselsEffekt)
         (andelsAccessor brukerForutsetninger |> Just)
+
+
+yearlyFotgjengerNyttePerTur antallTurer =
+    antallTurer * verdisettinger.reisetidGange * tidsbesparelseMinutterPerTur
+
+
+yearlyFotgjengerNytte this ({ gsB_GsA } as state) =
+    Maybe.map2
+        (\a b -> a * yearlyFotgjengerNyttePerTur b)
+        gsB_GsA.oppetidPercent.value
+        gsB_GsA.gangturerPerYear.value
+
+
+yearlyGangturer this ({ gsB_GsA } as state) =
+    fotgjengerForutsetninger gsB_GsA |> yearlyOverfoerteTurer this
+
+
+yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
+    let
+        receiver =
+            bindTiltak this state
+
+        overfoertNytte =
+            Maybe.map2
+                (\antallTurer oppetidPercent ->
+                    oppetidPercent * (yearlyFotgjengerNyttePerTur antallTurer / 2)
+                )
+                (fotgjengerForutsetninger gsB_GsA |> yearlyOverfoerteTurer this)
+                gsB_GsA.oppetidPercent.value
+    in
+    Maybe.map2 (+)
+        (receiver .yearlyFotgjengerNytte)
+        overfoertNytte
