@@ -226,6 +226,22 @@ nyeTurerFra this brukerForutsetninger andelsAccessor =
         (andelsAccessor brukerForutsetninger |> Just)
 
 
+yearlyOverfoerteSykkelturer : StateCalculationMethod
+yearlyOverfoerteSykkelturer ((Tiltak object) as this) state =
+    object.syklistForutsetninger state |> yearlyOverfoerteTurer this
+
+
+yearlyOverfoerteTurer this brukerForutsetninger =
+    let
+        receiver =
+            nyeTurerFra this brukerForutsetninger
+    in
+    Maybe.map3 (\a b c -> a + b + c)
+        (receiver .andelNyeBrukereFraBil)
+        (receiver .andelNyeBrukereFraKollektivtransport)
+        (receiver .andelNyeBrukereGenererte)
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte

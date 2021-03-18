@@ -1,12 +1,13 @@
 module GsB_GsATest exposing (..)
 
+import BasicTiltak exposing (yearlyOverfoerteSykkelturer)
 import Expect exposing (FloatingPointTolerance(..))
 import FormattedValue exposing (formattedValue)
 import Maybe.Extra
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
 import Tiltak exposing (analyse, sendTo)
-import Tiltak.GsB_GsA as GsB_GsA exposing (tiltak, yearlyOverfoerteSykkelturer)
+import Tiltak.GsB_GsA as GsB_GsA exposing (tiltak)
 import TiltakAndGroupData
 
 

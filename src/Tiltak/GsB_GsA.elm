@@ -196,7 +196,7 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\antallTurer oppetidPercent ->
                     oppetidPercent * (yearlySyklistNyttePerTur antallTurer / 2)
                 )
-                (syklistForutsetninger state |> yearlyOverfoerteTurer this)
+                (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this)
                 gsB_GsA.oppetidPercent.value
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
@@ -221,7 +221,7 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this { gsB_GsA } brukerForutsetnin
     Maybe.map4
         (\a b c d -> a * b * c * d)
         gsB_GsA.oppetidPercent.value
-        (yearlyOverfoerteTurer this brukerForutsetninger)
+        (BasicTiltak.yearlyOverfoerteTurer this brukerForutsetninger)
         (Just brukerForutsetninger.totalReiseDistanceKm)
         (Just brukerForutsetninger.helseTSGevinstBruker)
 
@@ -299,22 +299,6 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker this { gsB_GsA } brukerForutse
         )
 
 
-yearlyOverfoerteSykkelturer : StateCalculationMethod
-yearlyOverfoerteSykkelturer this state =
-    syklistForutsetninger state |> yearlyOverfoerteTurer this
-
-
-yearlyOverfoerteTurer this brukerForutsetninger =
-    let
-        receiver =
-            BasicTiltak.nyeTurerFra this brukerForutsetninger
-    in
-    Maybe.map3 (\a b c -> a + b + c)
-        (receiver .andelNyeBrukereFraBil)
-        (receiver .andelNyeBrukereFraKollektivtransport)
-        (receiver .andelNyeBrukereGenererte)
-
-
 yearlyFotgjengerNyttePerTur antallTurer =
     antallTurer * verdisettinger.reisetidGange * tidsbesparelseMinutterPerTur
 
@@ -327,7 +311,7 @@ yearlyFotgjengerNytte this { gsB_GsA } =
 
 
 yearlyGangturer this state =
-    fotgjengerForutsetninger state |> yearlyOverfoerteTurer this
+    fotgjengerForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this
 
 
 yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
@@ -340,7 +324,7 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\antallTurer oppetidPercent ->
                     oppetidPercent * (yearlyFotgjengerNyttePerTur antallTurer / 2)
                 )
-                (fotgjengerForutsetninger state |> yearlyOverfoerteTurer this)
+                (fotgjengerForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this)
                 gsB_GsA.oppetidPercent.value
     in
     Maybe.map2 (+)

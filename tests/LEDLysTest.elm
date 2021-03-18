@@ -1,12 +1,13 @@
 module LEDLysTest exposing (..)
 
+import BasicTiltak exposing (yearlyOverfoerteSykkelturer)
 import Expect
 import FormattedValue exposing (formattedValue)
 import Maybe.Extra
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
 import Tiltak exposing (analyse, sendTo)
-import Tiltak.LEDLys as LEDLys exposing (tiltak, yearlyOverfoerteSykkelturer)
+import Tiltak.LEDLys as LEDLys exposing (tiltak)
 import TiltakAndGroupData
 
 

@@ -178,7 +178,7 @@ yearlySyklistNytteInklOverfoert this state =
                 (\antallTurer ->
                     yearlySyklistNyttePerTur antallTurer / 2
                 )
-                (syklistForutsetninger state |> yearlyOverfoerteTurer this)
+                (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this)
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
 
@@ -200,7 +200,7 @@ yearlyTrafikantNytteInklOverfoertForBruker this state brukerForutsetninger =
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
     Maybe.map3
         (\a b c -> a * b * c)
-        (yearlyOverfoerteTurer this brukerForutsetninger)
+        (BasicTiltak.yearlyOverfoerteTurer this brukerForutsetninger)
         (Just brukerForutsetninger.totalReiseDistanceKm)
         (Just brukerForutsetninger.helseTSGevinstBruker)
 
@@ -271,19 +271,3 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker this state brukerForutsetninge
     Maybe.map2 nytte
         (nyeTurer .andelNyeBrukereFraBil)
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
-
-
-yearlyOverfoerteSykkelturer : StateCalculationMethod
-yearlyOverfoerteSykkelturer this state =
-    syklistForutsetninger state |> yearlyOverfoerteTurer this
-
-
-yearlyOverfoerteTurer this brukerForutsetninger =
-    let
-        receiver =
-            BasicTiltak.nyeTurerFra this brukerForutsetninger
-    in
-    Maybe.map3 (\a b c -> a + b + c)
-        (receiver .andelNyeBrukereFraBil)
-        (receiver .andelNyeBrukereFraKollektivtransport)
-        (receiver .andelNyeBrukereGenererte)
