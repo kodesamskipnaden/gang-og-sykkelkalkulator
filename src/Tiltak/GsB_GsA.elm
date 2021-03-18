@@ -31,7 +31,6 @@ tiltak =
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
-            , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
             , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
             , investeringsKostInklRestverdi =
                 \_ { gsB_GsA } ->
@@ -54,6 +53,8 @@ tiltakRecordImplementation =
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
+    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
+    , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     }
 
 
@@ -238,19 +239,6 @@ yearlyTSGevinstNytteForBrukere this { gsB_GsA } brukerForutsetninger =
         gsB_GsA.lengdeVeiKm.value
         brukerForutsetninger.turerPerYearMaybe
         gsB_GsA.oppetidPercent.value
-
-
-yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
-yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
-    Maybe.map2 (+)
-        (object.yearlyTSGevinstNytte this state)
-        (yearlyTSGevinstNytteOverfoert this state)
-
-
-yearlyTSGevinstNytteOverfoert this state =
-    Maybe.map2 (+)
-        (syklistForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
-        (fotgjengerForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =

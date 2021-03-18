@@ -191,6 +191,23 @@ yearlyTSGevinstNytte ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger state |> object.yearlyTSGevinstNytteForBrukere this state)
 
 
+yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
+    let
+        nytte =
+            object.yearlyTSGevinstNytteOverfoertForBrukere this state
+    in
+    Maybe.map2 (+)
+        (object.syklistForutsetninger state |> nytte)
+        (object.fotgjengerForutsetninger state |> nytte)
+
+
+yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
+yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
+    Maybe.map2 (+)
+        (object.yearlyTSGevinstNytte this state)
+        (object.yearlyTSGevinstNytteOverfoert this state)
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -211,6 +228,7 @@ defaults =
     , graphId = \this -> sendTo this .domId |> (++) "c3graph"
     , domId = \this -> sendTo this .title |> toDomId
     , skyggepris = skyggeprisHelper
+    , yearlyTSGevinstNytteOverfoert = yearlyTSGevinstNytteOverfoert
     }
 
 
@@ -232,6 +250,7 @@ basicTiltakRecord hooks =
     , nettoNytte = defaults.nettoNytte
     , nettoNytteInklOverfoert = defaults.nettoNytteInklOverfoert
     , skyggeprisHelper = defaults.skyggeprisHelper
+    , yearlyTSGevinstNytteOverfoert = defaults.yearlyTSGevinstNytteOverfoert
     , graphId = defaults.graphId
     , domId = defaults.domId
     , skyggepris = defaults.skyggepris
@@ -242,7 +261,7 @@ basicTiltakRecord hooks =
     , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
     , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
-    , yearlyTSGevinstNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
     , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
     , yearlyEksterneEffekterNytteInklOverfoert = \_ _ -> Nothing
     , driftOgVedlihKost = \_ _ -> Nothing
@@ -254,6 +273,8 @@ basicTiltakRecord hooks =
     , yearlyTrafikantNytteInklOverfoertForBruker = hooks.yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyHelsegevinstNytteInklOverfoertForBruker = hooks.yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = hooks.yearlyTSGevinstNytteForBrukere
+    , yearlyTSGevinstNytteOverfoertForBrukere = hooks.yearlyTSGevinstNytteOverfoertForBrukere
+    , yearlyEksterneEffekterNytteInklOverfoertForBruker = hooks.yearlyEksterneEffekterNytteInklOverfoertForBruker
     , syklistForutsetninger = hooks.syklistForutsetninger
     , fotgjengerForutsetninger = hooks.fotgjengerForutsetninger
     }

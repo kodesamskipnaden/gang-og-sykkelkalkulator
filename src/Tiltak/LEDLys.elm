@@ -31,7 +31,6 @@ tiltak =
             , yearlyFotgjengerNytte = \_ _ -> Just 0
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
-            , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
             , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
             , investeringsKostInklRestverdi =
                 \_ { ledLys } ->
@@ -54,6 +53,8 @@ tiltakRecordImplementation =
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
+    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
+    , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     }
 
 
@@ -217,19 +218,6 @@ yearlyTSGevinstNytteForBrukere this { ledLys } brukerForutsetninger =
         ledLys.lengdeVeiKm.value
 
 
-yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
-yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
-    Maybe.map2 (+)
-        (object.yearlyTSGevinstNytte this state)
-        (yearlyTSGevinstNytteOverfoert this state)
-
-
-yearlyTSGevinstNytteOverfoert this state =
-    Maybe.map2 (+)
-        (syklistForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
-        (fotgjengerForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
-
-
 yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
     let
         nyeTurerFunc =
@@ -286,10 +274,10 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker this state brukerForutsetninge
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
 
 
-yearlyEksterneEffekterNytteInklOverfoert this state =
+yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
     Maybe.map2 (+)
-        (syklistForutsetninger state |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
-        (fotgjengerForutsetninger state |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
+        (object.syklistForutsetninger state |> object.yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
+        (object.fotgjengerForutsetninger state |> object.yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
 
 
 yearlyOverfoerteSykkelturer : StateCalculationMethod
