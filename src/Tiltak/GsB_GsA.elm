@@ -31,14 +31,6 @@ tiltak =
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
-            , investeringsKostInklRestverdi =
-                \_ { gsB_GsA } ->
-                    BasicTiltak.investeringsKostInklRestverdi
-                        gsB_GsA
-                        levetid
-            , driftOgVedlihKost =
-                \_ { gsB_GsA } ->
-                    BasicTiltak.driftOgVedlihKost gsB_GsA
         }
 
 
@@ -47,6 +39,14 @@ tiltakRecordImplementation =
     { title = \_ -> "GsB til GsA"
     , fields = \_ -> fields
     , specificStateFocus = specificState
+    , investeringsKostInklRestverdi =
+        \_ { gsB_GsA } ->
+            BasicTiltak.investeringsKostInklRestverdi
+                gsB_GsA
+                levetid
+    , driftOgVedlihKost =
+        \_ { gsB_GsA } ->
+            BasicTiltak.driftOgVedlihKost gsB_GsA
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
@@ -160,16 +160,13 @@ syklistForutsetninger { gsB_GsA } =
 
 
 fotgjengerForutsetninger { gsB_GsA } =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
-    , tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsAGaaende
-    , tsKostnad = verdisettinger.tsKostnadGange
-    , eksterneKostnader = verdisettinger.eksterneKostnaderGange
-    , turerPerYearMaybe = gsB_GsA.gangturerPerYear.value
-    , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
-    , etterspoerselsEffekt = verdisettinger.fotgjengerGsB_GsA
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
+    let
+        basic =
+            BasicTiltak.basicFotgjengerForutsetninger gsB_GsA.gangturerPerYear.value
+    in
+    { basic
+        | tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsAGaaende
+        , etterspoerselsEffekt = verdisettinger.fotgjengerGsB_GsA
     }
 
 

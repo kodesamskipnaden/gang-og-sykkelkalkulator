@@ -298,12 +298,12 @@ basicTiltakRecord hooks =
     , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
     , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
     , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
-    , driftOgVedlihKost = \_ _ -> Nothing
-    , investeringsKostInklRestverdi = \_ _ -> Nothing
     , title = hooks.title
     , fields = hooks.fields
     , preferredField = preferredField hooks.specificStateFocus
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
+    , driftOgVedlihKost = hooks.driftOgVedlihKost
+    , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
     , yearlyTrafikantNytteInklOverfoertForBruker = hooks.yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyHelsegevinstNytteInklOverfoertForBruker = hooks.yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = hooks.yearlyTSGevinstNytteForBrukere
@@ -370,6 +370,20 @@ basicSyklistForutsetninger sykkelturerPerYearMaybe =
     , turerPerYearMaybe = sykkelturerPerYearMaybe
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    , tsGevinstTiltak = 0
+    , etterspoerselsEffekt = 0
+    }
+
+
+basicFotgjengerForutsetninger gangturerPerYearMaybe =
+    { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
+    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
+    , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
+    , tsKostnad = verdisettinger.tsKostnadGange
+    , eksterneKostnader = verdisettinger.eksterneKostnaderGange
+    , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
+    , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
+    , turerPerYearMaybe = gangturerPerYearMaybe
     , tsGevinstTiltak = 0
     , etterspoerselsEffekt = 0
     }

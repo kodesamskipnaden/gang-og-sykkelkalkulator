@@ -72,6 +72,8 @@ type alias CreateBrukerforutsetninger =
 type alias TiltakRecordHooks =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
+    , driftOgVedlihKost : StateCalculationMethod
+    , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : CreateBrukerforutsetninger
     , fotgjengerForutsetninger : CreateBrukerforutsetninger
     , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
@@ -104,8 +106,6 @@ type alias TiltakRecordPartial a =
         , eksterneEffekterNytteInklOverfoert : StateCalculationMethod
         , nytte : StateCalculationMethod
         , nytteInklOverfoert : StateCalculationMethod
-        , driftOgVedlihKost : StateCalculationMethod
-        , investeringsKostInklRestverdi : StateCalculationMethod
         , skyggepris : StateCalculationMethod
         , kostUtenSkyggepris : StateCalculationMethod
         , nettoNytte : StateCalculationMethod

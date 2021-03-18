@@ -31,14 +31,6 @@ tiltak =
             , yearlyFotgjengerNytte = \_ _ -> Just 0
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
-            , investeringsKostInklRestverdi =
-                \_ { ledLys } ->
-                    BasicTiltak.investeringsKostInklRestverdi
-                        ledLys
-                        levetid
-            , driftOgVedlihKost =
-                \_ { ledLys } ->
-                    BasicTiltak.driftOgVedlihKost ledLys
         }
 
 
@@ -47,6 +39,14 @@ tiltakRecordImplementation =
     { title = \_ -> "LED-lys for syklende og eller gående"
     , fields = \_ -> fields
     , specificStateFocus = specificState
+    , investeringsKostInklRestverdi =
+        \_ { ledLys } ->
+            BasicTiltak.investeringsKostInklRestverdi
+                ledLys
+                levetid
+    , driftOgVedlihKost =
+        \_ { ledLys } ->
+            BasicTiltak.driftOgVedlihKost ledLys
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
@@ -145,16 +145,13 @@ syklistForutsetninger { ledLys } =
 
 
 fotgjengerForutsetninger { ledLys } =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
-    , tsGevinstTiltak = verdisettinger.tsGevinstLEDLysGaaende
-    , tsKostnad = verdisettinger.tsKostnadGange
-    , eksterneKostnader = verdisettinger.eksterneKostnaderGange
-    , turerPerYearMaybe = ledLys.gangturerPerYear.value
-    , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
-    , etterspoerselsEffekt = verdisettinger.fotgjengerBedreBelysningLED
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
+    let
+        basic =
+            BasicTiltak.basicFotgjengerForutsetninger ledLys.gangturerPerYear.value
+    in
+    { basic
+        | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysGaaende
+        , etterspoerselsEffekt = verdisettinger.fotgjengerBedreBelysningLED
     }
 
 
