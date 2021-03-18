@@ -174,10 +174,18 @@ yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger state |> nytte)
 
 
-basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutsetninger } =
-    { title = \_ -> "Basic tiltak"
-    , fields = \_ -> []
-    , syklistNytte = syklistNytte
+yearlyHelsegevinstNytteInklOverfoert ((Tiltak object) as this) state =
+    let
+        nytte =
+            object.yearlyHelsegevinstNytteInklOverfoertForBruker this state
+    in
+    Maybe.map2 (+)
+        (object.syklistForutsetninger state |> nytte)
+        (object.fotgjengerForutsetninger state |> nytte)
+
+
+defaults =
+    { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
     , trafikantNytte = trafikantNytte
     , tsGevinstNytte = tsGevinstNytte
@@ -192,7 +200,35 @@ basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutse
     , kostUtenSkyggepris = kostUtenSkyggepris
     , nettoNytte = nettoNytte
     , nettoNytteInklOverfoert = nettoNytteInklOverfoert
-    , skyggepris = \_ _ -> Nothing
+    , skyggeprisHelper = skyggeprisHelper
+    , graphId = \this -> sendTo this .domId |> (++) "c3graph"
+    , domId = \this -> sendTo this .title |> toDomId
+    , skyggepris = skyggeprisHelper
+    }
+
+
+basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutsetninger, yearlyHelsegevinstNytteInklOverfoertForBruker, yearlyTrafikantNytteInklOverfoertForBruker } =
+    { title = \_ -> "Basic tiltak"
+    , fields = \_ -> []
+    , syklistNytte = defaults.syklistNytte
+    , fotgjengerNytte = defaults.fotgjengerNytte
+    , trafikantNytte = defaults.trafikantNytte
+    , tsGevinstNytte = defaults.tsGevinstNytte
+    , syklistNytteInklOverfoert = defaults.syklistNytteInklOverfoert
+    , fotgjengerNytteInklOverfoert = defaults.fotgjengerNytteInklOverfoert
+    , trafikantNytteInklOverfoert = defaults.trafikantNytteInklOverfoert
+    , tsGevinstNytteInklOverfoert = defaults.tsGevinstNytteInklOverfoert
+    , helseGevinstNytteInklOverfoert = defaults.helseGevinstNytteInklOverfoert
+    , eksterneEffekterNytteInklOverfoert = defaults.eksterneEffekterNytteInklOverfoert
+    , nytte = defaults.nytte
+    , nytteInklOverfoert = defaults.nytteInklOverfoert
+    , kostUtenSkyggepris = defaults.kostUtenSkyggepris
+    , nettoNytte = defaults.nettoNytte
+    , nettoNytteInklOverfoert = defaults.nettoNytteInklOverfoert
+    , skyggeprisHelper = defaults.skyggeprisHelper
+    , graphId = defaults.graphId
+    , domId = defaults.domId
+    , skyggepris = defaults.skyggepris
     , yearlySyklistNytte = \_ _ -> Nothing
     , yearlyFotgjengerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
@@ -201,16 +237,14 @@ basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutse
     , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
     , yearlyTSGevinstNytteInklOverfoert = \_ _ -> Nothing
-    , yearlyHelsegevinstNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
     , yearlyEksterneEffekterNytteInklOverfoert = \_ _ -> Nothing
     , driftOgVedlihKost = \_ _ -> Nothing
     , investeringsKostInklRestverdi = \_ _ -> Nothing
-    , skyggeprisHelper = skyggeprisHelper
-    , graphId = \this -> sendTo this .domId |> (++) "c3graph"
-    , domId = \this -> sendTo this .title |> toDomId
     , preferredField = preferredField specificStateFocus
     , preferredToGraphFocus = specificStateFocus => preferredToGraph
-    , yearlyTrafikantNytteInklOverfoertForBruker = \_ _ _ -> Nothing
+    , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
+    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     }

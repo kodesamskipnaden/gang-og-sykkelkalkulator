@@ -106,6 +106,7 @@ type alias TiltakRecord =
     , preferredField : Tiltak -> TiltakStates -> Maybe Field
     , preferredToGraphFocus : Focus TiltakStates String
     , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+    , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
     , syklistForutsetninger : CreateBrukerforutsetninger
     , fotgjengerForutsetninger : CreateBrukerforutsetninger
     }

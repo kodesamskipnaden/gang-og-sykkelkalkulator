@@ -27,6 +27,8 @@ tiltak =
                 { specificStateFocus = specificState
                 , syklistForutsetninger = syklistForutsetninger
                 , fotgjengerForutsetninger = fotgjengerForutsetninger
+                , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
+                , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
                 }
     in
     Tiltak
@@ -38,7 +40,6 @@ tiltak =
             , yearlyTSGevinstNytte = yearlyTSGevinstNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
-            , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
             , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
             , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
             , investeringsKostInklRestverdi =
@@ -49,13 +50,6 @@ tiltak =
             , driftOgVedlihKost =
                 \_ { ledLys } ->
                     BasicTiltak.driftOgVedlihKost ledLys
-            , skyggepris =
-                \this state ->
-                    sendTo
-                        this
-                        .skyggeprisHelper
-                        state
-            , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
         }
 
 
@@ -205,16 +199,6 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
         (yearlyOverfoerteTurer this brukerForutsetninger)
         (Just brukerForutsetninger.totalReiseDistanceKm)
         (Just brukerForutsetninger.helseTSGevinstBruker)
-
-
-yearlyHelsegevinstNytteInklOverfoert this state =
-    Maybe.map2 (+)
-        (syklistForutsetninger state
-            |> yearlyHelsegevinstNytteInklOverfoertForBruker this state
-        )
-        (fotgjengerForutsetninger state
-            |> yearlyHelsegevinstNytteInklOverfoertForBruker this state
-        )
 
 
 yearlyTSGevinstNytte : StateCalculationMethod
