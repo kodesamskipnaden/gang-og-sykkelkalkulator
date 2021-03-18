@@ -218,6 +218,14 @@ yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger state |> nytte)
 
 
+nyeTurerFra this brukerForutsetninger andelsAccessor =
+    Maybe.map3
+        (\a b c -> a * b * c)
+        brukerForutsetninger.turerPerYearMaybe
+        (Just brukerForutsetninger.etterspoerselsEffekt)
+        (andelsAccessor brukerForutsetninger |> Just)
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte

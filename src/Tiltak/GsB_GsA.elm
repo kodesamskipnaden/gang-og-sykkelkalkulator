@@ -211,7 +211,7 @@ yearlyTrafikantNytteInklOverfoertForBruker this ({ gsB_GsA } as state) brukerFor
             Maybe.map4 (\a b c d -> a * b * c * d)
                 gsB_GsA.oppetidPercent.value
                 (Just brukerForutsetninger.totalReiseDistanceKm)
-                (nyeTurerFra this brukerForutsetninger .andelNyeBrukereFraBil)
+                (BasicTiltak.nyeTurerFra this brukerForutsetninger .andelNyeBrukereFraBil)
                 (Just verdisettinger.koekostnadBiler)
     in
     Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
@@ -243,7 +243,7 @@ yearlyTSGevinstNytteForBrukere this { gsB_GsA } brukerForutsetninger =
 yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =
     let
         nyeTurerFunc =
-            nyeTurerFra this brukerForutsetninger
+            BasicTiltak.nyeTurerFra this brukerForutsetninger
 
         beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
             nyeTurerFraBil
@@ -272,7 +272,7 @@ yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =
 yearlyEksterneEffekterNytteInklOverfoertForBruker this { gsB_GsA } brukerForutsetninger =
     let
         nyeTurer =
-            nyeTurerFra this brukerForutsetninger
+            BasicTiltak.nyeTurerFra this brukerForutsetninger
 
         overfoertFraBilNyttePerKm nyeTurerFraBil =
             nyeTurerFraBil
@@ -307,20 +307,12 @@ yearlyOverfoerteSykkelturer this state =
 yearlyOverfoerteTurer this brukerForutsetninger =
     let
         receiver =
-            nyeTurerFra this brukerForutsetninger
+            BasicTiltak.nyeTurerFra this brukerForutsetninger
     in
     Maybe.map3 (\a b c -> a + b + c)
         (receiver .andelNyeBrukereFraBil)
         (receiver .andelNyeBrukereFraKollektivtransport)
         (receiver .andelNyeBrukereGenererte)
-
-
-nyeTurerFra this brukerForutsetninger andelsAccessor =
-    Maybe.map3
-        (\a b c -> a * b * c)
-        brukerForutsetninger.turerPerYearMaybe
-        (Just brukerForutsetninger.etterspoerselsEffekt)
-        (andelsAccessor brukerForutsetninger |> Just)
 
 
 yearlyFotgjengerNyttePerTur antallTurer =
