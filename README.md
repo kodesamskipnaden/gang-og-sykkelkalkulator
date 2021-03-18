@@ -32,7 +32,7 @@ In a new terminal:
 Kontinuerlig testing:
 
 ```
-    $ npm test:watch
+    $ npm run test:watch
 ```
 
 # Lisens
