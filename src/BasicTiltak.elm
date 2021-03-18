@@ -52,13 +52,17 @@ nytte this state =
         (f .tsGevinstNytte)
 
 
+maybeSum listOfMaybes =
+    Maybe.Extra.combine listOfMaybes |> Maybe.map List.sum
+
+
 nytteInklOverfoert : StateCalculationMethod
 nytteInklOverfoert this state =
     let
         f accessor =
             sendTo this accessor state
     in
-    Maybe.Extra.combine
+    maybeSum
         [ f .syklistNytteInklOverfoert
         , f .fotgjengerNytteInklOverfoert
         , f .trafikantNytteInklOverfoert
@@ -66,7 +70,6 @@ nytteInklOverfoert this state =
         , f .tsGevinstNytteInklOverfoert
         , f .eksterneEffekterNytteInklOverfoert
         ]
-        |> Maybe.map List.sum
 
 
 nettoNytte : StateCalculationMethod
@@ -75,10 +78,11 @@ nettoNytte this state =
         f =
             bindTiltak this state
     in
-    Maybe.map3 (\a b c -> a + b + c)
-        (f .nytte)
-        (f .kostUtenSkyggepris)
-        (f .skyggepris)
+    maybeSum
+        [ f .nytte
+        , f .kostUtenSkyggepris
+        , f .skyggepris
+        ]
 
 
 nettoNytteInklOverfoert : StateCalculationMethod
@@ -242,6 +246,20 @@ yearlyOverfoerteTurer this brukerForutsetninger =
         (receiver .andelNyeBrukereGenererte)
 
 
+yearlyTrafikantNytteInklOverfoertForBruker this state brukerForutsetninger =
+    let
+        receiver =
+            bindTiltak this state
+
+        overfoertNytte =
+            Maybe.map3 (\a b c -> a * b * c)
+                (Just brukerForutsetninger.totalReiseDistanceKm)
+                (nyeTurerFra this brukerForutsetninger .andelNyeBrukereFraBil)
+                (Just verdisettinger.koekostnadBiler)
+    in
+    Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -263,6 +281,7 @@ defaults =
     , domId = \this -> sendTo this .title |> toDomId
     , skyggepris = skyggeprisHelper
     , yearlyTSGevinstNytteOverfoert = yearlyTSGevinstNytteOverfoert
+    , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
     }
 
 
@@ -304,7 +323,7 @@ basicTiltakRecord hooks =
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
-    , yearlyTrafikantNytteInklOverfoertForBruker = hooks.yearlyTrafikantNytteInklOverfoertForBruker
+    , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyHelsegevinstNytteInklOverfoertForBruker = hooks.yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = hooks.yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = hooks.yearlyTSGevinstNytteOverfoertForBrukere

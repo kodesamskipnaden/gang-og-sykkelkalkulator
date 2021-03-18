@@ -31,6 +31,12 @@ tiltak =
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
+            , yearlyTrafikantNytteInklOverfoertForBruker =
+                \this ({ gsB_GsA } as state) brukerForutsetninger ->
+                    Maybe.map2
+                        (*)
+                        gsB_GsA.oppetidPercent.value
+                        (brukerForutsetninger |> basicTiltakRecord.yearlyTrafikantNytteInklOverfoertForBruker this state)
         }
 
 
@@ -50,7 +56,6 @@ tiltakRecordImplementation =
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
-    , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
@@ -172,21 +177,6 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
                 gsB_GsA.oppetidPercent.value
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
-
-
-yearlyTrafikantNytteInklOverfoertForBruker this ({ gsB_GsA } as state) brukerForutsetninger =
-    let
-        receiver =
-            bindTiltak this state
-
-        overfoertNytte =
-            Maybe.map4 (\a b c d -> a * b * c * d)
-                gsB_GsA.oppetidPercent.value
-                (Just brukerForutsetninger.totalReiseDistanceKm)
-                (BasicTiltak.nyeTurerFra this brukerForutsetninger .andelNyeBrukereFraBil)
-                (Just verdisettinger.koekostnadBiler)
-    in
-    Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this { gsB_GsA } brukerForutsetninger =

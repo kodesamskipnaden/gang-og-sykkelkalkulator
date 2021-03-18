@@ -50,7 +50,6 @@ tiltakRecordImplementation =
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
-    , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
@@ -153,20 +152,6 @@ yearlySyklistNytteInklOverfoert this state =
                 (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this)
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
-
-
-yearlyTrafikantNytteInklOverfoertForBruker this state brukerForutsetninger =
-    let
-        receiver =
-            bindTiltak this state
-
-        overfoertNytte =
-            Maybe.map3 (\a b c -> a * b * c)
-                (Just brukerForutsetninger.totalReiseDistanceKm)
-                (BasicTiltak.nyeTurerFra this brukerForutsetninger .andelNyeBrukereFraBil)
-                (Just verdisettinger.koekostnadBiler)
-    in
-    Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
