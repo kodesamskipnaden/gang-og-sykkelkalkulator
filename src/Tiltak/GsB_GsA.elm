@@ -31,7 +31,6 @@ tiltak =
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
-            , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
             , investeringsKostInklRestverdi =
                 \_ { gsB_GsA } ->
                     BasicTiltak.investeringsKostInklRestverdi
@@ -298,12 +297,6 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker this { gsB_GsA } brukerForutse
             (nyeTurer .andelNyeBrukereFraBil)
             (nyeTurer .andelNyeBrukereFraKollektivtransport)
         )
-
-
-yearlyEksterneEffekterNytteInklOverfoert this state =
-    Maybe.map2 (+)
-        (syklistForutsetninger state |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
-        (fotgjengerForutsetninger state |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
 
 
 yearlyOverfoerteSykkelturer : StateCalculationMethod

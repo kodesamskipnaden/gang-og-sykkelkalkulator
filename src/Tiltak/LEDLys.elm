@@ -31,7 +31,6 @@ tiltak =
             , yearlyFotgjengerNytte = \_ _ -> Just 0
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
-            , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
             , investeringsKostInklRestverdi =
                 \_ { ledLys } ->
                     BasicTiltak.investeringsKostInklRestverdi
@@ -272,12 +271,6 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker this state brukerForutsetninge
     Maybe.map2 nytte
         (nyeTurer .andelNyeBrukereFraBil)
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
-
-
-yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
-    Maybe.map2 (+)
-        (object.syklistForutsetninger state |> object.yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
-        (object.fotgjengerForutsetninger state |> object.yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
 
 
 yearlyOverfoerteSykkelturer : StateCalculationMethod

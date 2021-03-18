@@ -208,6 +208,16 @@ yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
         (object.yearlyTSGevinstNytteOverfoert this state)
 
 
+yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
+    let
+        nytte =
+            object.yearlyEksterneEffekterNytteInklOverfoertForBruker this state
+    in
+    Maybe.map2 (+)
+        (object.syklistForutsetninger state |> nytte)
+        (object.fotgjengerForutsetninger state |> nytte)
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -263,7 +273,7 @@ basicTiltakRecord hooks =
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
     , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
     , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
-    , yearlyEksterneEffekterNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
     , driftOgVedlihKost = \_ _ -> Nothing
     , investeringsKostInklRestverdi = \_ _ -> Nothing
     , title = hooks.title
