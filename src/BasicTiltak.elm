@@ -184,6 +184,13 @@ yearlyHelsegevinstNytteInklOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger state |> nytte)
 
 
+yearlyTSGevinstNytte : StateCalculationMethod
+yearlyTSGevinstNytte ((Tiltak object) as this) state =
+    Maybe.map2 (+)
+        (object.syklistForutsetninger state |> object.yearlyTSGevinstNytteForBrukere this state)
+        (object.fotgjengerForutsetninger state |> object.yearlyTSGevinstNytteForBrukere this state)
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -207,10 +214,9 @@ defaults =
     }
 
 
-basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutsetninger, yearlyHelsegevinstNytteInklOverfoertForBruker, yearlyTrafikantNytteInklOverfoertForBruker } =
-    { title = \_ -> "Basic tiltak"
-    , fields = \_ -> []
-    , syklistNytte = defaults.syklistNytte
+basicTiltakRecord : Hooks a -> TiltakRecord
+basicTiltakRecord hooks =
+    { syklistNytte = defaults.syklistNytte
     , fotgjengerNytte = defaults.fotgjengerNytte
     , trafikantNytte = defaults.trafikantNytte
     , tsGevinstNytte = defaults.tsGevinstNytte
@@ -232,7 +238,7 @@ basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutse
     , yearlySyklistNytte = \_ _ -> Nothing
     , yearlyFotgjengerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
-    , yearlyTSGevinstNytte = \_ _ -> Just 0
+    , yearlyTSGevinstNytte = yearlyTSGevinstNytte
     , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
     , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
@@ -241,12 +247,15 @@ basicTiltakRecord { specificStateFocus, syklistForutsetninger, fotgjengerForutse
     , yearlyEksterneEffekterNytteInklOverfoert = \_ _ -> Nothing
     , driftOgVedlihKost = \_ _ -> Nothing
     , investeringsKostInklRestverdi = \_ _ -> Nothing
-    , preferredField = preferredField specificStateFocus
-    , preferredToGraphFocus = specificStateFocus => preferredToGraph
-    , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
-    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
-    , syklistForutsetninger = syklistForutsetninger
-    , fotgjengerForutsetninger = fotgjengerForutsetninger
+    , title = hooks.title
+    , fields = hooks.fields
+    , preferredField = preferredField hooks.specificStateFocus
+    , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
+    , yearlyTrafikantNytteInklOverfoertForBruker = hooks.yearlyTrafikantNytteInklOverfoertForBruker
+    , yearlyHelsegevinstNytteInklOverfoertForBruker = hooks.yearlyHelsegevinstNytteInklOverfoertForBruker
+    , yearlyTSGevinstNytteForBrukere = hooks.yearlyTSGevinstNytteForBrukere
+    , syklistForutsetninger = hooks.syklistForutsetninger
+    , fotgjengerForutsetninger = hooks.fotgjengerForutsetninger
     }
 
 

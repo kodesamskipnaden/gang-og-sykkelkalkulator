@@ -16,28 +16,19 @@ import FormattedValue
         )
 import GeneralForutsetninger exposing (verdisettinger)
 import SpecificStates exposing (LEDLysState)
-import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
+import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
 tiltak : Tiltak
 tiltak =
     let
         basicTiltakRecord =
-            BasicTiltak.basicTiltakRecord
-                { specificStateFocus = specificState
-                , syklistForutsetninger = syklistForutsetninger
-                , fotgjengerForutsetninger = fotgjengerForutsetninger
-                , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
-                , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
-                }
+            BasicTiltak.basicTiltakRecord tiltakRecordImplementation
     in
     Tiltak
         { basicTiltakRecord
-            | title = \_ -> "LED-lys for syklende og eller gående"
-            , fields = \_ -> fields
-            , yearlySyklistNytte = yearlySyklistNytte
+            | yearlySyklistNytte = yearlySyklistNytte
             , yearlyFotgjengerNytte = \_ _ -> Just 0
-            , yearlyTSGevinstNytte = yearlyTSGevinstNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
             , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
@@ -51,6 +42,19 @@ tiltak =
                 \_ { ledLys } ->
                     BasicTiltak.driftOgVedlihKost ledLys
         }
+
+
+tiltakRecordImplementation : Hooks LEDLysState
+tiltakRecordImplementation =
+    { title = \_ -> "LED-lys for syklende og eller gående"
+    , fields = \_ -> fields
+    , specificStateFocus = specificState
+    , syklistForutsetninger = syklistForutsetninger
+    , fotgjengerForutsetninger = fotgjengerForutsetninger
+    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
+    , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
+    , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
+    }
 
 
 initialState : LEDLysState
@@ -201,13 +205,6 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
         (Just brukerForutsetninger.helseTSGevinstBruker)
 
 
-yearlyTSGevinstNytte : StateCalculationMethod
-yearlyTSGevinstNytte this ({ ledLys } as state) =
-    Maybe.map2 (+)
-        (syklistForutsetninger state |> yearlyTSGevinstNytteForBrukere this state)
-        (fotgjengerForutsetninger state |> yearlyTSGevinstNytteForBrukere this state)
-
-
 yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
     Maybe.map2
         (\turerPerYear lengde ->
@@ -221,9 +218,9 @@ yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
 
 
 yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
-yearlyTSGevinstNytteInklOverfoert this state =
+yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
     Maybe.map2 (+)
-        (yearlyTSGevinstNytte this state)
+        (object.yearlyTSGevinstNytte this state)
         (yearlyTSGevinstNytteOverfoert this state)
 
 

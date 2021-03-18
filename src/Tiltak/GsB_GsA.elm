@@ -16,28 +16,19 @@ import FormattedValue
         )
 import GeneralForutsetninger exposing (verdisettinger)
 import SpecificStates exposing (GsB_GsAState)
-import Tiltak exposing (StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
+import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
 
 tiltak : Tiltak
 tiltak =
     let
         basicTiltakRecord =
-            BasicTiltak.basicTiltakRecord
-                { specificStateFocus = specificState
-                , syklistForutsetninger = syklistForutsetninger
-                , fotgjengerForutsetninger = fotgjengerForutsetninger
-                , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
-                , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
-                }
+            BasicTiltak.basicTiltakRecord tiltakRecordImplementation
     in
     Tiltak
         { basicTiltakRecord
-            | title = \_ -> "GsB til GsA"
-            , fields = \_ -> fields
-            , yearlySyklistNytte = yearlySyklistNytte
+            | yearlySyklistNytte = yearlySyklistNytte
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
-            , yearlyTSGevinstNytte = yearlyTSGevinstNytte
             , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
             , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
@@ -51,6 +42,19 @@ tiltak =
                 \_ { gsB_GsA } ->
                     BasicTiltak.driftOgVedlihKost gsB_GsA
         }
+
+
+tiltakRecordImplementation : Hooks GsB_GsAState
+tiltakRecordImplementation =
+    { title = \_ -> "GsB til GsA"
+    , fields = \_ -> fields
+    , specificStateFocus = specificState
+    , syklistForutsetninger = syklistForutsetninger
+    , fotgjengerForutsetninger = fotgjengerForutsetninger
+    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
+    , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
+    , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
+    }
 
 
 initialState : GsB_GsAState
@@ -222,13 +226,6 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this ({ gsB_GsA } as state) bruker
         (Just brukerForutsetninger.helseTSGevinstBruker)
 
 
-yearlyTSGevinstNytte : StateCalculationMethod
-yearlyTSGevinstNytte this ({ gsB_GsA } as state) =
-    Maybe.map2 (+)
-        (syklistForutsetninger state |> yearlyTSGevinstNytteForBrukere this state)
-        (fotgjengerForutsetninger state |> yearlyTSGevinstNytteForBrukere this state)
-
-
 yearlyTSGevinstNytteForBrukere this ({ gsB_GsA } as state) brukerForutsetninger =
     Maybe.map3
         (\lengde turerPerYear oppetidPercent ->
@@ -244,16 +241,16 @@ yearlyTSGevinstNytteForBrukere this ({ gsB_GsA } as state) brukerForutsetninger 
 
 
 yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
-yearlyTSGevinstNytteInklOverfoert this state =
+yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
     Maybe.map2 (+)
-        (yearlyTSGevinstNytte this state)
+        (object.yearlyTSGevinstNytte this state)
         (yearlyTSGevinstNytteOverfoert this state)
 
 
 yearlyTSGevinstNytteOverfoert this ({ gsB_GsA } as state) =
     Maybe.map2 (+)
-        (fotgjengerForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
         (syklistForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
+        (fotgjengerForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this ({ gsB_GsA } as state) brukerForutsetninger =

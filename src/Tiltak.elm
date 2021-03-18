@@ -69,47 +69,65 @@ type alias CreateBrukerforutsetninger =
 -}
 
 
-type alias TiltakRecord =
+type alias TiltakRecordHooks =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
-    , syklistNytte : StateCalculationMethod
-    , fotgjengerNytte : StateCalculationMethod
-    , trafikantNytte : StateCalculationMethod
-    , tsGevinstNytte : StateCalculationMethod
-    , syklistNytteInklOverfoert : StateCalculationMethod
-    , fotgjengerNytteInklOverfoert : StateCalculationMethod
-    , trafikantNytteInklOverfoert : StateCalculationMethod
-    , helseGevinstNytteInklOverfoert : StateCalculationMethod
-    , tsGevinstNytteInklOverfoert : StateCalculationMethod
-    , eksterneEffekterNytteInklOverfoert : StateCalculationMethod
-    , nytte : StateCalculationMethod
-    , nytteInklOverfoert : StateCalculationMethod
-    , driftOgVedlihKost : StateCalculationMethod
-    , investeringsKostInklRestverdi : StateCalculationMethod
-    , skyggepris : StateCalculationMethod
-    , kostUtenSkyggepris : StateCalculationMethod
-    , nettoNytte : StateCalculationMethod
-    , nettoNytteInklOverfoert : StateCalculationMethod
-    , yearlySyklistNytte : StateCalculationMethod
-    , yearlyFotgjengerNytte : StateCalculationMethod
-    , yearlyTrafikantNytte : StateCalculationMethod
-    , yearlyTSGevinstNytte : StateCalculationMethod
-    , yearlySyklistNytteInklOverfoert : StateCalculationMethod
-    , yearlyFotgjengerNytteInklOverfoert : StateCalculationMethod
-    , yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
-    , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
-    , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
-    , yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
-    , skyggeprisHelper : StateCalculationMethod
-    , graphId : Tiltak -> String
-    , domId : Tiltak -> String
-    , preferredField : Tiltak -> TiltakStates -> Maybe Field
-    , preferredToGraphFocus : Focus TiltakStates String
-    , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
-    , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
     , syklistForutsetninger : CreateBrukerforutsetninger
     , fotgjengerForutsetninger : CreateBrukerforutsetninger
+    , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+    , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+    , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
     }
+
+
+type alias HooksPartial a specificState =
+    { a | specificStateFocus : Focus TiltakStates { specificState | preferredToGraph : String } }
+
+
+type alias Hooks specificState =
+    HooksPartial TiltakRecordHooks specificState
+
+
+type alias TiltakRecordPartial a =
+    { a
+        | syklistNytte : StateCalculationMethod
+        , fotgjengerNytte : StateCalculationMethod
+        , trafikantNytte : StateCalculationMethod
+        , tsGevinstNytte : StateCalculationMethod
+        , syklistNytteInklOverfoert : StateCalculationMethod
+        , fotgjengerNytteInklOverfoert : StateCalculationMethod
+        , trafikantNytteInklOverfoert : StateCalculationMethod
+        , helseGevinstNytteInklOverfoert : StateCalculationMethod
+        , tsGevinstNytteInklOverfoert : StateCalculationMethod
+        , eksterneEffekterNytteInklOverfoert : StateCalculationMethod
+        , nytte : StateCalculationMethod
+        , nytteInklOverfoert : StateCalculationMethod
+        , driftOgVedlihKost : StateCalculationMethod
+        , investeringsKostInklRestverdi : StateCalculationMethod
+        , skyggepris : StateCalculationMethod
+        , kostUtenSkyggepris : StateCalculationMethod
+        , nettoNytte : StateCalculationMethod
+        , nettoNytteInklOverfoert : StateCalculationMethod
+        , yearlySyklistNytte : StateCalculationMethod
+        , yearlyFotgjengerNytte : StateCalculationMethod
+        , yearlyTrafikantNytte : StateCalculationMethod
+        , yearlyTSGevinstNytte : StateCalculationMethod
+        , yearlySyklistNytteInklOverfoert : StateCalculationMethod
+        , yearlyFotgjengerNytteInklOverfoert : StateCalculationMethod
+        , yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
+        , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
+        , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
+        , yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
+        , skyggeprisHelper : StateCalculationMethod
+        , graphId : Tiltak -> String
+        , domId : Tiltak -> String
+        , preferredField : Tiltak -> TiltakStates -> Maybe Field
+        , preferredToGraphFocus : Focus TiltakStates String
+    }
+
+
+type alias TiltakRecord =
+    TiltakRecordPartial TiltakRecordHooks
 
 
 type alias TiltakAccessor a =
