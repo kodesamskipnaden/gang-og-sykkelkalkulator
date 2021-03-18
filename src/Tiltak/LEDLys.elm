@@ -163,12 +163,12 @@ yearlySyklistNyttePerTur antallTurer =
 
 
 yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte this ({ ledLys } as state) =
+yearlySyklistNytte this { ledLys } =
     Maybe.map yearlySyklistNyttePerTur ledLys.sykkelturerPerYear.value
 
 
 yearlySyklistNytteInklOverfoert : StateCalculationMethod
-yearlySyklistNytteInklOverfoert this ({ ledLys } as state) =
+yearlySyklistNytteInklOverfoert this state =
     let
         receiver =
             bindTiltak this state
@@ -183,7 +183,7 @@ yearlySyklistNytteInklOverfoert this ({ ledLys } as state) =
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
 
 
-yearlyTrafikantNytteInklOverfoertForBruker this ({ ledLys } as state) brukerForutsetninger =
+yearlyTrafikantNytteInklOverfoertForBruker this state brukerForutsetninger =
     let
         receiver =
             bindTiltak this state
@@ -205,7 +205,7 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
         (Just brukerForutsetninger.helseTSGevinstBruker)
 
 
-yearlyTSGevinstNytteForBrukere this ({ ledLys } as state) brukerForutsetninger =
+yearlyTSGevinstNytteForBrukere this { ledLys } brukerForutsetninger =
     Maybe.map2
         (\turerPerYear lengde ->
             min lengde brukerForutsetninger.totalReiseDistanceKm
@@ -224,7 +224,7 @@ yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
         (yearlyTSGevinstNytteOverfoert this state)
 
 
-yearlyTSGevinstNytteOverfoert this ({ ledLys } as state) =
+yearlyTSGevinstNytteOverfoert this state =
     Maybe.map2 (+)
         (syklistForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
         (fotgjengerForutsetninger state |> yearlyTSGevinstNytteOverfoertForBrukere this state)
@@ -260,7 +260,7 @@ yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
         )
 
 
-yearlyEksterneEffekterNytteInklOverfoertForBruker this ({ ledLys } as state) brukerForutsetninger =
+yearlyEksterneEffekterNytteInklOverfoertForBruker this state brukerForutsetninger =
     let
         nyeTurer =
             nyeTurerFra this brukerForutsetninger
@@ -286,7 +286,7 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker this ({ ledLys } as state) bru
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
 
 
-yearlyEksterneEffekterNytteInklOverfoert this ({ ledLys } as state) =
+yearlyEksterneEffekterNytteInklOverfoert this state =
     Maybe.map2 (+)
         (syklistForutsetninger state |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
         (fotgjengerForutsetninger state |> yearlyEksterneEffekterNytteInklOverfoertForBruker this state)
