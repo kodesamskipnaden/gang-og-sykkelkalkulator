@@ -356,11 +356,6 @@ driftOgVedlihKost specificState =
         |> Maybe.map negate
 
 
-yearlyMaintenancePlaceholder : String
-yearlyMaintenancePlaceholder =
-    "Årlige (økninger i) kostnader til drift og vedlikehold som knytter seg til dette tiltaket"
-
-
 basicSyklistForutsetninger sykkelturerPerYearMaybe =
     { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
     , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport

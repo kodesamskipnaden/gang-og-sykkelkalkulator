@@ -101,36 +101,11 @@ fieldDefinitions =
                     { specificState | oppetidPercent = f specificState.oppetidPercent }
                 )
     in
-    [ { name = "installationCost"
-      , title = "Installasjonskostnad"
-      , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"
-      , focus = specificState => installationCost
-      , stepSize = 50000
-      }
-    , { name = "yearlyMaintenance"
-      , title = "Økte årlige drifts- og vedlikeholdskostnader"
-      , placeholder = BasicTiltak.yearlyMaintenancePlaceholder
-      , focus = specificState => yearlyMaintenance
-      , stepSize = 5000
-      }
-    , { name = "lengdeVeiKm"
-      , title = "Veilengde i kilometer"
-      , placeholder = "Lengde vei (km)"
-      , focus = specificState => lengdeVeiKm
-      , stepSize = 5
-      }
-    , { name = "sykkelturerPerYear"
-      , title = "Antall sykkelturer per år"
-      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
-      , focus = specificState => sykkelturerPerYear
-      , stepSize = 50
-      }
-    , { name = "gangturerPerYear"
-      , title = "Antall gangturer per år"
-      , placeholder = "Turer på mørke tider som får nytte av tiltaket"
-      , focus = specificState => gangturerPerYear
-      , stepSize = 50
-      }
+    [ Field.installationCostSimpleField specificState
+    , Field.yearlyMaintenanceSimpleField specificState
+    , Field.lengdeVeiKmSimpleField specificState
+    , Field.sykkelturerPerYearSimpleField specificState
+    , Field.gangturerPerYearSimpleField specificState
     , { name = "oppetidPercent"
       , title = "Tiltakets oppetid, prosent"
       , placeholder = "Andel av aktuell tidsperiode hvor nivået GsA oppfylles (mindre enn 100% pga f.eks. at det tar tid fra nedbør skjer, til GsA-standard er gjenopprettet)"
