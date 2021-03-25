@@ -150,31 +150,28 @@ fotgjengerForutsetninger { gsB_GsA } =
     }
 
 
-yearlySyklistNyttePerTur antallTurer =
-    antallTurer * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur
+yearlySyklistNyttePerTur { gsB_GsA } antallTurer =
+    Maybe.map2
+        (\a b -> a * b * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur)
+        gsB_GsA.oppetidPercent.value
+        antallTurer
 
 
 yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte this { gsB_GsA } =
-    Maybe.map2
-        (\a b -> a * yearlySyklistNyttePerTur b)
-        gsB_GsA.oppetidPercent.value
-        gsB_GsA.sykkelturerPerYear.value
+yearlySyklistNytte this ({ gsB_GsA } as state) =
+    yearlySyklistNyttePerTur state gsB_GsA.sykkelturerPerYear.value
 
 
 yearlySyklistNytteInklOverfoert : StateCalculationMethod
-yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
+yearlySyklistNytteInklOverfoert this state =
     let
         receiver =
             bindTiltak this state
 
         overfoertNytte =
-            Maybe.map2
-                (\antallTurer oppetidPercent ->
-                    oppetidPercent * (yearlySyklistNyttePerTur antallTurer / 2)
-                )
-                (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this)
-                gsB_GsA.oppetidPercent.value
+            Maybe.map
+                (\a -> a / 2)
+                (yearlySyklistNyttePerTur state (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this))
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
 

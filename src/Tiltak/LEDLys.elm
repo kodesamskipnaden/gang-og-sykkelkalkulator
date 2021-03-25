@@ -129,13 +129,15 @@ fotgjengerForutsetninger { ledLys } =
     }
 
 
-yearlySyklistNyttePerTur antallTurer =
-    antallTurer * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur
+yearlySyklistNyttePerTur _ antallTurer =
+    Maybe.map
+        (\a -> a * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur)
+        antallTurer
 
 
 yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte this { ledLys } =
-    Maybe.map yearlySyklistNyttePerTur ledLys.sykkelturerPerYear.value
+yearlySyklistNytte this ({ ledLys } as state) =
+    yearlySyklistNyttePerTur state ledLys.sykkelturerPerYear.value
 
 
 yearlySyklistNytteInklOverfoert : StateCalculationMethod
@@ -146,10 +148,8 @@ yearlySyklistNytteInklOverfoert this state =
 
         overfoertNytte =
             Maybe.map
-                (\antallTurer ->
-                    yearlySyklistNyttePerTur antallTurer / 2
-                )
-                (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this)
+                (\a -> a / 2)
+                (yearlySyklistNyttePerTur state (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this))
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
 
