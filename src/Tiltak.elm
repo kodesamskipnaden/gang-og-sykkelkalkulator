@@ -77,7 +77,6 @@ type alias TiltakRecordHooks =
     , syklistForutsetninger : CreateBrukerforutsetninger
     , fotgjengerForutsetninger : CreateBrukerforutsetninger
     , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
-    , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
     , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
     , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
     , yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
@@ -123,6 +122,7 @@ type alias TiltakRecordPartial a =
         , skyggeprisHelper : StateCalculationMethod
         , yearlyTSGevinstNytteOverfoert : StateCalculationMethod
         , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+        , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String
         , preferredField : Tiltak -> TiltakStates -> Maybe Field

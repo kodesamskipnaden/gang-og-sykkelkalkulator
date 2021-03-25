@@ -49,7 +49,6 @@ tiltakRecordImplementation =
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
-    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
@@ -138,14 +137,6 @@ yearlySyklistNyttePerTur _ antallTurer =
 yearlySyklistNytte : StateCalculationMethod
 yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
     object.yearlySyklistNyttePerTur state ledLys.sykkelturerPerYear.value
-
-
-yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
-    Maybe.map3
-        (\a b c -> a * b * c)
-        (BasicTiltak.yearlyOverfoerteTurer this brukerForutsetninger)
-        (Just brukerForutsetninger.totalReiseDistanceKm)
-        (Just brukerForutsetninger.helseTSGevinstBruker)
 
 
 yearlyTSGevinstNytteForBrukere this { ledLys } brukerForutsetninger =
