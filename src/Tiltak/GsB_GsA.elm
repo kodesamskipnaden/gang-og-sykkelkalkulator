@@ -27,8 +27,7 @@ tiltak =
     in
     Tiltak
         { basicTiltakRecord
-            | yearlySyklistNytte = yearlySyklistNytte
-            , yearlyFotgjengerNytte = yearlyFotgjengerNytte
+            | yearlyFotgjengerNytte = yearlyFotgjengerNytte
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
             , yearlyTrafikantNytteInklOverfoertForBruker =
                 \this state brukerForutsetninger ->
@@ -184,11 +183,6 @@ yearlySyklistNyttePerTur { gsB_GsA } antallTurer =
         (\a b -> a * b * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur)
         gsB_GsA.oppetidPercent.value
         antallTurer
-
-
-yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
-    object.yearlySyklistNyttePerTur state gsB_GsA.sykkelturerPerYear.value
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =

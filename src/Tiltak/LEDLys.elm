@@ -27,8 +27,7 @@ tiltak =
     in
     Tiltak
         { basicTiltakRecord
-            | yearlySyklistNytte = yearlySyklistNytte
-            , yearlyFotgjengerNytte = \_ _ -> Just 0
+            | yearlyFotgjengerNytte = \_ _ -> Just 0
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
         }
 
@@ -138,11 +137,6 @@ yearlySyklistNyttePerTur _ antallTurer =
     Maybe.map
         (\a -> a * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur)
         antallTurer
-
-
-yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
-    object.yearlySyklistNyttePerTur state ledLys.sykkelturerPerYear.value
 
 
 yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =

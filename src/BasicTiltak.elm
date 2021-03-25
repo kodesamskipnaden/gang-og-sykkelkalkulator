@@ -294,6 +294,11 @@ yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetnin
         (record.basicState state).lengdeVeiKm.value
 
 
+yearlySyklistNytte : StateCalculationMethod
+yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
+    object.yearlySyklistNyttePerTur state (object.basicState state).sykkelturerPerYear.value
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -344,7 +349,7 @@ basicTiltakRecord hooks =
     , yearlyFotgjengerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
     , yearlyTSGevinstNytte = yearlyTSGevinstNytte
-    , yearlySyklistNytte = \_ _ -> Nothing
+    , yearlySyklistNytte = yearlySyklistNytte
     , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
     , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
