@@ -56,7 +56,6 @@ tiltakRecordImplementation =
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
-    , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     }
 
 
@@ -139,18 +138,6 @@ yearlySyklistNyttePerTur _ antallTurer =
         antallTurer
 
 
-yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =
-    Maybe.map2
-        (\turerPerYear lengde ->
-            min lengde brukerForutsetninger.totalReiseDistanceKm
-                * turerPerYear
-                * brukerForutsetninger.tsKostnad
-                * brukerForutsetninger.tsGevinstTiltak
-        )
-        brukerForutsetninger.turerPerYearMaybe
-        (record.basicState state).lengdeVeiKm.value
-
-
 yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
     let
         nyeTurerFunc =
@@ -179,29 +166,3 @@ yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
             (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
             (nyeTurerFunc .andelNyeBrukereGenererte)
         )
-
-
-yearlyEksterneEffekterNytteInklOverfoertForBruker this state brukerForutsetninger =
-    let
-        nyeTurer =
-            BasicTiltak.nyeTurerFra this brukerForutsetninger
-
-        overfoertFraBilNyttePerKm nyeTurerFraBil =
-            nyeTurerFraBil
-                * (verdisettinger.eksterneKostnaderBil
-                    - brukerForutsetninger.eksterneKostnader
-                  )
-
-        overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv =
-            nyeTurerFraKollektiv
-                * (verdisettinger.eksterneKostnaderKollektiv
-                    - brukerForutsetninger.eksterneKostnader
-                  )
-
-        nytte nyeTurerFraBil nyeTurerFraKollektiv =
-            brukerForutsetninger.totalReiseDistanceKm
-                * (overfoertFraBilNyttePerKm nyeTurerFraBil + overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv)
-    in
-    Maybe.map2 nytte
-        (nyeTurer .andelNyeBrukereFraBil)
-        (nyeTurer .andelNyeBrukereFraKollektivtransport)

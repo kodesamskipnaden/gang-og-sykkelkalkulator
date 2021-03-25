@@ -299,6 +299,32 @@ yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
     object.yearlySyklistNyttePerTur state (object.basicState state).sykkelturerPerYear.value
 
 
+yearlyEksterneEffekterNytteInklOverfoertForBruker this state brukerForutsetninger =
+    let
+        nyeTurer =
+            nyeTurerFra this brukerForutsetninger
+
+        overfoertFraBilNyttePerKm nyeTurerFraBil =
+            nyeTurerFraBil
+                * (verdisettinger.eksterneKostnaderBil
+                    - brukerForutsetninger.eksterneKostnader
+                  )
+
+        overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv =
+            nyeTurerFraKollektiv
+                * (verdisettinger.eksterneKostnaderKollektiv
+                    - brukerForutsetninger.eksterneKostnader
+                  )
+
+        nytte nyeTurerFraBil nyeTurerFraKollektiv =
+            brukerForutsetninger.totalReiseDistanceKm
+                * (overfoertFraBilNyttePerKm nyeTurerFraBil + overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv)
+    in
+    Maybe.map2 nytte
+        (nyeTurer .andelNyeBrukereFraBil)
+        (nyeTurer .andelNyeBrukereFraKollektivtransport)
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -367,8 +393,8 @@ basicTiltakRecord hooks =
     , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
+    , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteOverfoertForBrukere = hooks.yearlyTSGevinstNytteOverfoertForBrukere
-    , yearlyEksterneEffekterNytteInklOverfoertForBruker = hooks.yearlyEksterneEffekterNytteInklOverfoertForBruker
     , syklistForutsetninger = hooks.syklistForutsetninger
     , fotgjengerForutsetninger = hooks.fotgjengerForutsetninger
     }

@@ -59,6 +59,16 @@ tiltak =
                             state
                             brukerForutsetninger
                         )
+            , yearlyEksterneEffekterNytteInklOverfoertForBruker =
+                \this state brukerForutsetninger ->
+                    Maybe.map2
+                        (*)
+                        state.gsB_GsA.oppetidPercent.value
+                        (basicTiltakRecord.yearlyEksterneEffekterNytteInklOverfoertForBruker
+                            this
+                            state
+                            brukerForutsetninger
+                        )
         }
 
 
@@ -86,7 +96,6 @@ tiltakRecordImplementation =
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
-    , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     }
 
 
@@ -211,36 +220,6 @@ yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =
             (nyeTurerFunc .andelNyeBrukereFraBil)
             (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
             (nyeTurerFunc .andelNyeBrukereGenererte)
-        )
-
-
-yearlyEksterneEffekterNytteInklOverfoertForBruker this { gsB_GsA } brukerForutsetninger =
-    let
-        nyeTurer =
-            BasicTiltak.nyeTurerFra this brukerForutsetninger
-
-        overfoertFraBilNyttePerKm nyeTurerFraBil =
-            nyeTurerFraBil
-                * (verdisettinger.eksterneKostnaderBil
-                    - brukerForutsetninger.eksterneKostnader
-                  )
-
-        overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv =
-            nyeTurerFraKollektiv
-                * (verdisettinger.eksterneKostnaderKollektiv
-                    - brukerForutsetninger.eksterneKostnader
-                  )
-
-        nytte nyeTurerFraBil nyeTurerFraKollektiv =
-            brukerForutsetninger.totalReiseDistanceKm
-                * (overfoertFraBilNyttePerKm nyeTurerFraBil + overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv)
-    in
-    Maybe.map2 (*)
-        gsB_GsA.oppetidPercent.value
-        (Maybe.map2
-            nytte
-            (nyeTurer .andelNyeBrukereFraBil)
-            (nyeTurer .andelNyeBrukereFraKollektivtransport)
         )
 
 
