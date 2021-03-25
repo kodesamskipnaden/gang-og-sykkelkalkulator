@@ -260,6 +260,28 @@ yearlyTrafikantNytteInklOverfoertForBruker this state brukerForutsetninger =
     Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
 
 
+yearlySyklistNytteInklOverfoert : StateCalculationMethod
+yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
+    let
+        receiver =
+            bindTiltak this state
+
+        overfoertNytte =
+            Maybe.map
+                (\a -> a / 2)
+                (object.yearlySyklistNyttePerTur state (object.syklistForutsetninger state |> yearlyOverfoerteTurer this))
+    in
+    Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
+
+
+yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
+    Maybe.map3
+        (\a b c -> a * b * c)
+        (yearlyOverfoerteTurer this brukerForutsetninger)
+        (Just brukerForutsetninger.totalReiseDistanceKm)
+        (Just brukerForutsetninger.helseTSGevinstBruker)
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -307,11 +329,11 @@ basicTiltakRecord hooks =
     , graphId = defaults.graphId
     , domId = defaults.domId
     , skyggepris = defaults.skyggepris
-    , yearlySyklistNytte = \_ _ -> Nothing
     , yearlyFotgjengerNytte = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
     , yearlyTSGevinstNytte = yearlyTSGevinstNytte
-    , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
+    , yearlySyklistNytte = \_ _ -> Nothing
+    , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
     , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
     , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
@@ -323,8 +345,9 @@ basicTiltakRecord hooks =
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
+    , yearlySyklistNyttePerTur = hooks.yearlySyklistNyttePerTur
     , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
-    , yearlyHelsegevinstNytteInklOverfoertForBruker = hooks.yearlyHelsegevinstNytteInklOverfoertForBruker
+    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = hooks.yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = hooks.yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = hooks.yearlyEksterneEffekterNytteInklOverfoertForBruker

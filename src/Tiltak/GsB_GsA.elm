@@ -29,7 +29,6 @@ tiltak =
         { basicTiltakRecord
             | yearlySyklistNytte = yearlySyklistNytte
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
-            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
             , yearlyTrafikantNytteInklOverfoertForBruker =
                 \this ({ gsB_GsA } as state) brukerForutsetninger ->
@@ -37,6 +36,12 @@ tiltak =
                         (*)
                         gsB_GsA.oppetidPercent.value
                         (brukerForutsetninger |> basicTiltakRecord.yearlyTrafikantNytteInklOverfoertForBruker this state)
+            , yearlyHelsegevinstNytteInklOverfoertForBruker =
+                \this ({ gsB_GsA } as state) brukerForutsetninger ->
+                    Maybe.map2
+                        (*)
+                        gsB_GsA.oppetidPercent.value
+                        (brukerForutsetninger |> basicTiltakRecord.yearlyHelsegevinstNytteInklOverfoertForBruker this state)
         }
 
 
@@ -53,6 +58,7 @@ tiltakRecordImplementation =
     , driftOgVedlihKost =
         \_ { gsB_GsA } ->
             BasicTiltak.driftOgVedlihKost gsB_GsA
+    , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
@@ -158,22 +164,8 @@ yearlySyklistNyttePerTur { gsB_GsA } antallTurer =
 
 
 yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte this ({ gsB_GsA } as state) =
-    yearlySyklistNyttePerTur state gsB_GsA.sykkelturerPerYear.value
-
-
-yearlySyklistNytteInklOverfoert : StateCalculationMethod
-yearlySyklistNytteInklOverfoert this state =
-    let
-        receiver =
-            bindTiltak this state
-
-        overfoertNytte =
-            Maybe.map
-                (\a -> a / 2)
-                (yearlySyklistNyttePerTur state (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this))
-    in
-    Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
+yearlySyklistNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
+    object.yearlySyklistNyttePerTur state gsB_GsA.sykkelturerPerYear.value
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this { gsB_GsA } brukerForutsetninger =

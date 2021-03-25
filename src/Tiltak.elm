@@ -76,6 +76,7 @@ type alias TiltakRecordHooks =
     , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : CreateBrukerforutsetninger
     , fotgjengerForutsetninger : CreateBrukerforutsetninger
+    , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
     , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
     , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
     , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod

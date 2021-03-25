@@ -29,7 +29,6 @@ tiltak =
         { basicTiltakRecord
             | yearlySyklistNytte = yearlySyklistNytte
             , yearlyFotgjengerNytte = \_ _ -> Just 0
-            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
             , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
         }
 
@@ -47,6 +46,7 @@ tiltakRecordImplementation =
     , driftOgVedlihKost =
         \_ { ledLys } ->
             BasicTiltak.driftOgVedlihKost ledLys
+    , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
@@ -136,22 +136,8 @@ yearlySyklistNyttePerTur _ antallTurer =
 
 
 yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte this ({ ledLys } as state) =
-    yearlySyklistNyttePerTur state ledLys.sykkelturerPerYear.value
-
-
-yearlySyklistNytteInklOverfoert : StateCalculationMethod
-yearlySyklistNytteInklOverfoert this state =
-    let
-        receiver =
-            bindTiltak this state
-
-        overfoertNytte =
-            Maybe.map
-                (\a -> a / 2)
-                (yearlySyklistNyttePerTur state (syklistForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this))
-    in
-    Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
+yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
+    object.yearlySyklistNyttePerTur state ledLys.sykkelturerPerYear.value
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
