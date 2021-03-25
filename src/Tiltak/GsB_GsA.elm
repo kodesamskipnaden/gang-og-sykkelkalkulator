@@ -31,17 +31,35 @@ tiltak =
             , yearlyFotgjengerNytte = yearlyFotgjengerNytte
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
             , yearlyTrafikantNytteInklOverfoertForBruker =
-                \this ({ gsB_GsA } as state) brukerForutsetninger ->
+                \this state brukerForutsetninger ->
                     Maybe.map2
                         (*)
-                        gsB_GsA.oppetidPercent.value
-                        (brukerForutsetninger |> basicTiltakRecord.yearlyTrafikantNytteInklOverfoertForBruker this state)
+                        state.gsB_GsA.oppetidPercent.value
+                        (basicTiltakRecord.yearlyTrafikantNytteInklOverfoertForBruker
+                            this
+                            state
+                            brukerForutsetninger
+                        )
             , yearlyHelsegevinstNytteInklOverfoertForBruker =
-                \this ({ gsB_GsA } as state) brukerForutsetninger ->
+                \this state brukerForutsetninger ->
                     Maybe.map2
                         (*)
-                        gsB_GsA.oppetidPercent.value
-                        (brukerForutsetninger |> basicTiltakRecord.yearlyHelsegevinstNytteInklOverfoertForBruker this state)
+                        state.gsB_GsA.oppetidPercent.value
+                        (basicTiltakRecord.yearlyHelsegevinstNytteInklOverfoertForBruker
+                            this
+                            state
+                            brukerForutsetninger
+                        )
+            , yearlyTSGevinstNytteForBrukere =
+                \this state brukerForutsetninger ->
+                    Maybe.map2
+                        (*)
+                        state.gsB_GsA.oppetidPercent.value
+                        (basicTiltakRecord.yearlyTSGevinstNytteForBrukere
+                            this
+                            state
+                            brukerForutsetninger
+                        )
         }
 
 
@@ -58,10 +76,16 @@ tiltakRecordImplementation =
     , driftOgVedlihKost =
         \_ { gsB_GsA } ->
             BasicTiltak.driftOgVedlihKost gsB_GsA
+    , basicState =
+        \{ gsB_GsA } ->
+            { sykkelturerPerYear = gsB_GsA.sykkelturerPerYear
+            , gangturerPerYear = gsB_GsA.gangturerPerYear
+            , preferredToGraph = gsB_GsA.preferredToGraph
+            , lengdeVeiKm = gsB_GsA.lengdeVeiKm
+            }
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
-    , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     }
@@ -165,29 +189,6 @@ yearlySyklistNyttePerTur { gsB_GsA } antallTurer =
 yearlySyklistNytte : StateCalculationMethod
 yearlySyklistNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
     object.yearlySyklistNyttePerTur state gsB_GsA.sykkelturerPerYear.value
-
-
-yearlyHelsegevinstNytteInklOverfoertForBruker this { gsB_GsA } brukerForutsetninger =
-    Maybe.map4
-        (\a b c d -> a * b * c * d)
-        gsB_GsA.oppetidPercent.value
-        (BasicTiltak.yearlyOverfoerteTurer this brukerForutsetninger)
-        (Just brukerForutsetninger.totalReiseDistanceKm)
-        (Just brukerForutsetninger.helseTSGevinstBruker)
-
-
-yearlyTSGevinstNytteForBrukere this { gsB_GsA } brukerForutsetninger =
-    Maybe.map3
-        (\lengde turerPerYear oppetidPercent ->
-            min lengde brukerForutsetninger.totalReiseDistanceKm
-                * turerPerYear
-                * brukerForutsetninger.tsKostnad
-                * brukerForutsetninger.tsGevinstTiltak
-                * oppetidPercent
-        )
-        gsB_GsA.lengdeVeiKm.value
-        brukerForutsetninger.turerPerYearMaybe
-        gsB_GsA.oppetidPercent.value
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =

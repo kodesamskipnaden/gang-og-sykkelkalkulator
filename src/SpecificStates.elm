@@ -1,20 +1,13 @@
 module SpecificStates exposing (..)
 
+import BasicState exposing (BasicState)
 import FormattedValue exposing (..)
-
-
-type alias BasicState =
-    { sykkelturerPerYear : FormattedValue Float
-    , gangturerPerYear : FormattedValue Float
-    , preferredToGraph : String
-    }
 
 
 type alias SimpleCommonPartial a =
     { a
         | yearlyMaintenance : FormattedValue Float
         , installationCost : FormattedValue Float
-        , lengdeVeiKm : FormattedValue Float
     }
 
 

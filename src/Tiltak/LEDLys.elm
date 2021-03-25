@@ -46,10 +46,16 @@ tiltakRecordImplementation =
     , driftOgVedlihKost =
         \_ { ledLys } ->
             BasicTiltak.driftOgVedlihKost ledLys
+    , basicState =
+        \{ ledLys } ->
+            { sykkelturerPerYear = ledLys.sykkelturerPerYear
+            , gangturerPerYear = ledLys.gangturerPerYear
+            , preferredToGraph = ledLys.preferredToGraph
+            , lengdeVeiKm = ledLys.lengdeVeiKm
+            }
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
-    , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     }
@@ -139,7 +145,7 @@ yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
     object.yearlySyklistNyttePerTur state ledLys.sykkelturerPerYear.value
 
 
-yearlyTSGevinstNytteForBrukere this { ledLys } brukerForutsetninger =
+yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =
     Maybe.map2
         (\turerPerYear lengde ->
             min lengde brukerForutsetninger.totalReiseDistanceKm
@@ -148,7 +154,7 @@ yearlyTSGevinstNytteForBrukere this { ledLys } brukerForutsetninger =
                 * brukerForutsetninger.tsGevinstTiltak
         )
         brukerForutsetninger.turerPerYearMaybe
-        ledLys.lengdeVeiKm.value
+        (record.basicState state).lengdeVeiKm.value
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =

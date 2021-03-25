@@ -282,6 +282,18 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
         (Just brukerForutsetninger.helseTSGevinstBruker)
 
 
+yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =
+    Maybe.map2
+        (\turerPerYear lengde ->
+            min lengde brukerForutsetninger.totalReiseDistanceKm
+                * turerPerYear
+                * brukerForutsetninger.tsKostnad
+                * brukerForutsetninger.tsGevinstTiltak
+        )
+        brukerForutsetninger.turerPerYearMaybe
+        (record.basicState state).lengdeVeiKm.value
+
+
 defaults =
     { syklistNytte = syklistNytte
     , fotgjengerNytte = fotgjengerNytte
@@ -343,12 +355,13 @@ basicTiltakRecord hooks =
     , fields = hooks.fields
     , preferredField = preferredField hooks.specificStateFocus
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
+    , basicState = hooks.basicState
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
     , yearlySyklistNyttePerTur = hooks.yearlySyklistNyttePerTur
     , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
-    , yearlyTSGevinstNytteForBrukere = hooks.yearlyTSGevinstNytteForBrukere
+    , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoertForBrukere = hooks.yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = hooks.yearlyEksterneEffekterNytteInklOverfoertForBruker
     , syklistForutsetninger = hooks.syklistForutsetninger

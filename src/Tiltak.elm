@@ -1,5 +1,6 @@
 module Tiltak exposing (..)
 
+import BasicState exposing (BasicState)
 import Field exposing (Field)
 import Focus exposing (Focus)
 import TiltakStates exposing (TiltakStates)
@@ -72,12 +73,12 @@ type alias CreateBrukerforutsetninger =
 type alias TiltakRecordHooks =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
+    , basicState : TiltakStates -> BasicState
     , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : CreateBrukerforutsetninger
     , fotgjengerForutsetninger : CreateBrukerforutsetninger
     , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
-    , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
     , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
     , yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
     }
@@ -123,6 +124,7 @@ type alias TiltakRecordPartial a =
         , yearlyTSGevinstNytteOverfoert : StateCalculationMethod
         , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
         , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+        , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String
         , preferredField : Tiltak -> TiltakStates -> Maybe Field
