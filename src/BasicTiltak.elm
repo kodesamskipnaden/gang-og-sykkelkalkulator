@@ -174,8 +174,8 @@ yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) state =
             object.yearlyTrafikantNytteInklOverfoertForBruker this state
     in
     Maybe.map2 (+)
-        (object.syklistForutsetninger state |> nytte)
-        (object.fotgjengerForutsetninger state |> nytte)
+        (object.syklistForutsetninger this state |> nytte)
+        (object.fotgjengerForutsetninger this state |> nytte)
 
 
 yearlyHelsegevinstNytteInklOverfoert ((Tiltak object) as this) state =
@@ -184,15 +184,15 @@ yearlyHelsegevinstNytteInklOverfoert ((Tiltak object) as this) state =
             object.yearlyHelsegevinstNytteInklOverfoertForBruker this state
     in
     Maybe.map2 (+)
-        (object.syklistForutsetninger state |> nytte)
-        (object.fotgjengerForutsetninger state |> nytte)
+        (object.syklistForutsetninger this state |> nytte)
+        (object.fotgjengerForutsetninger this state |> nytte)
 
 
 yearlyTSGevinstNytte : StateCalculationMethod
 yearlyTSGevinstNytte ((Tiltak object) as this) state =
     Maybe.map2 (+)
-        (object.syklistForutsetninger state |> object.yearlyTSGevinstNytteForBrukere this state)
-        (object.fotgjengerForutsetninger state |> object.yearlyTSGevinstNytteForBrukere this state)
+        (object.syklistForutsetninger this state |> object.yearlyTSGevinstNytteForBrukere this state)
+        (object.fotgjengerForutsetninger this state |> object.yearlyTSGevinstNytteForBrukere this state)
 
 
 yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
@@ -201,8 +201,8 @@ yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
             object.yearlyTSGevinstNytteOverfoertForBrukere this state
     in
     Maybe.map2 (+)
-        (object.syklistForutsetninger state |> nytte)
-        (object.fotgjengerForutsetninger state |> nytte)
+        (object.syklistForutsetninger this state |> nytte)
+        (object.fotgjengerForutsetninger this state |> nytte)
 
 
 yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
@@ -218,8 +218,8 @@ yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
             object.yearlyEksterneEffekterNytteInklOverfoertForBruker this state
     in
     Maybe.map2 (+)
-        (object.syklistForutsetninger state |> nytte)
-        (object.fotgjengerForutsetninger state |> nytte)
+        (object.syklistForutsetninger this state |> nytte)
+        (object.fotgjengerForutsetninger this state |> nytte)
 
 
 nyeTurerFra this brukerForutsetninger andelsAccessor =
@@ -232,7 +232,7 @@ nyeTurerFra this brukerForutsetninger andelsAccessor =
 
 yearlyOverfoerteSykkelturer : StateCalculationMethod
 yearlyOverfoerteSykkelturer ((Tiltak object) as this) state =
-    object.syklistForutsetninger state |> yearlyOverfoerteTurer this
+    object.syklistForutsetninger this state |> yearlyOverfoerteTurer this
 
 
 yearlyOverfoerteTurer this brukerForutsetninger =
@@ -269,7 +269,7 @@ yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
         overfoertNytte =
             Maybe.map
                 (\a -> a / 2)
-                (object.yearlySyklistNyttePerTur state (object.syklistForutsetninger state |> yearlyOverfoerteTurer this))
+                (object.yearlySyklistNyttePerTur state (object.syklistForutsetninger this state |> yearlyOverfoerteTurer this))
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
 
@@ -442,13 +442,13 @@ driftOgVedlihKost specificState =
         |> Maybe.map negate
 
 
-basicSyklistForutsetninger sykkelturerPerYearMaybe =
+basicSyklistForutsetninger (Tiltak object) state =
     { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
     , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
     , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
     , tsKostnad = verdisettinger.tsKostnadSykkel
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
-    , turerPerYearMaybe = sykkelturerPerYearMaybe
+    , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
     , tsGevinstTiltak = 0
@@ -456,7 +456,7 @@ basicSyklistForutsetninger sykkelturerPerYearMaybe =
     }
 
 
-basicFotgjengerForutsetninger gangturerPerYearMaybe =
+basicFotgjengerForutsetninger (Tiltak object) state =
     { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
     , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
     , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
@@ -464,7 +464,7 @@ basicFotgjengerForutsetninger gangturerPerYearMaybe =
     , eksterneKostnader = verdisettinger.eksterneKostnaderGange
     , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
     , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
-    , turerPerYearMaybe = gangturerPerYearMaybe
+    , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value
     , tsGevinstTiltak = 0
     , etterspoerselsEffekt = 0
     }

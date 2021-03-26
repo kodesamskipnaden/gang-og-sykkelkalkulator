@@ -110,10 +110,10 @@ tidsbesparelseMinutterPerTur =
     0.5
 
 
-syklistForutsetninger { ledLys } =
+syklistForutsetninger this state =
     let
         basic =
-            BasicTiltak.basicSyklistForutsetninger ledLys.sykkelturerPerYear.value
+            BasicTiltak.basicSyklistForutsetninger this state
     in
     { basic
         | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysSyklende
@@ -121,10 +121,10 @@ syklistForutsetninger { ledLys } =
     }
 
 
-fotgjengerForutsetninger { ledLys } =
+fotgjengerForutsetninger this state =
     let
         basic =
-            BasicTiltak.basicFotgjengerForutsetninger ledLys.gangturerPerYear.value
+            BasicTiltak.basicFotgjengerForutsetninger this state
     in
     { basic
         | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysGaaende

@@ -165,10 +165,10 @@ tidsbesparelseMinutterPerTur =
     0.5
 
 
-syklistForutsetninger { gsB_GsA } =
+syklistForutsetninger this state =
     let
         basic =
-            BasicTiltak.basicSyklistForutsetninger gsB_GsA.sykkelturerPerYear.value
+            BasicTiltak.basicSyklistForutsetninger this state
     in
     { basic
         | tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsASyklende
@@ -176,10 +176,10 @@ syklistForutsetninger { gsB_GsA } =
     }
 
 
-fotgjengerForutsetninger { gsB_GsA } =
+fotgjengerForutsetninger this state =
     let
         basic =
-            BasicTiltak.basicFotgjengerForutsetninger gsB_GsA.gangturerPerYear.value
+            BasicTiltak.basicFotgjengerForutsetninger this state
     in
     { basic
         | tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsAGaaende
@@ -235,7 +235,7 @@ yearlyFotgjengerNytte this { gsB_GsA } =
 
 
 yearlyGangturer this state =
-    fotgjengerForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this
+    fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this
 
 
 yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
@@ -248,7 +248,7 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\antallTurer oppetidPercent ->
                     oppetidPercent * (yearlyFotgjengerNyttePerTur antallTurer / 2)
                 )
-                (fotgjengerForutsetninger state |> BasicTiltak.yearlyOverfoerteTurer this)
+                (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this)
                 gsB_GsA.oppetidPercent.value
     in
     Maybe.map2 (+)

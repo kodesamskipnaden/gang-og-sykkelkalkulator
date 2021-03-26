@@ -49,10 +49,6 @@ type alias BrukerforutsetningStateCalculationMethod =
     Tiltak -> TiltakStates -> BrukerForutsetninger -> Maybe Float
 
 
-type alias CreateBrukerforutsetninger =
-    TiltakStates -> BrukerForutsetninger
-
-
 
 {-
     Some invariants
@@ -76,8 +72,8 @@ type alias TiltakRecordHooks =
     , basicState : TiltakStates -> BasicState
     , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
-    , syklistForutsetninger : CreateBrukerforutsetninger
-    , fotgjengerForutsetninger : CreateBrukerforutsetninger
+    , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
+    , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
     , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
     }
