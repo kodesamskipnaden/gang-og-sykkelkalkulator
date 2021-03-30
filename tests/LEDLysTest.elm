@@ -1,6 +1,6 @@
 module LEDLysTest exposing (..)
 
-import BasicState exposing (Nivaa(..))
+import BasicState exposing (..)
 import BasicTiltak exposing (yearlyOverfoerteSykkelturer)
 import Expect
 import FormattedValue exposing (formattedValue)
@@ -21,13 +21,14 @@ sykkelSuite =
         state =
             { initialState
                 | ledLys =
-                    { installationCost = Just 1.0e6 |> formattedValue
+                    { nivaa = LavTilHoey
+                    , sted = Storby
+                    , installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
                     , lengdeVeiKm = Just 1 |> formattedValue
                     , preferredToGraph = ""
-                    , nivaa = LavTilHoey
                     }
             }
 
@@ -78,6 +79,7 @@ gangOgSykkelSuite =
             { initialState
                 | ledLys =
                     { nivaa = LavTilHoey
+                    , sted = Storby
                     , installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
@@ -184,6 +186,7 @@ ifLengdeLongerThanAverageTrip =
             { initialState
                 | ledLys =
                     { nivaa = LavTilHoey
+                    , sted = Storby
                     , installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
@@ -197,6 +200,7 @@ ifLengdeLongerThanAverageTrip =
             { initialState
                 | ledLys =
                     { nivaa = LavTilHoey
+                    , sted = Storby
                     , installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue

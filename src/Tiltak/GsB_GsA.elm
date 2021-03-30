@@ -1,6 +1,6 @@
 module Tiltak.GsB_GsA exposing (..)
 
-import BasicState exposing (Nivaa(..))
+import BasicState exposing (Nivaa(..), Sted(..))
 import BasicTiltak
 import Field exposing (Field, SimpleField)
 import Focus exposing ((=>), Focus)
@@ -93,6 +93,7 @@ tiltakRecordImplementation =
             , preferredToGraph = gsB_GsA.preferredToGraph
             , lengdeVeiKm = gsB_GsA.lengdeVeiKm
             , nivaa = gsB_GsA.nivaa
+            , sted = gsB_GsA.sted
             }
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
@@ -104,6 +105,7 @@ tiltakRecordImplementation =
 initialState : GsB_GsAState
 initialState =
     { nivaa = LavTilHoey
+    , sted = Storby
     , installationCost = Just 0 |> formattedValue
     , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = Just 0 |> formattedValue
@@ -168,6 +170,25 @@ tidsbesparelseMinutterPerTur =
     0.5
 
 
+etterspoerselsEffektFotgjengerGsB_GsA nivaa =
+    let
+        lavTilHoey =
+            5 / 100
+
+        lavTilMiddels =
+            4 / 100
+    in
+    case nivaa of
+        LavTilHoey ->
+            lavTilHoey
+
+        LavTilMiddels ->
+            4 / 100
+
+        MiddelsTilHoey ->
+            lavTilHoey - lavTilMiddels
+
+
 syklistForutsetninger this state =
     let
         basic =
@@ -179,14 +200,20 @@ syklistForutsetninger this state =
     }
 
 
-fotgjengerForutsetninger this state =
+fotgjengerForutsetninger ((Tiltak object) as this) state =
     let
         basic =
             BasicTiltak.basicFotgjengerForutsetninger this state
+
+        basicState =
+            object.basicState state
     in
     { basic
         | tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsAGaaende
-        , etterspoerselsEffekt = verdisettinger.fotgjengerGsB_GsA
+        , etterspoerselsEffekt =
+            etterspoerselsEffektFotgjengerGsB_GsA basicState.nivaa
+
+        -- verdisettinger.fotgjengerGsB_GsA
     }
 
 

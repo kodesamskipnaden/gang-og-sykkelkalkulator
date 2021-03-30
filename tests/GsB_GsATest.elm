@@ -1,6 +1,6 @@
 module GsB_GsATest exposing (..)
 
-import BasicState exposing (Nivaa(..))
+import BasicState exposing (..)
 import BasicTiltak exposing (yearlyOverfoerteSykkelturer)
 import Expect exposing (FloatingPointTolerance(..))
 import FormattedValue exposing (formattedValue)
@@ -62,6 +62,7 @@ sykkelSuite =
             { initialState
                 | gsB_GsA =
                     { nivaa = LavTilHoey
+                    , sted = Storby
                     , installationCost = Just 0 |> formattedValue
                     , yearlyMaintenance = Just 222000 |> formattedValue
                     , sykkelturerPerYear = Just 5.0e4 |> formattedValue
@@ -116,6 +117,7 @@ fotgjengerSuite =
             { initialState
                 | gsB_GsA =
                     { nivaa = LavTilHoey
+                    , sted = Storby
                     , installationCost = Just 0 |> formattedValue
                     , yearlyMaintenance = Just 2.22e5 |> formattedValue
                     , sykkelturerPerYear = Just 0 |> formattedValue
