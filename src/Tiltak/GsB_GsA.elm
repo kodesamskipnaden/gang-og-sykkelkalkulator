@@ -189,6 +189,19 @@ etterspoerselsEffektFotgjengerGsB_GsA nivaa =
             lavTilHoey - lavTilMiddels
 
 
+tsGevinstGaaende nivaa =
+    let
+        lavTilHoey =
+            verdisettinger.tsGevinstGsB_GsAGaaende
+    in
+    case nivaa of
+        LavTilHoey ->
+            lavTilHoey
+
+        _ ->
+            Debug.crash "This is not implemented"
+
+
 syklistForutsetninger this state =
     let
         basic =
@@ -209,11 +222,9 @@ fotgjengerForutsetninger ((Tiltak object) as this) state =
             object.basicState state
     in
     { basic
-        | tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsAGaaende
+        | tsGevinstTiltak = tsGevinstGaaende basicState.nivaa
         , etterspoerselsEffekt =
             etterspoerselsEffektFotgjengerGsB_GsA basicState.nivaa
-
-        -- verdisettinger.fotgjengerGsB_GsA
     }
 
 

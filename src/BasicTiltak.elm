@@ -1,5 +1,6 @@
 module BasicTiltak exposing (..)
 
+import BasicState exposing (..)
 import Focus exposing ((=>), Focus)
 import FormattedValue
     exposing
@@ -442,10 +443,31 @@ driftOgVedlihKost specificState =
         |> Maybe.map negate
 
 
-basicSyklistForutsetninger (Tiltak object) state =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeSyklisterFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeSyklisterFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeSyklisterGenererte
+overfoertFra sted =
+    case sted of
+        Storby ->
+            { bil = 40 / 100, kollektivtransport = 35 / 100, genererte = 25 / 100 }
+
+        _ ->
+            Debug.crash "Not implemented"
+
+
+overfoertFraHelper (Tiltak object) state =
+    let
+        basicState =
+            object.basicState state
+    in
+    overfoertFra basicState.sted
+
+
+basicSyklistForutsetninger ((Tiltak object) as this) state =
+    let
+        overfoert =
+            overfoertFraHelper this state
+    in
+    { andelNyeBrukereFraBil = overfoert.bil
+    , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
+    , andelNyeBrukereGenererte = overfoert.genererte
     , tsKostnad = verdisettinger.tsKostnadSykkel
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
@@ -456,10 +478,14 @@ basicSyklistForutsetninger (Tiltak object) state =
     }
 
 
-basicFotgjengerForutsetninger (Tiltak object) state =
-    { andelNyeBrukereFraBil = verdisettinger.andelNyeFotgjengereFraBil
-    , andelNyeBrukereFraKollektivtransport = verdisettinger.andelNyeFotgjengereFraKollektivtransport
-    , andelNyeBrukereGenererte = verdisettinger.andelNyeFotgjengereGenererte
+basicFotgjengerForutsetninger ((Tiltak object) as this) state =
+    let
+        overfoert =
+            overfoertFraHelper this state
+    in
+    { andelNyeBrukereFraBil = overfoert.bil
+    , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
+    , andelNyeBrukereGenererte = overfoert.genererte
     , tsKostnad = verdisettinger.tsKostnadGange
     , eksterneKostnader = verdisettinger.eksterneKostnaderGange
     , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
