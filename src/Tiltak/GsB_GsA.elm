@@ -183,7 +183,7 @@ etterspoerselsEffektFotgjengerGsB_GsA nivaa =
             lavTilHoey
 
         LavTilMiddels ->
-            4 / 100
+            lavTilMiddels
 
         MiddelsTilHoey ->
             lavTilHoey - lavTilMiddels
