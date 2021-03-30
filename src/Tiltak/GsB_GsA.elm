@@ -235,18 +235,21 @@ yearlySyklistNyttePerTur { gsB_GsA } antallTurer =
         antallTurer
 
 
-yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =
+yearlyTSGevinstNytteOverfoertForBrukere ((Tiltak object) as this) state brukerForutsetninger =
     let
         nyeTurerFunc =
             BasicTiltak.nyeTurerFra this brukerForutsetninger
 
+        tsKostnader =
+            BasicTiltak.tsKostnader (object.basicState state).sted
+
         beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
             nyeTurerFraBil
-                * (verdisettinger.tsKostnadBil
+                * (tsKostnader.bil
                     - brukerForutsetninger.tsKostnad
                   )
                 + (nyeTurerFraKollektiv
-                    * (verdisettinger.tsKostnadKollektiv
+                    * (tsKostnader.kollektivtransport
                         - brukerForutsetninger.tsKostnad
                       )
                   )
@@ -254,7 +257,7 @@ yearlyTSGevinstNytteOverfoertForBrukere this { gsB_GsA } brukerForutsetninger =
                 * brukerForutsetninger.tsKostnad
     in
     Maybe.map3 (\a b c -> a * b * c)
-        gsB_GsA.oppetidPercent.value
+        state.gsB_GsA.oppetidPercent.value
         (Just brukerForutsetninger.totalReiseDistanceKm)
         (Maybe.map3
             beregning

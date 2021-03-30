@@ -247,16 +247,22 @@ yearlyOverfoerteTurer this brukerForutsetninger =
         (receiver .andelNyeBrukereGenererte)
 
 
-yearlyTrafikantNytteInklOverfoertForBruker this state brukerForutsetninger =
+yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
     let
         receiver =
             bindTiltak this state
+
+        basicState =
+            object.basicState state
+
+        koekostnad =
+            koekostnadBiler basicState.sted
 
         overfoertNytte =
             Maybe.map3 (\a b c -> a * b * c)
                 (Just brukerForutsetninger.totalReiseDistanceKm)
                 (nyeTurerFra this brukerForutsetninger .andelNyeBrukereFraBil)
-                (Just verdisettinger.koekostnadBiler)
+                (Just koekostnad)
     in
     Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
 
@@ -447,6 +453,26 @@ overfoertFra sted =
     case sted of
         Storby ->
             { bil = 40 / 100, kollektivtransport = 35 / 100, genererte = 25 / 100 }
+
+        _ ->
+            Debug.crash "Not implemented"
+
+
+tsKostnader sted =
+    case sted of
+        Storby ->
+            { bil = verdisettinger.tsKostnadBil
+            , kollektivtransport = verdisettinger.tsKostnadKollektiv
+            }
+
+        _ ->
+            Debug.crash "Not implemented"
+
+
+koekostnadBiler sted =
+    case sted of
+        Storby ->
+            verdisettinger.koekostnadBiler
 
         _ ->
             Debug.crash "Not implemented"
