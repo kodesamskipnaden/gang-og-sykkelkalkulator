@@ -306,26 +306,34 @@ yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
     object.yearlySyklistNyttePerTur state (object.basicState state).sykkelturerPerYear.value
 
 
-yearlyEksterneEffekterNytteInklOverfoertForBruker this state brukerForutsetninger =
+yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
     let
         nyeTurer =
             nyeTurerFra this brukerForutsetninger
 
+        sted =
+            (object.basicState state).sted
+
+        eksterneKostnader =
+            oevrigeEksterneKostnader sted
+
         overfoertFraBilNyttePerKm nyeTurerFraBil =
             nyeTurerFraBil
-                * (verdisettinger.eksterneKostnaderBil
+                * (eksterneKostnader.bil
                     - brukerForutsetninger.eksterneKostnader
                   )
 
         overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv =
             nyeTurerFraKollektiv
-                * (verdisettinger.eksterneKostnaderKollektiv
+                * (eksterneKostnader.kollektivtransport
                     - brukerForutsetninger.eksterneKostnader
                   )
 
         nytte nyeTurerFraBil nyeTurerFraKollektiv =
             brukerForutsetninger.totalReiseDistanceKm
-                * (overfoertFraBilNyttePerKm nyeTurerFraBil + overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv)
+                * (overfoertFraBilNyttePerKm nyeTurerFraBil
+                    + overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv
+                  )
     in
     Maybe.map2 nytte
         (nyeTurer .andelNyeBrukereFraBil)
@@ -463,6 +471,17 @@ tsKostnader sted =
         Storby ->
             { bil = verdisettinger.tsKostnadBil
             , kollektivtransport = verdisettinger.tsKostnadKollektiv
+            }
+
+        _ ->
+            Debug.crash "Not implemented"
+
+
+oevrigeEksterneKostnader sted =
+    case sted of
+        Storby ->
+            { bil = verdisettinger.eksterneKostnaderBil
+            , kollektivtransport = verdisettinger.eksterneKostnaderKollektiv
             }
 
         _ ->
