@@ -1,5 +1,6 @@
 module Tiltak.GsB_GsA exposing (..)
 
+import BasicState exposing (Nivaa(..))
 import BasicTiltak
 import Field exposing (Field, SimpleField)
 import Focus exposing ((=>), Focus)
@@ -91,6 +92,7 @@ tiltakRecordImplementation =
             , gangturerPerYear = gsB_GsA.gangturerPerYear
             , preferredToGraph = gsB_GsA.preferredToGraph
             , lengdeVeiKm = gsB_GsA.lengdeVeiKm
+            , nivaa = gsB_GsA.nivaa
             }
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
@@ -101,7 +103,8 @@ tiltakRecordImplementation =
 
 initialState : GsB_GsAState
 initialState =
-    { installationCost = Just 0 |> formattedValue
+    { nivaa = LavTilHoey
+    , installationCost = Just 0 |> formattedValue
     , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue

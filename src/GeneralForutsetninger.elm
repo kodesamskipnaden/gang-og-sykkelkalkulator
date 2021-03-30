@@ -1,5 +1,12 @@
 module GeneralForutsetninger exposing (..)
 
+-- TODO: grupper verdisettinger som varierer etter hva de varierer på
+-- TODO: Datatype Nivaa: lav-middels, lav-høy, middels-høy
+-- Noen varierer på nivå: lav-middels, lav-høy, middels-høy
+-- Noen varierer på sted spredtbygd, liten by, stor by
+-- Vi kan begynne med å introdusere nivåer ved å postulere at dagens program er lav til høy
+-- Vi kunne uttrykt nivå bestemte verdier ved å lagre 2 tall (sjekk med nils). Enten lav til høy og lav til middels (så kan man regne ut differansen for å finne ut middels til høy).
+
 
 verdisettinger =
     -- alle verdier i NOK

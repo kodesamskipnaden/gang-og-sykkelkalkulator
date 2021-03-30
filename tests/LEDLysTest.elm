@@ -1,5 +1,6 @@
 module LEDLysTest exposing (..)
 
+import BasicState exposing (Nivaa(..))
 import BasicTiltak exposing (yearlyOverfoerteSykkelturer)
 import Expect
 import FormattedValue exposing (formattedValue)
@@ -26,6 +27,7 @@ sykkelSuite =
                     , gangturerPerYear = Just 0 |> formattedValue
                     , lengdeVeiKm = Just 1 |> formattedValue
                     , preferredToGraph = ""
+                    , nivaa = LavTilHoey
                     }
             }
 
@@ -75,7 +77,8 @@ gangOgSykkelSuite =
         state =
             { initialState
                 | ledLys =
-                    { installationCost = Just 1.0e6 |> formattedValue
+                    { nivaa = LavTilHoey
+                    , installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 2.0e4 |> formattedValue
@@ -180,7 +183,8 @@ ifLengdeLongerThanAverageTrip =
         stateLengdeLargest =
             { initialState
                 | ledLys =
-                    { installationCost = Just 1.0e6 |> formattedValue
+                    { nivaa = LavTilHoey
+                    , installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
@@ -192,7 +196,8 @@ ifLengdeLongerThanAverageTrip =
         stateTotalLargest =
             { initialState
                 | ledLys =
-                    { installationCost = Just 1.0e6 |> formattedValue
+                    { nivaa = LavTilHoey
+                    , installationCost = Just 1.0e6 |> formattedValue
                     , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue

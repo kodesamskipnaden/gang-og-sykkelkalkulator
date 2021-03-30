@@ -1,5 +1,6 @@
 module Tiltak.LEDLys exposing (..)
 
+import BasicState exposing (Nivaa(..))
 import BasicTiltak
 import Field exposing (Field, SimpleField)
 import Focus exposing ((=>), Focus)
@@ -51,6 +52,7 @@ tiltakRecordImplementation =
             , gangturerPerYear = ledLys.gangturerPerYear
             , preferredToGraph = ledLys.preferredToGraph
             , lengdeVeiKm = ledLys.lengdeVeiKm
+            , nivaa = ledLys.nivaa
             }
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
@@ -61,7 +63,8 @@ tiltakRecordImplementation =
 
 initialState : LEDLysState
 initialState =
-    { installationCost = formattedValueDefault
+    { nivaa = LavTilHoey
+    , installationCost = formattedValueDefault
     , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue

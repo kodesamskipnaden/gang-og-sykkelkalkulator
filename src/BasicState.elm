@@ -1,6 +1,12 @@
-module BasicState exposing (BasicState)
+module BasicState exposing (BasicState, Nivaa(..))
 
 import FormattedValue exposing (FormattedValue)
+
+
+type Nivaa
+    = LavTilHoey
+    | LavTilMiddels
+    | MiddelsTilHoey
 
 
 type alias BasicState =
@@ -8,4 +14,5 @@ type alias BasicState =
     , gangturerPerYear : FormattedValue Float
     , preferredToGraph : String
     , lengdeVeiKm : FormattedValue Float
+    , nivaa : Nivaa
     }
