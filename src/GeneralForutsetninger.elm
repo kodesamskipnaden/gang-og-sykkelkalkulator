@@ -34,16 +34,16 @@ verdisettinger =
     , fotgjengerBedreBelysningLED = 5 / 100
     , sykkelGsB_GsA = 5 / 100
     , fotgjengerGsB_GsA = 5 / 100
+
+    -- Overføring
     , andelNyeSyklisterFraBil = 40 / 100
-    , andelNyeSyklisterFraKollektivtransport = 35 / 100
-
-    --    , andelNyeSyklisterFraGange = 0
-    , andelNyeSyklisterGenererte = 25 / 100
     , andelNyeFotgjengereFraBil = 40 / 100
+    , andelNyeSyklisterFraKollektivtransport = 35 / 100
     , andelNyeFotgjengereFraKollektivtransport = 35 / 100
-
-    --    , andelNyeFotgjengereFraSykkel = 0
+    , andelNyeSyklisterGenererte = 25 / 100
     , andelNyeFotgjengereGenererte = 25 / 100
+
+    -- Andre verdier
     , koekostnadBiler =
         -- kr pr km per bil
         2.0890356
