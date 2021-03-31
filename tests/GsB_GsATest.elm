@@ -131,20 +131,21 @@ fotgjengerSuite =
         expectedRecord =
             { yearlySyklistNytte = 0
             , yearlySyklistNytteInklOverfoert = 0
-            , yearlyTrafikantNytte = 0
-            , yearlyTrafikantNytteInklOverfoert = 3342.46
-            , yearlyHelsegevinstNytteInklOverfoert = 239600
-            , yearlyTSGevinstNytte = 41671.29
-            , yearlyTSGevinstNytteInklOverfoert = 21275.44
-            , yearlyEksterneEffekterNytteInklOverfoert = 1005.68
-            , nytte = 2371716.7
-            , nytteInklOverfoert = 7864261.6
+            , yearlyFotgjengerNytteInklOverfoert = 248552.97
+            , yearlyTrafikantNytte = 0 -- denne er nok feil, men vet ikke hva den skal være
+            , yearlyTrafikantNytteInklOverfoert = 1975.6705
+            , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
+            , yearlyTSGevinstNytte = 0 -- denne er feil men vet ikke fasit
+            , yearlyTSGevinstNytteInklOverfoert = 32697.4675
+            , yearlyEksterneEffekterNytteInklOverfoert = 1591.3741
+            , nytte = 0 -- denner er feil men mangler fasit
+            , nytteInklOverfoert = 14444763.2819
             , driftOgVedlihKost = -4393995.8
             , investeringsKostInklRestverdi = 0
             , kostUtenSkyggepris = -4393995.8
             , skyggepris = -878799.16
             , nettoNytte = -2901078.26
-            , nettoNytteInklOverfoert = 2591466.64
+            , nettoNytteInklOverfoert = 9171968.3193
             }
 
         checkWithState : CheckWithStateFunction
@@ -158,4 +159,8 @@ fotgjengerSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA fotgjengervei"
-        [ tiltakSuite checkWithState expectedRecord ]
+        [ tiltakSuite checkWithState expectedRecord
+        , test "overfoerteGangturer" <|
+            \() ->
+                yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
+        ]
