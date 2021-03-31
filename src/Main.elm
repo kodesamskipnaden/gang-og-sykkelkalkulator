@@ -64,6 +64,12 @@ subscriptions model =
         ]
 
 
+updateRadio model tiltak radioValue selected =
+    ( model
+    , Cmd.none
+    )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -84,6 +90,9 @@ update msg model =
 
         UpdateField tiltak field stringValue ->
             updateField model tiltak field stringValue
+
+        UpdateRadio tiltak radioValue selected ->
+            updateRadio model tiltak radioValue selected
 
         FieldBlur field ->
             ( { model | tiltakStates = field.beDisplayMode model.tiltakStates }

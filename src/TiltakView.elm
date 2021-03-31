@@ -194,5 +194,14 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
 
 tiltakForm : Tiltak -> TiltakStates -> Html Msg
 tiltakForm tiltak tiltakStates =
+    let
+        formGroups =
+            sendTo tiltak .fields |> List.map (fieldView tiltak tiltakStates)
+
+        nivaaGroup =
+            []
+    in
     Form.form []
-        (sendTo tiltak .fields |> List.map (fieldView tiltak tiltakStates))
+        (nivaaGroup
+            ++ formGroups
+        )
