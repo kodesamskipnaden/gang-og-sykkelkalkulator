@@ -16,7 +16,7 @@ type Msg
     = UrlChange Location
     | AccordionMsg Accordion.State
     | UpdateField Tiltak Field String
-    | UpdateRadio Tiltak RadioValue Bool
+    | UpdateRadio Tiltak RadioValue
     | ChartsChanged (List String)
     | FieldBlur Field
     | FieldFocus Field

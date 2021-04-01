@@ -104,5 +104,13 @@ nivaa =
         )
 
 
+sted =
+    Focus.create
+        .sted
+        (\f specificState ->
+            { specificState | sted = f specificState.sted }
+        )
+
+
 installationCostValue =
     installationCost => value

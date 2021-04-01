@@ -403,6 +403,7 @@ basicTiltakRecord hooks =
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
     , basicState = hooks.basicState
     , nivaaFocus = hooks.nivaaFocus
+    , stedFocus = hooks.stedFocus
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
     , yearlySyklistNyttePerTur = hooks.yearlySyklistNyttePerTur

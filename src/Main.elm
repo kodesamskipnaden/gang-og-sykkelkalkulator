@@ -68,23 +68,18 @@ updateRadio :
     Model
     -> Tiltak
     -> RadioValue
-    -> Bool
     -> ( Model, Cmd msg )
-updateRadio ({ tiltakStates } as model) ((Tiltak object) as tiltak) radioValue selected =
+updateRadio ({ tiltakStates } as model) ((Tiltak object) as tiltak) radioValue =
     let
-        dummy =
-            Debug.log "radioValue" radioValue
-
-        dummy2 =
-            Debug.log "selected" selected
-
         newTiltakStates =
-            case radioValue of
-                NivaaType nivaa ->
-                    Focus.set object.nivaaFocus nivaa model.tiltakStates
+            model.tiltakStates
+                |> (case radioValue of
+                        NivaaType nivaa ->
+                            Focus.set object.nivaaFocus nivaa
 
-                StedType sted ->
-                    Debug.crash "sted ikke støttet"
+                        StedType sted ->
+                            Focus.set object.stedFocus sted
+                   )
     in
     ( { model | tiltakStates = newTiltakStates }
     , Cmd.none
@@ -112,8 +107,8 @@ update msg model =
         UpdateField tiltak field stringValue ->
             updateField model tiltak field stringValue
 
-        UpdateRadio tiltak radioValue selected ->
-            updateRadio model tiltak radioValue selected
+        UpdateRadio tiltak radioValue ->
+            updateRadio model tiltak radioValue
 
         FieldBlur field ->
             ( { model | tiltakStates = field.beDisplayMode model.tiltakStates }

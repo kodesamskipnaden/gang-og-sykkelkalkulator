@@ -96,6 +96,7 @@ tiltakRecordImplementation =
             , sted = gsB_GsA.sted
             }
     , nivaaFocus = specificState => FormattedValue.nivaa
+    , stedFocus = specificState => FormattedValue.sted
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger

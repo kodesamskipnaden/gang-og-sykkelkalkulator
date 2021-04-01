@@ -1,7 +1,7 @@
 module TiltakView exposing (..)
 
 import AnalyseView
-import BasicState exposing (Nivaa(..))
+import BasicState exposing (Nivaa(..), Sted(..))
 import Bootstrap.Accordion as Accordion
 import Bootstrap.Button as Button
 import Bootstrap.ButtonGroup as ButtonGroup
@@ -10,12 +10,13 @@ import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.Radio as Radio
 import Field exposing (Field)
+import Focus
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onBlur, onFocus)
 import Msgs exposing (Msg(..), RadioValue(..))
 import NumberFormat
-import Tiltak exposing (Tiltak, sendTo)
+import Tiltak exposing (Tiltak(..), sendTo)
 import TiltakCharting exposing (GraphState(..))
 import TiltakStates exposing (TiltakStates)
 
@@ -194,26 +195,71 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
         ]
 
 
+nivaaGroup : Tiltak -> TiltakStates -> Html Msg
+nivaaGroup ((Tiltak object) as tiltak) tiltakStates =
+    let
+        nivaa =
+            Focus.get object.nivaaFocus tiltakStates
+    in
+    Form.group []
+        ([ Form.label [ for "nivaaRadios" ] [ text "Nivå" ] ]
+            ++ Radio.radioList "nivaaRadios"
+                [ Radio.create
+                    [ Radio.checked (nivaa == LavTilHoey)
+                    , Radio.onClick (UpdateRadio tiltak (NivaaType LavTilHoey))
+                    ]
+                    "Lav til Høy"
+                , Radio.create
+                    [ Radio.checked (nivaa == MiddelsTilHoey)
+                    , Radio.onClick (UpdateRadio tiltak (NivaaType MiddelsTilHoey))
+                    ]
+                    "Middels til Høy"
+                , Radio.create
+                    [ Radio.checked (nivaa == LavTilMiddels)
+                    , Radio.onClick (UpdateRadio tiltak (NivaaType LavTilMiddels))
+                    ]
+                    "Lav til Middels"
+                ]
+        )
+
+
+stedGroup : Tiltak -> TiltakStates -> Html Msg
+stedGroup ((Tiltak object) as tiltak) tiltakStates =
+    let
+        sted =
+            Focus.get object.stedFocus tiltakStates
+    in
+    Form.group []
+        ([ Form.label [ for "stedRadios" ] [ text "Sted" ] ]
+            ++ Radio.radioList "stedRadios"
+                [ Radio.create
+                    [ Radio.checked (sted == Storby)
+                    , Radio.onClick (UpdateRadio tiltak (StedType Storby))
+                    ]
+                    "Storby"
+                , Radio.create
+                    [ Radio.checked (sted == LitenBy)
+                    , Radio.onClick (UpdateRadio tiltak (StedType LitenBy))
+                    ]
+                    "Liten by"
+                , Radio.create
+                    [ Radio.checked (sted == Spredtbygd)
+                    , Radio.onClick (UpdateRadio tiltak (StedType Spredtbygd))
+                    ]
+                    "Spredtbygd"
+                ]
+        )
+
+
 tiltakForm : Tiltak -> TiltakStates -> Html Msg
 tiltakForm tiltak tiltakStates =
     let
         formGroups =
             sendTo tiltak .fields |> List.map (fieldView tiltak tiltakStates)
-
-        nivaaGroup =
-            Radio.radioList "nivaaRadios"
-                [ Radio.create
-                    [ Radio.onClick (UpdateRadio tiltak (NivaaType LavTilHoey) True) ]
-                    "Lav til Høy"
-                , Radio.create
-                    [ Radio.onClick (UpdateRadio tiltak (NivaaType MiddelsTilHoey) True) ]
-                    "Middels til Høy"
-                , Radio.create
-                    [ Radio.onClick (UpdateRadio tiltak (NivaaType LavTilMiddels) True) ]
-                    "Lav til Middels"
-                ]
     in
     Form.form []
-        (nivaaGroup
+        ([ nivaaGroup tiltak tiltakStates
+         , stedGroup tiltak tiltakStates
+         ]
             ++ formGroups
         )

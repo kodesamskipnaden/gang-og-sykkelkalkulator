@@ -1,6 +1,6 @@
 module Tiltak exposing (..)
 
-import BasicState exposing (BasicState, Nivaa)
+import BasicState exposing (BasicState, Nivaa, Sted)
 import Field exposing (Field)
 import Focus exposing (Focus)
 import TiltakStates exposing (TiltakStates)
@@ -71,6 +71,7 @@ type alias TiltakRecordHooks =
     , fields : Tiltak -> List Field
     , basicState : TiltakStates -> BasicState
     , nivaaFocus : Focus TiltakStates Nivaa
+    , stedFocus : Focus TiltakStates Sted
     , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger

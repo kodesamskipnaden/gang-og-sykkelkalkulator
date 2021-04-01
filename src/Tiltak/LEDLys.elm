@@ -56,6 +56,7 @@ tiltakRecordImplementation =
             , sted = ledLys.sted
             }
     , nivaaFocus = specificState => FormattedValue.nivaa
+    , stedFocus = specificState => FormattedValue.sted
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
