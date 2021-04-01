@@ -5,10 +5,10 @@ import Focus exposing ((=>))
 import FormattedValue exposing (value)
 import Group
 import Models exposing (..)
-import Msgs exposing (Msg(..))
+import Msgs exposing (Msg(..), RadioValue(..))
 import Navigation exposing (Location)
 import Ports
-import Tiltak exposing (Tiltak, sendTo)
+import Tiltak exposing (Tiltak(..), sendTo)
 import TiltakAndGroupData
 import TiltakCharting exposing (GraphState(..))
 import UrlParser exposing ((</>))
@@ -64,8 +64,29 @@ subscriptions model =
         ]
 
 
-updateRadio model tiltak radioValue selected =
-    ( model
+updateRadio :
+    Model
+    -> Tiltak
+    -> RadioValue
+    -> Bool
+    -> ( Model, Cmd msg )
+updateRadio ({ tiltakStates } as model) ((Tiltak object) as tiltak) radioValue selected =
+    let
+        dummy =
+            Debug.log "radioValue" radioValue
+
+        dummy2 =
+            Debug.log "selected" selected
+
+        newTiltakStates =
+            case radioValue of
+                NivaaType nivaa ->
+                    Focus.set object.nivaaFocus nivaa model.tiltakStates
+
+                StedType sted ->
+                    Debug.crash "sted ikke støttet"
+    in
+    ( { model | tiltakStates = newTiltakStates }
     , Cmd.none
     )
 

@@ -1,17 +1,19 @@
 module TiltakView exposing (..)
 
 import AnalyseView
+import BasicState exposing (Nivaa(..))
 import Bootstrap.Accordion as Accordion
 import Bootstrap.Button as Button
 import Bootstrap.ButtonGroup as ButtonGroup
 import Bootstrap.Card as Card
 import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
+import Bootstrap.Form.Radio as Radio
 import Field exposing (Field)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onBlur, onFocus)
-import Msgs exposing (Msg(..))
+import Msgs exposing (Msg(..), RadioValue(..))
 import NumberFormat
 import Tiltak exposing (Tiltak, sendTo)
 import TiltakCharting exposing (GraphState(..))
@@ -199,7 +201,17 @@ tiltakForm tiltak tiltakStates =
             sendTo tiltak .fields |> List.map (fieldView tiltak tiltakStates)
 
         nivaaGroup =
-            []
+            Radio.radioList "nivaaRadios"
+                [ Radio.create
+                    [ Radio.onClick (UpdateRadio tiltak (NivaaType LavTilHoey) True) ]
+                    "Lav til Høy"
+                , Radio.create
+                    [ Radio.onClick (UpdateRadio tiltak (NivaaType MiddelsTilHoey) True) ]
+                    "Middels til Høy"
+                , Radio.create
+                    [ Radio.onClick (UpdateRadio tiltak (NivaaType LavTilMiddels) True) ]
+                    "Lav til Middels"
+                ]
     in
     Form.form []
         (nivaaGroup

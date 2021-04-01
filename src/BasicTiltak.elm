@@ -402,6 +402,7 @@ basicTiltakRecord hooks =
     , preferredField = preferredField hooks.specificStateFocus
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
     , basicState = hooks.basicState
+    , nivaaFocus = hooks.nivaaFocus
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
     , yearlySyklistNyttePerTur = hooks.yearlySyklistNyttePerTur
