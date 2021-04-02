@@ -172,6 +172,11 @@ tidsbesparelseMinutterPerTur =
     0.5
 
 
+-- =60* (lengde gangvei/hastighet før - lengde gangvei hastighet etter)
+-- = 60 * lengde * hastighetsdifferanse
+-- =60* [(lengde gangvei/hastighet før) - (lengde gangvei/hastighet etter)]
+
+
 nivaaForutsetninger nivaa =
     case nivaa of
         LavTilHoey ->
@@ -290,6 +295,18 @@ yearlyFotgjengerNytte this { gsB_GsA } =
 
 yearlyGangturer this state =
     fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this
+
+
+
+--
+-- Min: laveste verdi av tiltakets lengde og total reiselengde
+-- *      henter WTP for tiltaket basert på nivå
+-- * (antall brukere i dag + 1/2 av nye brukere)
+-- MIN($B$6;$B$12)*FINN.RAD(KJED.SAMMEN(C3;C4;C5);'Forutsetninger tiltak-nivå-sted'!$F$4:$AD$39;21;USANN)*($B$10+0,5*C23)
+-- Min: laveste verdi av tiltakets lengde og total reiselengde
+-- Finn.rad: henter WTP for tiltaket
+-- ($B$10+0,5*C23)
+-- antall brukere i dag + 1/2 av nye brukere
 
 
 yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
