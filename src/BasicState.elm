@@ -3,6 +3,11 @@ module BasicState exposing (BasicState, Nivaa(..), Sted(..))
 import FormattedValue exposing (FormattedValue)
 
 
+type alias NivaaForutsetninger =
+    { etterspoerselsEffektFotgjenger : Float
+    }
+
+
 type Nivaa
     = LavTilHoey
     | LavTilMiddels
