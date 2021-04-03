@@ -7,7 +7,7 @@ import FormattedValue exposing (formattedValue)
 import Maybe.Extra
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
-import Tiltak exposing (analyse, sendTo)
+import Tiltak exposing (Tiltak(..), analyse, sendTo)
 import Tiltak.GsB_GsA as GsB_GsA exposing (tiltak)
 import TiltakAndGroupData
 
@@ -131,7 +131,8 @@ fotgjengerSuite =
         expectedRecord =
             { yearlySyklistNytte = 0
             , yearlySyklistNytteInklOverfoert = 0
-            , yearlyFotgjengerNytteInklOverfoert = 248552.97
+
+            -- , yearlyFotgjengerNytteInklOverfoert = 248552.97
             , yearlyTrafikantNytte = 0 -- denne er nok feil, men vet ikke hva den skal være
             , yearlyTrafikantNytteInklOverfoert = 1975.6705
             , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
@@ -148,6 +149,16 @@ fotgjengerSuite =
             , nettoNytteInklOverfoert = 9171968.3193
             }
 
+        expectTiltakMaybe description accessor expectedValue =
+            let
+                (Tiltak object) =
+                    tiltak
+            in
+            test description <|
+                \() ->
+                    accessor object tiltak state
+                        |> checkMaybe (Expect.equal expectedValue)
+
         checkWithState : CheckWithStateFunction
         checkWithState description accessor expectation =
             test description <|
@@ -160,6 +171,10 @@ fotgjengerSuite =
     in
     describe "GsB_GsA fotgjengervei"
         [ tiltakSuite checkWithState expectedRecord
+        , expectTiltakMaybe
+            "yearlyFotgjengerNytteInklOverfoert"
+            .yearlyFotgjengerNytteInklOverfoert
+            248552.97
         , test "overfoerteGangturer" <|
             \() ->
                 yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
