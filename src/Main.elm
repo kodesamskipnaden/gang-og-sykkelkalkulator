@@ -5,10 +5,10 @@ import Focus exposing ((=>))
 import FormattedValue exposing (value)
 import Group
 import Models exposing (..)
-import Msgs exposing (Msg(..))
+import Msgs exposing (Msg(..), RadioValue(..))
 import Navigation exposing (Location)
 import Ports
-import Tiltak exposing (Tiltak, sendTo)
+import Tiltak exposing (Tiltak(..), sendTo)
 import TiltakAndGroupData
 import TiltakCharting exposing (GraphState(..))
 import UrlParser exposing ((</>))
@@ -64,6 +64,28 @@ subscriptions model =
         ]
 
 
+updateRadio :
+    Model
+    -> Tiltak
+    -> RadioValue
+    -> ( Model, Cmd msg )
+updateRadio ({ tiltakStates } as model) ((Tiltak object) as tiltak) radioValue =
+    let
+        newTiltakStates =
+            model.tiltakStates
+                |> (case radioValue of
+                        NivaaType nivaa ->
+                            Focus.set object.nivaaFocus nivaa
+
+                        StedType sted ->
+                            Focus.set object.stedFocus sted
+                   )
+    in
+    ( { model | tiltakStates = newTiltakStates }
+    , Cmd.none
+    )
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -84,6 +106,9 @@ update msg model =
 
         UpdateField tiltak field stringValue ->
             updateField model tiltak field stringValue
+
+        UpdateRadio tiltak radioValue ->
+            updateRadio model tiltak radioValue
 
         FieldBlur field ->
             ( { model | tiltakStates = field.beDisplayMode model.tiltakStates }

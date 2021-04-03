@@ -96,5 +96,21 @@ bompengeAndel =
         )
 
 
+nivaa =
+    Focus.create
+        .nivaa
+        (\f specificState ->
+            { specificState | nivaa = f specificState.nivaa }
+        )
+
+
+sted =
+    Focus.create
+        .sted
+        (\f specificState ->
+            { specificState | sted = f specificState.sted }
+        )
+
+
 installationCostValue =
     installationCost => value

@@ -95,6 +95,8 @@ tiltakRecordImplementation =
             , nivaa = gsB_GsA.nivaa
             , sted = gsB_GsA.sted
             }
+    , nivaaFocus = specificState => FormattedValue.nivaa
+    , stedFocus = specificState => FormattedValue.sted
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
@@ -170,42 +172,49 @@ tidsbesparelseMinutterPerTur =
     0.5
 
 
-
 -- =60* (lengde gangvei/hastighet før - lengde gangvei hastighet etter)
 -- = 60 * lengde * hastighetsdifferanse
 -- =60* [(lengde gangvei/hastighet før) - (lengde gangvei/hastighet etter)]
 
 
-etterspoerselsEffektFotgjengerGsB_GsA nivaa =
-    let
-        lavTilHoey =
-            5 / 100
-
-        lavTilMiddels =
-            4 / 100
-    in
+nivaaForutsetninger nivaa =
     case nivaa of
         LavTilHoey ->
-            lavTilHoey
+            { etterspoerselsEffektFotgjenger = 5 / 100
+            , tsGevinstGaaende = verdisettinger.tsGevinstGsB_GsAGaaende
+            }
 
         LavTilMiddels ->
-            lavTilMiddels
+            -- { etterspoerselsEffektFotgjenger = 4 / 100 }
+            Debug.crash "Not Implemented"
 
         MiddelsTilHoey ->
-            lavTilHoey - lavTilMiddels
+            -- { etterspoerselsEffektFotgjenger = 1 / 100 }
+            Debug.crash "Not Implemented"
+
+
+etterspoerselsEffektFotgjengerGsB_GsA nivaa =
+    (nivaaForutsetninger nivaa).etterspoerselsEffektFotgjenger
+
+
+
+-- let
+--     lavTilHoey =
+--         5 / 100
+--     lavTilMiddels =
+--         4 / 100
+-- in
+-- case nivaa of
+--     LavTilHoey ->
+--         lavTilHoey
+--     LavTilMiddels ->
+--         lavTilMiddels
+--     MiddelsTilHoey ->
+--         lavTilHoey - lavTilMiddels
 
 
 tsGevinstGaaende nivaa =
-    let
-        lavTilHoey =
-            verdisettinger.tsGevinstGsB_GsAGaaende
-    in
-    case nivaa of
-        LavTilHoey ->
-            lavTilHoey
-
-        _ ->
-            Debug.crash "This is not implemented"
+    (nivaaForutsetninger nivaa).tsGevinstGaaende
 
 
 syklistForutsetninger this state =

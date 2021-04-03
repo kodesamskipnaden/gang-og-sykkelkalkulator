@@ -402,6 +402,8 @@ basicTiltakRecord hooks =
     , preferredField = preferredField hooks.specificStateFocus
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
     , basicState = hooks.basicState
+    , nivaaFocus = hooks.nivaaFocus
+    , stedFocus = hooks.stedFocus
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
     , yearlySyklistNyttePerTur = hooks.yearlySyklistNyttePerTur
@@ -457,44 +459,39 @@ driftOgVedlihKost specificState =
         |> Maybe.map negate
 
 
-overfoertFra sted =
+stedsForutsetninger sted =
     case sted of
         Storby ->
-            { bil = 40 / 100, kollektivtransport = 35 / 100, genererte = 25 / 100 }
+            { overfoertFra = { bil = 40 / 100, kollektivtransport = 35 / 100, genererte = 25 / 100 }
+            , tsKostnader =
+                { bil = verdisettinger.tsKostnadBil
+                , kollektivtransport = verdisettinger.tsKostnadKollektiv
+                }
+            , oevrigeEksterneKostnader =
+                { bil = verdisettinger.eksterneKostnaderBil
+                , kollektivtransport = verdisettinger.eksterneKostnaderKollektiv
+                }
+            , koekostnadBiler = verdisettinger.koekostnadBiler
+            }
 
         _ ->
             Debug.crash "Not implemented"
+
+
+overfoertFra sted =
+    (stedsForutsetninger sted).overfoertFra
 
 
 tsKostnader sted =
-    case sted of
-        Storby ->
-            { bil = verdisettinger.tsKostnadBil
-            , kollektivtransport = verdisettinger.tsKostnadKollektiv
-            }
-
-        _ ->
-            Debug.crash "Not implemented"
+    (stedsForutsetninger sted).tsKostnader
 
 
 oevrigeEksterneKostnader sted =
-    case sted of
-        Storby ->
-            { bil = verdisettinger.eksterneKostnaderBil
-            , kollektivtransport = verdisettinger.eksterneKostnaderKollektiv
-            }
-
-        _ ->
-            Debug.crash "Not implemented"
+    (stedsForutsetninger sted).oevrigeEksterneKostnader
 
 
 koekostnadBiler sted =
-    case sted of
-        Storby ->
-            verdisettinger.koekostnadBiler
-
-        _ ->
-            Debug.crash "Not implemented"
+    (stedsForutsetninger sted).koekostnadBiler
 
 
 overfoertFraHelper (Tiltak object) state =
