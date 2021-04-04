@@ -236,29 +236,14 @@ tidsbesparelseMinPerTurSyklende { gsB_GsA } =
         (Just tidsbesparelseMinPerKm)
 
 
-
--- tidsbesparelseMinPerTurGaaende { gsB_GsA } =
---     let
---         tidsbesparelseMinPerKm =
---             (nivaaForutsetninger gsB_GsA.nivaa).tidsbesparelseGaaendeMinutterPerKilometer
---         dummy =
---             Debug.log "tidsbesparelseMinPerKm" tidsbesparelseMinPerKm
---         dummy2 =
---             Debug.log "lengeVeiKm" gsB_GsA.lengdeVeiKm.value
---     in
---     Maybe.map2 (*)
---         gsB_GsA.lengdeVeiKm.value
---         (Just tidsbesparelseMinPerKm)
--- =60* [(lengde gangvei/hastighet før) - (lengde gangvei/hastighet etter)]
-
-
 tidsbesparelseMinPerTurGaaende { gsB_GsA } =
     let
-        tidsbesparelseMinPerTur lengde =
-            60 * ((lengde / 4.4) - (lengde / 5.3))
+        tidsbesparelseMinPerKm =
+            (nivaaForutsetninger gsB_GsA.nivaa).tidsbesparelseGaaendeMinutterPerKilometer
     in
-    Maybe.map tidsbesparelseMinPerTur
+    Maybe.map2 (*)
         gsB_GsA.lengdeVeiKm.value
+        (Just tidsbesparelseMinPerKm)
 
 
 yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
