@@ -258,8 +258,8 @@ tiltakForm tiltak tiltakStates =
             sendTo tiltak .fields |> List.map (fieldView tiltak tiltakStates)
     in
     Form.form []
-        ([ nivaaGroup tiltak tiltakStates
-         , stedGroup tiltak tiltakStates
-         ]
-            ++ formGroups
-        )
+        -- [ nivaaGroup tiltak tiltakStates
+        -- , stedGroup tiltak tiltakStates
+        -- ]
+        --    ++
+        formGroups
