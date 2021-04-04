@@ -122,7 +122,7 @@ fotgjengerSuite =
                     , yearlyMaintenance = Just 2.22e5 |> formattedValue
                     , sykkelturerPerYear = Just 0 |> formattedValue
                     , gangturerPerYear = Just 5.0e4 |> formattedValue
-                    , lengdeVeiKm = Just 1 |> formattedValue
+                    , lengdeVeiKm = Just 2.3 |> formattedValue
                     , oppetidPercent = Just 0.8 |> formattedValue
                     , preferredToGraph = ""
                     }
@@ -180,5 +180,6 @@ fotgjengerSuite =
           --       yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
           test "tidsbesparelseMinPerTurGaaende" <|
             \() ->
-                GsB_GsA.tidsbesparelseMinPerTurGaaende state |> checkMaybe (Expect.equal 1.05)
+                GsB_GsA.tidsbesparelseMinPerTurGaaende state
+                    |> checkMaybe (Expect.within (Absolute 0.00001) 5.3259)
         ]
