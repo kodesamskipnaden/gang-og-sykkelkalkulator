@@ -236,6 +236,10 @@ yearlyOverfoerteSykkelturer ((Tiltak object) as this) state =
     object.syklistForutsetninger this state |> yearlyOverfoerteTurer this
 
 
+yearlyOverfoerteGangturer ((Tiltak object) as this) state =
+    object.fotgjengerForutsetninger this state |> yearlyOverfoerteTurer this
+
+
 yearlyOverfoerteTurer this brukerForutsetninger =
     let
         receiver =

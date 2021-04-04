@@ -15,7 +15,7 @@ import FormattedValue
         , value
         , yearlyMaintenance
         )
-import GeneralForutsetninger exposing (verdisettinger)
+import GeneralForutsetninger exposing (verdisettinger, verifiserteVerdisettinger)
 import SpecificStates exposing (GsB_GsAState)
 import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
@@ -256,7 +256,7 @@ yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
 
 yearlyFotgjengerNyttePerTur ({ gsB_GsA } as state) antallTurer =
     Maybe.map3
-        (\a b c -> a * b * verdisettinger.reisetidGange * c)
+        (\a b c -> a * b * verifiserteVerdisettinger.voTGange * c)
         gsB_GsA.oppetidPercent.value
         antallTurer
         (tidsbesparelseMinPerTurGaaende state)
@@ -320,12 +320,11 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
             bindTiltak this state
 
         overfoertNytte =
-            Maybe.map2
-                (\fotgjengerNytte oppetidPercent ->
-                    oppetidPercent * (fotgjengerNytte / 2)
+            Maybe.map
+                (\fotgjengerNytte ->
+                    fotgjengerNytte / 2
                 )
                 (yearlyFotgjengerNyttePerTur state (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this))
-                gsB_GsA.oppetidPercent.value
     in
     Maybe.map2 (+)
         (receiver .yearlyFotgjengerNytte)

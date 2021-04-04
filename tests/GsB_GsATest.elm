@@ -1,7 +1,7 @@
 module GsB_GsATest exposing (..)
 
 import BasicState exposing (..)
-import BasicTiltak exposing (yearlyOverfoerteSykkelturer)
+import BasicTiltak
 import Expect exposing (FloatingPointTolerance(..))
 import FormattedValue exposing (formattedValue)
 import Maybe.Extra
@@ -106,7 +106,7 @@ sykkelSuite =
         [ -- tiltakSuite checkWithState expectedRecord
           test "overfoerteSykkelturer" <|
             \() ->
-                yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
+                BasicTiltak.yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
         ]
 
 
@@ -171,14 +171,16 @@ fotgjengerSuite =
     in
     describe "GsB_GsA fotgjengervei"
         [ -- tiltakSuite checkWithState expectedRecord
-          -- , expectTiltakMaybe
-          --     "yearlyFotgjengerNytteInklOverfoert"
-          --     .yearlyFotgjengerNytteInklOverfoert
-          --     248552.97
-          -- test "overfoerteGangturer" <|
-          --   \() ->
-          --       yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
-          test "tidsbesparelseMinPerTurGaaende" <|
+          expectTiltakMaybe
+            "yearlyFotgjengerNytteInklOverfoert"
+            .yearlyFotgjengerNytteInklOverfoert
+            248552.97
+        , test "overfoerteGangturer" <|
+            \() ->
+                BasicTiltak.yearlyOverfoerteGangturer tiltak state |> checkMaybe (Expect.equal 2500)
+        , test
+            "tidsbesparelseMinPerTurGaaende"
+          <|
             \() ->
                 GsB_GsA.tidsbesparelseMinPerTurGaaende state
                     |> checkMaybe (Expect.within (Absolute 0.00001) 5.3259)

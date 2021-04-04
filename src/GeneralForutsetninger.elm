@@ -8,16 +8,20 @@ module GeneralForutsetninger exposing (..)
 -- Vi kunne uttrykt nivå bestemte verdier ved å lagre 2 tall (sjekk med nils). Enten lav til høy og lav til middels (så kan man regne ut differansen for å finne ut middels til høy).
 
 
+verifiserteVerdisettinger =
+    { voTGange =
+        -- VoT_Gange
+        -- kr pr. min pr. gangtur
+        2.77293673883309
+    }
+
+
 verdisettinger =
     -- alle verdier i NOK
     { reisetidSykkel =
         -- VoT_Sykkel
         -- kr. pr min pr syklist
         147.47 / 60
-    , reisetidGange =
-        -- VoT_Gange
-        -- kr pr. min pr. gangtur
-        2.77293673883309
     , tsKostnadSykkel = 3.50891113
     , tsKostnadBil = 0.2639315
     , tsKostnadKollektiv = 0.0125062
