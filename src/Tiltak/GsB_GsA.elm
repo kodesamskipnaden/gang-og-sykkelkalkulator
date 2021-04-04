@@ -180,7 +180,7 @@ nivaaForutsetninger nivaa =
             { etterspoerselsEffektFotgjenger = 5 / 100
             , tsGevinstGaaende = verdisettinger.tsGevinstGsB_GsAGaaende
             , tidsbesparelseSyklendeMinutterPerKilometer = (17 - 13.1) * 60
-            , tidsbesparelseGaaendeMinutterPerKilometer = (5.3 - 4.4) * 60
+            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 5.3) * 60
             }
 
         LavTilMiddels ->
@@ -236,14 +236,29 @@ tidsbesparelseMinPerTurSyklende { gsB_GsA } =
         (Just tidsbesparelseMinPerKm)
 
 
+
+-- tidsbesparelseMinPerTurGaaende { gsB_GsA } =
+--     let
+--         tidsbesparelseMinPerKm =
+--             (nivaaForutsetninger gsB_GsA.nivaa).tidsbesparelseGaaendeMinutterPerKilometer
+--         dummy =
+--             Debug.log "tidsbesparelseMinPerKm" tidsbesparelseMinPerKm
+--         dummy2 =
+--             Debug.log "lengeVeiKm" gsB_GsA.lengdeVeiKm.value
+--     in
+--     Maybe.map2 (*)
+--         gsB_GsA.lengdeVeiKm.value
+--         (Just tidsbesparelseMinPerKm)
+-- =60* [(lengde gangvei/hastighet før) - (lengde gangvei/hastighet etter)]
+
+
 tidsbesparelseMinPerTurGaaende { gsB_GsA } =
     let
-        tidsbesparelseMinPerKm =
-            (nivaaForutsetninger gsB_GsA.nivaa).tidsbesparelseGaaendeMinutterPerKilometer
+        tidsbesparelseMinPerTur lengde =
+            60 * ((lengde / 4.4) - (lengde / 5.3))
     in
-    Maybe.map2 (*)
+    Maybe.map tidsbesparelseMinPerTur
         gsB_GsA.lengdeVeiKm.value
-        (Just tidsbesparelseMinPerKm)
 
 
 yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =

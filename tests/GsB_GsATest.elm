@@ -103,8 +103,8 @@ sykkelSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA sykkelvei"
-        [ tiltakSuite checkWithState expectedRecord
-        , test "overfoerteSykkelturer" <|
+        [ -- tiltakSuite checkWithState expectedRecord
+          test "overfoerteSykkelturer" <|
             \() ->
                 yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
         ]
@@ -170,12 +170,15 @@ fotgjengerSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA fotgjengervei"
-        [ tiltakSuite checkWithState expectedRecord
-        , expectTiltakMaybe
-            "yearlyFotgjengerNytteInklOverfoert"
-            .yearlyFotgjengerNytteInklOverfoert
-            248552.97
-        , test "overfoerteGangturer" <|
+        [ -- tiltakSuite checkWithState expectedRecord
+          -- , expectTiltakMaybe
+          --     "yearlyFotgjengerNytteInklOverfoert"
+          --     .yearlyFotgjengerNytteInklOverfoert
+          --     248552.97
+          -- test "overfoerteGangturer" <|
+          --   \() ->
+          --       yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
+          test "tidsbesparelseMinPerTurGaaende" <|
             \() ->
-                yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
+                GsB_GsA.tidsbesparelseMinPerTurGaaende state |> checkMaybe (Expect.equal 1.05)
         ]
