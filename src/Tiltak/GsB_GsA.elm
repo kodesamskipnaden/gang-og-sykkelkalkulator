@@ -255,18 +255,6 @@ yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
         (tidsbesparelseMinPerTurSyklende state)
 
 
-yearlyFotgjengerNyttePerTur ({ gsB_GsA } as state) antallTurer =
-    Maybe.map3
-        (\a b c -> a * b * verifiserteVerdisettinger.voTGange * c)
-        gsB_GsA.oppetidPercent.value
-        antallTurer
-        (tidsbesparelseMinPerTurGaaende state)
-
-
-yearlyFotgjengerNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
-    yearlyFotgjengerNyttePerTur state (object.basicState state).gangturerPerYear.value
-
-
 yearlyTSGevinstNytteOverfoertForBrukere ((Tiltak object) as this) state brukerForutsetninger =
     let
         nyeTurerFunc =
@@ -303,6 +291,17 @@ yearlyGangturer this state =
     fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this
 
 
+yearlyFotgjengerNyttePerTur ({ gsB_GsA } as state) antallTurer =
+    Maybe.map2
+        (\a b -> a * b * verifiserteVerdisettinger.voTGange)
+        antallTurer
+        (tidsbesparelseMinPerTurGaaende state)
+
+
+yearlyFotgjengerNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
+    yearlyFotgjengerNyttePerTur state (object.basicState state).gangturerPerYear.value
+
+
 
 --
 -- Min: laveste verdi av tiltakets lengde og total reiselengde
@@ -327,10 +326,11 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
                 )
                 (yearlyFotgjengerNyttePerTur state (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this))
     in
-    Maybe.map3 (\a b c -> a + b + c)
+    Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlyFotgjengerNytte)
         overfoertNytte
         (wtpNytte this state)
+        gsB_GsA.oppetidPercent.value
 
 
 
@@ -356,7 +356,6 @@ wtpNytte this state =
                 state.gsB_GsA.gangturerPerYear.value
                 (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this)
     in
-    Maybe.map3 (\distanse turerPluss oppetid -> distanse * turerPluss * wtp * oppetid)
+    Maybe.map2 (\distanse turerPluss -> distanse * turerPluss * wtp)
         distanseMaybe
         turerPlussMaybe
-        state.gsB_GsA.oppetidPercent.value
