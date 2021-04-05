@@ -46,6 +46,7 @@ type alias ExpectedRecord =
     , nettoNytteInklOverfoert : Float
     , yearlySyklistNytte : Float
     , yearlySyklistNytteInklOverfoert : Float
+    , yearlyFotgjengerNytteInklOverfoert : Float
     , yearlyTrafikantNytte : Float
     , yearlyTrafikantNytteInklOverfoert : Float
     , yearlyTSGevinstNytte : Float
@@ -71,6 +72,10 @@ tiltakSuite checkWithState expectedRecord =
                 "yearlySyklistNytteInklOverfoert"
                 .yearlySyklistNytteInklOverfoert
                 (closeTo expectedRecord.yearlySyklistNytteInklOverfoert 2)
+            , checkWithState
+                "yearlyFotgjengerNytteInklOverfoert"
+                .yearlyFotgjengerNytteInklOverfoert
+                (closeTo expectedRecord.yearlyFotgjengerNytteInklOverfoert 2)
             , checkWithState
                 "yearlyTrafikantNytte"
                 .yearlyTrafikantNytte

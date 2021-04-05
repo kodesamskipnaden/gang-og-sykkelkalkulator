@@ -35,6 +35,7 @@ sykkelSuite =
         expectedRecord =
             { yearlySyklistNytte = 18433.75
             , yearlySyklistNytteInklOverfoert = 18894.59
+            , yearlyFotgjengerNytteInklOverfoert = 0
             , yearlyTrafikantNytte = 0
             , yearlyTrafikantNytteInklOverfoert = 3133.55
             , yearlyHelsegevinstNytteInklOverfoert = 85500
@@ -104,6 +105,7 @@ gangOgSykkelSuite =
         expectedRecord =
             { yearlySyklistNytte = 18433.75
             , yearlySyklistNytteInklOverfoert = 18894.59
+            , yearlyFotgjengerNytteInklOverfoert = 0
             , yearlyTrafikantNytte = 0
             , yearlyTrafikantNytteInklOverfoert =
                 3133.55 + 1671.23

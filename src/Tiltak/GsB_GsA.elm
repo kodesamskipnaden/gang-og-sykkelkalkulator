@@ -181,6 +181,7 @@ nivaaForutsetninger nivaa =
             , tsGevinstGaaende = verdisettinger.tsGevinstGsB_GsAGaaende
             , tidsbesparelseSyklendeMinutterPerKilometer = (17 - 13.1) * 60
             , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 5.3) * 60
+            , wtp = 3.16
             }
 
         LavTilMiddels ->
@@ -326,6 +327,36 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
                 )
                 (yearlyFotgjengerNyttePerTur state (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this))
     in
-    Maybe.map2 (+)
+    Maybe.map3 (\a b c -> a + b + c)
         (receiver .yearlyFotgjengerNytte)
         overfoertNytte
+        (wtpNytte this state)
+
+
+
+-- yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
+
+
+wtpNytte this state =
+    let
+        totalReiseDistanceKm =
+            (fotgjengerForutsetninger this state).totalReiseDistanceKm
+
+        distanseMaybe =
+            Maybe.map
+                (\lengdeGangVei -> min lengdeGangVei totalReiseDistanceKm)
+                state.gsB_GsA.lengdeVeiKm.value
+
+        wtp =
+            (nivaaForutsetninger state.gsB_GsA.nivaa).wtp
+
+        turerPlussMaybe =
+            Maybe.map2
+                (\antallTurer overfoerteTurer -> antallTurer + 0.5 * overfoerteTurer)
+                state.gsB_GsA.gangturerPerYear.value
+                (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this)
+    in
+    Maybe.map3 (\distanse turerPluss oppetid -> distanse * turerPluss * wtp * oppetid)
+        distanseMaybe
+        turerPlussMaybe
+        state.gsB_GsA.oppetidPercent.value

@@ -131,8 +131,7 @@ fotgjengerSuite =
         expectedRecord =
             { yearlySyklistNytte = 0
             , yearlySyklistNytteInklOverfoert = 0
-
-            -- , yearlyFotgjengerNytteInklOverfoert = 248552.97
+            , yearlyFotgjengerNytteInklOverfoert = 864623.7934
             , yearlyTrafikantNytte = 0 -- denne er nok feil, men vet ikke hva den skal være
             , yearlyTrafikantNytteInklOverfoert = 1975.6705
             , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
@@ -149,7 +148,7 @@ fotgjengerSuite =
             , nettoNytteInklOverfoert = 9171968.3193
             }
 
-        expectTiltakMaybe description accessor expectedValue =
+        expectTiltakMaybe description accessor expectation =
             let
                 (Tiltak object) =
                     tiltak
@@ -157,7 +156,7 @@ fotgjengerSuite =
             test description <|
                 \() ->
                     accessor object tiltak state
-                        |> checkMaybe (Expect.equal expectedValue)
+                        |> checkMaybe expectation
 
         checkWithState : CheckWithStateFunction
         checkWithState description accessor expectation =
@@ -170,11 +169,11 @@ fotgjengerSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA fotgjengervei"
-        [ -- tiltakSuite checkWithState expectedRecord
-          expectTiltakMaybe
+        [ tiltakSuite checkWithState expectedRecord
+        , expectTiltakMaybe
             "yearlyFotgjengerNytteInklOverfoert"
             .yearlyFotgjengerNytteInklOverfoert
-            248552.97
+            (Expect.within (Absolute 0.0001) 864623.7934)
         , test "overfoerteGangturer" <|
             \() ->
                 BasicTiltak.yearlyOverfoerteGangturer tiltak state |> checkMaybe (Expect.equal 2500)
@@ -184,4 +183,10 @@ fotgjengerSuite =
             \() ->
                 GsB_GsA.tidsbesparelseMinPerTurGaaende state
                     |> checkMaybe (Expect.within (Absolute 0.00001) 5.3259)
+        , test
+            "wtpNytte"
+          <|
+            \() ->
+                GsB_GsA.wtpNytte tiltak state
+                    |> checkMaybe (Expect.within (Absolute 0.00001) 259120)
         ]
