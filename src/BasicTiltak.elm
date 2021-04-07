@@ -260,7 +260,7 @@ yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state bruke
             object.basicState state
 
         koekostnad =
-            koekostnadBiler basicState.sted
+            (stedsForutsetninger basicState.sted).koekostnadBiler
 
         overfoertNytte =
             Maybe.map3 (\a b c -> a * b * c)
@@ -466,7 +466,7 @@ driftOgVedlihKost specificState =
 stedsForutsetninger sted =
     case sted of
         Storby ->
-            { overfoertFra = { bil = 40 / 100, kollektivtransport = 35 / 100, genererte = 25 / 100 }
+            { overfoertFra = { bil = 30 / 100, kollektivtransport = 50 / 100, genererte = 20 / 100 }
             , tsKostnader =
                 { bil = verdisettinger.tsKostnadBil
                 , kollektivtransport = verdisettinger.tsKostnadKollektiv
@@ -475,7 +475,7 @@ stedsForutsetninger sted =
                 { bil = verdisettinger.eksterneKostnaderBil
                 , kollektivtransport = verdisettinger.eksterneKostnaderKollektiv
                 }
-            , koekostnadBiler = verdisettinger.koekostnadBiler
+            , koekostnadBiler = 1.3171136
             }
 
         _ ->
