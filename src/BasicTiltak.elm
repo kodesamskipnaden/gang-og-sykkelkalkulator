@@ -9,7 +9,7 @@ import FormattedValue
         , installationCost
         , value
         )
-import GeneralForutsetninger exposing (verdisettinger)
+import GeneralForutsetninger exposing (verdisettinger, verifiserteVerdisettinger)
 import Maybe.Extra
 import Regex
 import Tiltak exposing (..)
@@ -290,7 +290,7 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
         (\a b c -> a * b * c)
         (yearlyOverfoerteTurer this brukerForutsetninger)
         (Just brukerForutsetninger.totalReiseDistanceKm)
-        (Just brukerForutsetninger.helseTSGevinstBruker)
+        (Just brukerForutsetninger.helseGevinstBruker)
 
 
 yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =
@@ -518,7 +518,7 @@ basicSyklistForutsetninger ((Tiltak object) as this) state =
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    , helseGevinstBruker = verdisettinger.helseTSGevinstSykkel
     , tsGevinstTiltak = 0
     , etterspoerselsEffekt = 0
     }
@@ -535,7 +535,7 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     , tsKostnad = verdisettinger.tsKostnadGange
     , eksterneKostnader = verdisettinger.eksterneKostnaderGange
     , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
-    , helseTSGevinstBruker = verdisettinger.helseTSGevinstGange
+    , helseGevinstBruker = verifiserteVerdisettinger.helseGevinstGange
     , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value
     , tsGevinstTiltak = 0
     , etterspoerselsEffekt = 0

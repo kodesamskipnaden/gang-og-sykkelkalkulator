@@ -26,12 +26,12 @@ tiltakSuiteInProgress checkWithState expectedRecord =
             , checkWithState
                 "yearlyTrafikantNytteInklOverfoert"
                 .yearlyTrafikantNytteInklOverfoert
-                (closeTo expectedRecord.yearlyTrafikantNytteInklOverfoert 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlyTrafikantNytteInklOverfoert)
+            , checkWithState
+                "yearlyHelsegevinstNytteInklOverfoert"
+                .yearlyHelsegevinstNytteInklOverfoert
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
 
-            -- , checkWithState
-            --     "yearlyHelsegevinstNytteInklOverfoert"
-            --     .yearlyHelsegevinstNytteInklOverfoert
-            --     (closeTo expectedRecord.yearlyHelsegevinstNytteInklOverfoert 2)
             -- , checkWithState
             --     "yearlyTSGevinstNytteInklOverfoert"
             --     .yearlyTSGevinstNytteInklOverfoert
@@ -126,7 +126,7 @@ fotgjengerSuite =
             { yearlySyklistNytteInklOverfoert = 0
             , yearlyFotgjengerNytteInklOverfoert = 864623.7934
             , yearlyTrafikantNytteInklOverfoert = 1975.6705
-            , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
+            , yearlyHelsegevinstNytteInklOverfoert = 306745.6575
             , yearlyTSGevinstNytteInklOverfoert = 74363.3766
             , yearlyEksterneEffekterNytteInklOverfoert = 1591.3741
             }

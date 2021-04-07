@@ -41,7 +41,7 @@ type alias BrukerForutsetninger =
     , turerPerYearMaybe : Maybe Float
     , totalReiseDistanceKm : Float
     , etterspoerselsEffekt : Float
-    , helseTSGevinstBruker : Float
+    , helseGevinstBruker : Float
     }
 
 

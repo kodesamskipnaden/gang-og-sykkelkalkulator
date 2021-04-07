@@ -13,6 +13,9 @@ verifiserteVerdisettinger =
         -- VoT_Gange
         -- kr pr. min pr. gangtur
         2.77293673883309
+    , helseGevinstGange =
+        -- kr pr km gange
+        61.3491315
     }
 
 
@@ -66,9 +69,6 @@ verdisettinger =
     , helseTSGevinstSykkel =
         -- kr pr km syklet
         22.8
-    , helseTSGevinstGange =
-        -- kr pr km gange
-        59.9
     , syklistTotalReiseDistanceKm = 5
     , fotgjengerTotalReiseDistanceKm = 2
     }
