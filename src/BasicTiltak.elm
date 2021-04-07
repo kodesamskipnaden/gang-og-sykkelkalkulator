@@ -319,7 +319,7 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
             (object.basicState state).sted
 
         eksterneKostnader =
-            oevrigeEksterneKostnader sted
+            stedsForutsetninger sted |> .oevrigeEksterneKostnader
 
         overfoertFraBilNyttePerKm nyeTurerFraBil =
             nyeTurerFraBil
@@ -472,8 +472,8 @@ stedsForutsetninger sted =
                 , kollektivtransport = 0.0203143
                 }
             , oevrigeEksterneKostnader =
-                { bil = verdisettinger.eksterneKostnaderBil
-                , kollektivtransport = verdisettinger.eksterneKostnaderKollektiv
+                { bil = 0.6207036
+                , kollektivtransport = 0.2641275
                 }
             , koekostnadBiler = 1.3171136
             }
@@ -484,10 +484,6 @@ stedsForutsetninger sted =
 
 overfoertFra sted =
     (stedsForutsetninger sted).overfoertFra
-
-
-oevrigeEksterneKostnader sted =
-    (stedsForutsetninger sted).oevrigeEksterneKostnader
 
 
 koekostnadBiler sted =

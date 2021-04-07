@@ -30,16 +30,6 @@ tiltak =
         { basicTiltakRecord
             | yearlyFotgjengerNytte = yearlyFotgjengerNytte
             , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
-            , yearlyEksterneEffekterNytteInklOverfoertForBruker =
-                \this state brukerForutsetninger ->
-                    Maybe.map2
-                        (*)
-                        state.gsB_GsA.oppetidPercent.value
-                        (basicTiltakRecord.yearlyEksterneEffekterNytteInklOverfoertForBruker
-                            this
-                            state
-                            brukerForutsetninger
-                        )
         }
 
 
