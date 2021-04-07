@@ -147,24 +147,24 @@ levetid =
 nivaaForutsetninger nivaa =
     case nivaa of
         LavTilHoey ->
-            { etterspoerselsEffektFotgjenger = 5 / 100
-            , tsGevinstGaaende = verdisettinger.tsGevinstGsB_GsAGaaende
-            , tidsbesparelseSyklendeMinutterPerKilometer = (17 - 13.1) * 60
+            { etterspoerselsEffekt = 5 / 100
+            , tsGevinstGaaende = 0.454545455
+            , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 17) * 60
             , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 5.3) * 60
             , wtp = 3.16
             }
 
         LavTilMiddels ->
-            -- { etterspoerselsEffektFotgjenger = 4 / 100 }
+            -- { etterspoerselsEffekt = 4 / 100 }
             Debug.crash "Not Implemented"
 
         MiddelsTilHoey ->
-            -- { etterspoerselsEffektFotgjenger = 1 / 100 }
+            -- { etterspoerselsEffekt = 1 / 100 }
             Debug.crash "Not Implemented"
 
 
 etterspoerselsEffektFotgjengerGsB_GsA nivaa =
-    (nivaaForutsetninger nivaa).etterspoerselsEffektFotgjenger
+    (nivaaForutsetninger nivaa).etterspoerselsEffekt
 
 
 tsGevinstGaaende nivaa =
@@ -231,30 +231,28 @@ yearlyTSGevinstNytteOverfoertForBrukere ((Tiltak object) as this) state brukerFo
             BasicTiltak.nyeTurerFra this brukerForutsetninger
 
         tsKostnader =
-            BasicTiltak.tsKostnader (object.basicState state).sted
+            (object.basicState state).sted |> BasicTiltak.stedsForutsetninger |> .tsKostnader
 
         beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
-            nyeTurerFraBil
-                * (tsKostnader.bil
-                    - brukerForutsetninger.tsKostnad
-                  )
-                + (nyeTurerFraKollektiv
-                    * (tsKostnader.kollektivtransport
+            brukerForutsetninger.totalReiseDistanceKm
+                * (nyeTurerFraBil
+                    * (tsKostnader.bil
                         - brukerForutsetninger.tsKostnad
                       )
+                    + (nyeTurerFraKollektiv
+                        * (tsKostnader.kollektivtransport
+                            - brukerForutsetninger.tsKostnad
+                          )
+                      )
+                    - nyeTurerFraGenererte
+                    * brukerForutsetninger.tsKostnad
                   )
-                - nyeTurerFraGenererte
-                * brukerForutsetninger.tsKostnad
     in
-    Maybe.map3 (\a b c -> a * b * c)
-        state.gsB_GsA.oppetidPercent.value
-        (Just brukerForutsetninger.totalReiseDistanceKm)
-        (Maybe.map3
-            beregning
-            (nyeTurerFunc .andelNyeBrukereFraBil)
-            (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
-            (nyeTurerFunc .andelNyeBrukereGenererte)
-        )
+    Maybe.map3
+        beregning
+        (nyeTurerFunc .andelNyeBrukereFraBil)
+        (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
+        (nyeTurerFunc .andelNyeBrukereGenererte)
 
 
 yearlyGangturer this state =

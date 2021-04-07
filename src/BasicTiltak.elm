@@ -468,8 +468,8 @@ stedsForutsetninger sted =
         Storby ->
             { overfoertFra = { bil = 30 / 100, kollektivtransport = 50 / 100, genererte = 20 / 100 }
             , tsKostnader =
-                { bil = verdisettinger.tsKostnadBil
-                , kollektivtransport = verdisettinger.tsKostnadKollektiv
+                { bil = 0.0981818
+                , kollektivtransport = 0.0203143
                 }
             , oevrigeEksterneKostnader =
                 { bil = verdisettinger.eksterneKostnaderBil
@@ -484,10 +484,6 @@ stedsForutsetninger sted =
 
 overfoertFra sted =
     (stedsForutsetninger sted).overfoertFra
-
-
-tsKostnader sted =
-    (stedsForutsetninger sted).tsKostnader
 
 
 oevrigeEksterneKostnader sted =
@@ -532,7 +528,7 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     { andelNyeBrukereFraBil = overfoert.bil
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
     , andelNyeBrukereGenererte = overfoert.genererte
-    , tsKostnad = verdisettinger.tsKostnadGange
+    , tsKostnad = verifiserteVerdisettinger.tsKostnadGange
     , eksterneKostnader = verdisettinger.eksterneKostnaderGange
     , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
     , helseGevinstBruker = verifiserteVerdisettinger.helseGevinstGange

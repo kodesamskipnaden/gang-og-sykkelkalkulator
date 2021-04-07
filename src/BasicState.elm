@@ -4,7 +4,10 @@ import FormattedValue exposing (FormattedValue)
 
 
 type alias NivaaForutsetninger =
-    { etterspoerselsEffektFotgjenger : Float
+    { etterspoerselsEffekt : Float
+    , tidsbesparelseSyklendeMinutterPerKilometer : Float
+    , tidsbesparelseGaaendeMinutterPerKilometer : Float
+    , wtp : Float
     }
 
 

@@ -16,6 +16,7 @@ verifiserteVerdisettinger =
     , helseGevinstGange =
         -- kr pr km gange
         61.3491315
+    , tsKostnadGange = 1.8333
     }
 
 
@@ -28,7 +29,6 @@ verdisettinger =
     , tsKostnadSykkel = 3.50891113
     , tsKostnadBil = 0.2639315
     , tsKostnadKollektiv = 0.0125062
-    , tsKostnadGange = 5.2089111
 
     -- skadereduksjon %
     , tsGevinstLEDLysSyklende = 100 / 100
