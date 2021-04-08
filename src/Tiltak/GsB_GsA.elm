@@ -13,7 +13,6 @@ import FormattedValue
         , lengdeVeiKm
         , sykkelturerPerYear
         , value
-        , yearlyMaintenance
         )
 import GeneralForutsetninger exposing (verdisettinger, verifiserteVerdisettinger)
 import SpecificStates exposing (GsB_GsAState)
@@ -43,9 +42,7 @@ tiltakRecordImplementation =
             BasicTiltak.investeringsKostInklRestverdi
                 gsB_GsA
                 levetid
-    , driftOgVedlihKost =
-        \_ { gsB_GsA } ->
-            BasicTiltak.driftOgVedlihKost gsB_GsA
+    , driftOgVedlihKost = driftOgVedlihKost
     , basicState =
         \{ gsB_GsA } ->
             { sykkelturerPerYear = gsB_GsA.sykkelturerPerYear
@@ -69,7 +66,6 @@ initialState =
     { nivaa = LavTilHoey
     , sted = Storby
     , installationCost = Just 0 |> formattedValue
-    , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue
     , lengdeVeiKm = formattedValueDefault
@@ -111,7 +107,6 @@ fieldDefinitions =
                 )
     in
     [ Field.installationCostSimpleField specificState
-    , Field.yearlyMaintenanceSimpleField specificState
     , Field.lengdeVeiKmSimpleField specificState
     , Field.sykkelturerPerYearSimpleField specificState
     , Field.gangturerPerYearSimpleField specificState
@@ -142,6 +137,7 @@ nivaaForutsetninger nivaa =
             , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 17) * 60
             , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 5.3) * 60
             , wtp = 3.16
+            , annuiserteDriftsKostnaderPerKm = 195000
             }
 
         LavTilMiddels ->
@@ -317,3 +313,15 @@ wtpNytte this state =
     Maybe.map2 (\distanse turerPluss -> distanse * turerPluss * wtp)
         distanseMaybe
         turerPlussMaybe
+
+
+yearlyDriftOgVedlikeholdsKostnad ((Tiltak object) as this) state =
+    state.gsB_GsA.lengdeVeiKm.value
+        |> Maybe.map (\lengde -> lengde * (nivaaForutsetninger state.gsB_GsA.nivaa).annuiserteDriftsKostnaderPerKm)
+
+
+driftOgVedlihKost ((Tiltak object) as this) state =
+    Maybe.map
+        (\yearlyKostnad -> yearlyKostnad * GeneralForutsetninger.afaktor)
+        (yearlyDriftOgVedlikeholdsKostnad this state)
+        |> Maybe.map negate

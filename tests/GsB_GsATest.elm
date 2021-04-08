@@ -40,6 +40,25 @@ tiltakSuiteInProgress checkWithState expectedRecord =
                 .yearlyEksterneEffekterNytteInklOverfoert
                 (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
             ]
+        , describe "kost calculations"
+            [ -- checkWithState
+              --   "investeringsKostInklRestverdi"
+              --   .investeringsKostInklRestverdi
+              --   (closeTo expectedRecord.investeringsKostInklRestverdi 2)
+              checkWithState
+                "driftOgVedlihKost"
+                .driftOgVedlihKost
+                (Expect.within (Absolute 0.0001) expectedRecord.driftOgVedlihKost)
+
+            -- , checkWithState
+            --     "kostUtenSkyggepris"
+            --     .kostUtenSkyggepris
+            --     (closeTo expectedRecord.kostUtenSkyggepris 2)
+            , checkWithState
+                "skyggepris"
+                .skyggepris
+                (closeTo expectedRecord.skyggepris 2)
+            ]
         ]
 
 
@@ -56,7 +75,6 @@ sykkelSuite =
                     { nivaa = LavTilHoey
                     , sted = Storby
                     , installationCost = Just 0 |> formattedValue
-                    , yearlyMaintenance = Just 222000 |> formattedValue
                     , sykkelturerPerYear = Just 5.0e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
                     , lengdeVeiKm = Just 1 |> formattedValue
@@ -112,7 +130,6 @@ fotgjengerSuite =
                     { nivaa = LavTilHoey
                     , sted = Storby
                     , installationCost = Just 0 |> formattedValue
-                    , yearlyMaintenance = Just 2.22e5 |> formattedValue
                     , sykkelturerPerYear = Just 0 |> formattedValue
                     , gangturerPerYear = Just 5.0e4 |> formattedValue
                     , lengdeVeiKm = Just 2.3 |> formattedValue
@@ -128,6 +145,7 @@ fotgjengerSuite =
             , yearlyHelsegevinstNytteInklOverfoert = 306745.6575
             , yearlyTSGevinstNytteInklOverfoert = 74363.3766
             , yearlyEksterneEffekterNytteInklOverfoert = 1591.3741
+            , driftOgVedlihKost = -8877059.0867
             }
 
         expectTiltakMaybe description accessor expectation =
