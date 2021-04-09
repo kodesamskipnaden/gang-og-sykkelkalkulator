@@ -268,6 +268,10 @@ yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
     object.yearlySyklistNyttePerTur state (object.basicState state).sykkelturerPerYear.value
 
 
+yearlyFotgjengerNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
+    object.yearlyFotgjengerNyttePerTur state (object.basicState state).gangturerPerYear.value
+
+
 yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
     let
         nyeTurer =
@@ -337,12 +341,12 @@ basicTiltakRecord hooks =
     , graphId = defaults.graphId
     , domId = defaults.domId
     , skyggepris = defaults.skyggepris
-    , yearlyFotgjengerNytte = \_ _ -> Nothing
+    , yearlySyklistNytte = yearlySyklistNytte
+    , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
+    , yearlyFotgjengerNytte = yearlyFotgjengerNytte
+    , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
     , yearlyTSGevinstNytte = yearlyTSGevinstNytte
-    , yearlySyklistNytte = yearlySyklistNytte
-    , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
-    , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
     , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
     , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
@@ -358,6 +362,7 @@ basicTiltakRecord hooks =
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
     , yearlySyklistNyttePerTur = hooks.yearlySyklistNyttePerTur
+    , yearlyFotgjengerNyttePerTur = hooks.yearlyFotgjengerNyttePerTur
     , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere

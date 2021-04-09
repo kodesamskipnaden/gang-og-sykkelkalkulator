@@ -77,6 +77,7 @@ type alias TiltakRecordHooks =
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
+    , yearlyFotgjengerNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
     , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
     }
 

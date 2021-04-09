@@ -27,8 +27,8 @@ tiltak =
     in
     Tiltak
         { basicTiltakRecord
-            | yearlyFotgjengerNytte = yearlyFotgjengerNytte
-            , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
+            | yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
+            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
         }
 
 
@@ -55,6 +55,7 @@ tiltakRecordImplementation =
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
+    , yearlyFotgjengerNyttePerTur = yearlyFotgjengerNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
@@ -203,14 +204,6 @@ tidsbesparelseMinPerTurGaaende { gsB_GsA } =
         (Just tidsbesparelseMinPerKm)
 
 
-yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
-    Maybe.map3
-        (\a b c -> a * b * verdisettinger.reisetidSykkel * c)
-        gsB_GsA.oppetidPercent.value
-        antallTurer
-        (tidsbesparelseMinPerTurSyklende state)
-
-
 yearlyTSGevinstNytteOverfoertForBrukere ((Tiltak object) as this) state brukerForutsetninger =
     let
         nyeTurerFunc =
@@ -245,6 +238,13 @@ yearlyGangturer this state =
     fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this
 
 
+yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
+    Maybe.map2
+        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
+        antallTurer
+        (tidsbesparelseMinPerTurSyklende state)
+
+
 yearlyFotgjengerNyttePerTur ({ gsB_GsA } as state) antallTurer =
     Maybe.map2
         (\a b -> a * b * verifiserteVerdisettinger.voTGange)
@@ -252,11 +252,21 @@ yearlyFotgjengerNyttePerTur ({ gsB_GsA } as state) antallTurer =
         (tidsbesparelseMinPerTurGaaende state)
 
 
-yearlyFotgjengerNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
-    yearlyFotgjengerNyttePerTur state (object.basicState state).gangturerPerYear.value
 
-
-
+-- eksperiment for å se hvordan man finne fellestrekk i tiltaksnytte
+-- yearlyTiltakNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
+--     let
+--         receiver =
+--             bindTiltak this state
+--         overfoertNytte =
+--             Maybe.map
+--                 (\a -> a / 2)
+--                 (object.yearlyTiltakNyttePerTur state (brukerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this))
+--     in
+--     Maybe.map4 (\a b c x -> x * (a + b + c))
+--         (receiver .yearlyTiltakNytteForBruker)
+--         overfoertNytte
+--         (wtpNytte this state brukerForutsetninger)
 --
 -- Min: laveste verdi av tiltakets lengde og total reiselengde
 -- *      henter WTP for tiltaket basert på nivå
@@ -287,6 +297,28 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
         (receiver .yearlyFotgjengerNytte)
         overfoertNytte
         (wtpNytte this state boundFotgjengerForutsetninger)
+        gsB_GsA.oppetidPercent.value
+
+
+yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
+    let
+        receiver =
+            bindTiltak this state
+
+        boundSyklistForutsetninger =
+            syklistForutsetninger this state
+
+        overfoertNytte =
+            Maybe.map
+                (\syklistNytte ->
+                    syklistNytte / 2
+                )
+                (yearlySyklistNyttePerTur state (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this))
+    in
+    Maybe.map4 (\a b c x -> x * (a + b + c))
+        (receiver .yearlySyklistNytte)
+        overfoertNytte
+        (wtpNytte this state boundSyklistForutsetninger)
         gsB_GsA.oppetidPercent.value
 
 

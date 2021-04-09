@@ -15,7 +15,7 @@ import FormattedValue
         , value
         , yearlyMaintenance
         )
-import GeneralForutsetninger exposing (verdisettinger)
+import GeneralForutsetninger exposing (verdisettinger, verifiserteVerdisettinger)
 import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
@@ -58,6 +58,7 @@ tiltakRecordImplementation =
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
+    , yearlyFotgjengerNyttePerTur = \_ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
@@ -139,10 +140,19 @@ fotgjengerForutsetninger this state =
     }
 
 
-yearlySyklistNyttePerTur _ antallTurer =
-    Maybe.map
-        (\a -> a * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur)
+tidsbesparelseMinPerTurSyklende { gsB_GsA } =
+    Just 5
+
+
+
+-- fiks dette
+
+
+yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
+    Maybe.map2
+        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
         antallTurer
+        (tidsbesparelseMinPerTurSyklende state)
 
 
 yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =

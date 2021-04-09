@@ -31,14 +31,16 @@ tiltakSuiteInProgress checkWithState expectedRecord =
                 "yearlyHelsegevinstNytteInklOverfoert"
                 .yearlyHelsegevinstNytteInklOverfoert
                 (Expect.within (Absolute 0.0001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
-            , checkWithState
-                "yearlyTSGevinstNytteInklOverfoert"
-                .yearlyTSGevinstNytteInklOverfoert
-                (Expect.within (Absolute 0.001) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
-            , checkWithState
-                "yearlyEksterneEffekterNytteInklOverfoert"
-                .yearlyEksterneEffekterNytteInklOverfoert
-                (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
+            , skip <|
+                checkWithState
+                    "yearlyTSGevinstNytteInklOverfoert"
+                    .yearlyTSGevinstNytteInklOverfoert
+                    (Expect.within (Absolute 0.001) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
+            , skip <|
+                checkWithState
+                    "yearlyEksterneEffekterNytteInklOverfoert"
+                    .yearlyEksterneEffekterNytteInklOverfoert
+                    (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
             ]
 
         -- , describe "kost calculations"
@@ -84,12 +86,12 @@ sykkelSuite =
             }
 
         expectedRecord =
-            { yearlySyklistNytteInklOverfoert = 50385.58
+            { yearlySyklistNytteInklOverfoert = 541522.0903
             , yearlyFotgjengerNytteInklOverfoert = 0
-            , yearlyTrafikantNytteInklOverfoert = 8356.14
-            , yearlyHelsegevinstNytteInklOverfoert = 228000
-            , yearlyTSGevinstNytteInklOverfoert = -32586.05
-            , yearlyEksterneEffekterNytteInklOverfoert = 2514.2
+            , yearlyTrafikantNytteInklOverfoert = 4939.1761
+            , yearlyHelsegevinstNytteInklOverfoert = 291894.8659
+            , yearlyTSGevinstNytteInklOverfoert = 0
+            , yearlyEksterneEffekterNytteInklOverfoert = 0
             }
 
         checkWithState : CheckWithStateFunction
@@ -103,7 +105,7 @@ sykkelSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA sykkelvei"
-        [ skip <| tiltakSuiteInProgress checkWithState expectedRecord
+        [ tiltakSuiteInProgress checkWithState expectedRecord
         , test "overfoerteSykkelturer" <|
             \() ->
                 BasicTiltak.yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)

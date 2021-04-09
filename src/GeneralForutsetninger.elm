@@ -13,6 +13,10 @@ verifiserteVerdisettinger =
         -- VoT_Gange
         -- kr pr. min pr. gangtur
         2.77293673883309
+    , voTSykkel =
+        -- VoT_Sykkel
+        -- kr. pr min pr syklist
+        147.47 / 60
     , helseGevinstGange =
         -- kr pr km gange
         61.3491315
@@ -22,11 +26,7 @@ verifiserteVerdisettinger =
 
 verdisettinger =
     -- alle verdier i NOK
-    { reisetidSykkel =
-        -- VoT_Sykkel
-        -- kr. pr min pr syklist
-        147.47 / 60
-    , tsKostnadSykkel = 3.50891113
+    { tsKostnadSykkel = 3.50891113
     , tsKostnadBil = 0.2639315
     , tsKostnadKollektiv = 0.0125062
 
