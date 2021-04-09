@@ -37,53 +37,31 @@ toDomId string =
         |> String.join "-"
 
 
-nytte : StateCalculationMethod
-nytte this state =
-    let
-        f accessor =
-            sendTo this accessor state
-    in
-    Maybe.map4
-        (\a b c d ->
-            a + b + c + d
-        )
-        (f .syklistNytte)
-        (f .fotgjengerNytte)
-        (f .trafikantNytte)
-        (f .tsGevinstNytte)
-
-
 maybeSum listOfMaybes =
     Maybe.Extra.combine listOfMaybes |> Maybe.map List.sum
 
 
-nytteInklOverfoert : StateCalculationMethod
-nytteInklOverfoert this state =
+allYearlyNytter this state =
     let
         f accessor =
             sendTo this accessor state
     in
-    maybeSum
-        [ f .syklistNytteInklOverfoert
-        , f .fotgjengerNytteInklOverfoert
-        , f .trafikantNytteInklOverfoert
-        , f .helseGevinstNytteInklOverfoert
-        , f .tsGevinstNytteInklOverfoert
-        , f .eksterneEffekterNytteInklOverfoert
-        ]
+    [ f .yearlySyklistNytteInklOverfoert
+    , f .yearlyFotgjengerNytteInklOverfoert
+    , f .yearlyTrafikantNytteInklOverfoert
+    , f .yearlyHelsegevinstNytteInklOverfoert
+    , f .yearlyTSGevinstNytteInklOverfoert
+    , f .yearlyEksterneEffekterNytteInklOverfoert
+    ]
 
 
-nettoNytte : StateCalculationMethod
-nettoNytte this state =
-    let
-        f =
-            bindTiltak this state
-    in
-    maybeSum
-        [ f .nytte
-        , f .kostUtenSkyggepris
-        , f .skyggepris
-        ]
+yearlyNytteInklOverfoertSum this state =
+    allYearlyNytter this state |> maybeSum
+
+
+nytteInklOverfoert : StateCalculationMethod
+nytteInklOverfoert this state =
+    allYearlyNytter this state |> List.map (Maybe.map ((*) GeneralForutsetninger.afaktorVekst)) |> maybeSum
 
 
 nettoNytteInklOverfoert : StateCalculationMethod
@@ -98,16 +76,6 @@ nettoNytteInklOverfoert this state =
         (f .skyggepris)
 
 
-syklistNytte : StateCalculationMethod
-syklistNytte =
-    analysePeriodeNytteFor .yearlySyklistNytte
-
-
-fotgjengerNytte : StateCalculationMethod
-fotgjengerNytte =
-    analysePeriodeNytteFor .yearlyFotgjengerNytte
-
-
 syklistNytteInklOverfoert : StateCalculationMethod
 syklistNytteInklOverfoert =
     analysePeriodeNytteFor .yearlySyklistNytteInklOverfoert
@@ -117,11 +85,6 @@ fotgjengerNytteInklOverfoert =
     analysePeriodeNytteFor .yearlyFotgjengerNytteInklOverfoert
 
 
-trafikantNytte : StateCalculationMethod
-trafikantNytte =
-    analysePeriodeNytteFor .yearlyTrafikantNytte
-
-
 trafikantNytteInklOverfoert : StateCalculationMethod
 trafikantNytteInklOverfoert =
     analysePeriodeNytteFor .yearlyTrafikantNytteInklOverfoert
@@ -129,11 +92,6 @@ trafikantNytteInklOverfoert =
 
 helseGevinstNytteInklOverfoert =
     analysePeriodeNytteFor .yearlyHelsegevinstNytteInklOverfoert
-
-
-tsGevinstNytte : StateCalculationMethod
-tsGevinstNytte =
-    analysePeriodeNytteFor .yearlyTSGevinstNytte
 
 
 tsGevinstNytteInklOverfoert : StateCalculationMethod
@@ -345,20 +303,14 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
 
 
 defaults =
-    { syklistNytte = syklistNytte
-    , fotgjengerNytte = fotgjengerNytte
-    , trafikantNytte = trafikantNytte
-    , tsGevinstNytte = tsGevinstNytte
-    , syklistNytteInklOverfoert = syklistNytteInklOverfoert
+    { syklistNytteInklOverfoert = syklistNytteInklOverfoert
     , fotgjengerNytteInklOverfoert = fotgjengerNytteInklOverfoert
     , trafikantNytteInklOverfoert = trafikantNytteInklOverfoert
     , tsGevinstNytteInklOverfoert = tsGevinstNytteInklOverfoert
     , helseGevinstNytteInklOverfoert = helseGevinstNytteInklOverfoert
     , eksterneEffekterNytteInklOverfoert = eksterneEffekterNytteInklOverfoert
-    , nytte = nytte
     , nytteInklOverfoert = nytteInklOverfoert
     , kostUtenSkyggepris = kostUtenSkyggepris
-    , nettoNytte = nettoNytte
     , nettoNytteInklOverfoert = nettoNytteInklOverfoert
     , skyggeprisHelper = skyggeprisHelper
     , graphId = \this -> sendTo this .domId |> (++) "c3graph"
@@ -371,20 +323,14 @@ defaults =
 
 basicTiltakRecord : Hooks a -> TiltakRecord
 basicTiltakRecord hooks =
-    { syklistNytte = defaults.syklistNytte
-    , fotgjengerNytte = defaults.fotgjengerNytte
-    , trafikantNytte = defaults.trafikantNytte
-    , tsGevinstNytte = defaults.tsGevinstNytte
-    , syklistNytteInklOverfoert = defaults.syklistNytteInklOverfoert
+    { syklistNytteInklOverfoert = defaults.syklistNytteInklOverfoert
     , fotgjengerNytteInklOverfoert = defaults.fotgjengerNytteInklOverfoert
     , trafikantNytteInklOverfoert = defaults.trafikantNytteInklOverfoert
     , tsGevinstNytteInklOverfoert = defaults.tsGevinstNytteInklOverfoert
     , helseGevinstNytteInklOverfoert = defaults.helseGevinstNytteInklOverfoert
     , eksterneEffekterNytteInklOverfoert = defaults.eksterneEffekterNytteInklOverfoert
-    , nytte = defaults.nytte
     , nytteInklOverfoert = defaults.nytteInklOverfoert
     , kostUtenSkyggepris = defaults.kostUtenSkyggepris
-    , nettoNytte = defaults.nettoNytte
     , nettoNytteInklOverfoert = defaults.nettoNytteInklOverfoert
     , skyggeprisHelper = defaults.skyggeprisHelper
     , yearlyTSGevinstNytteOverfoert = defaults.yearlyTSGevinstNytteOverfoert
@@ -401,6 +347,7 @@ basicTiltakRecord hooks =
     , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
     , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
     , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
+    , yearlyNytteInklOverfoertSum = yearlyNytteInklOverfoertSum
     , title = hooks.title
     , fields = hooks.fields
     , preferredField = preferredField hooks.specificStateFocus

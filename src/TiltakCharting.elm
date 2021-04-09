@@ -1,9 +1,9 @@
 module TiltakCharting exposing (..)
 
-import Focus exposing ((=>))
 import Charting
-import Tiltak exposing (Tiltak, sendTo)
+import Focus exposing ((=>))
 import FormattedValue exposing (value)
+import Tiltak exposing (Tiltak, sendTo)
 
 
 type GraphState
@@ -35,15 +35,15 @@ maybeFieldToGraph tiltak state =
             sendTo tiltak .fields
                 |> List.filter filterFunc
     in
-        case nothingFields of
-            [ head ] ->
-                Just head
+    case nothingFields of
+        [ head ] ->
+            Just head
 
-            [] ->
-                sendTo tiltak .preferredField state
+        [] ->
+            sendTo tiltak .preferredField state
 
-            _ ->
-                Nothing
+        _ ->
+            Nothing
 
 
 possibleFieldsToGraph tiltak state =
@@ -64,18 +64,19 @@ possibleFieldsToGraph tiltak state =
             maybeFieldToGraph tiltak state
                 |> Maybe.map .name
     in
-        case nothingFields of
-            [] ->
-                sendTo tiltak .fields
-                    |> case maybeFieldToGraphName of
+    case nothingFields of
+        [] ->
+            sendTo tiltak .fields
+                |> (case maybeFieldToGraphName of
                         Just name ->
                             List.filter (\field -> field.name /= name)
 
                         Nothing ->
                             identity
+                   )
 
-            _ ->
-                []
+        _ ->
+            []
 
 
 graphState tiltak state =
@@ -89,21 +90,24 @@ graphDataForField tiltak state field =
         stateFrom x =
             Focus.set (field.focus => value) (Just x) state
 
+        nettoNytte x =
+            sendTo tiltak .nettoNytteInklOverfoert (stateFrom x)
+
         generateData x =
-            sendTo tiltak .nettoNytte (stateFrom x)
+            nettoNytte x
                 |> Maybe.map (\y -> ( x, y ))
 
         sampleFunc x =
-            case sendTo tiltak .nettoNytte (stateFrom x) of
+            case nettoNytte x of
                 Just value ->
                     value
 
                 Nothing ->
                     Debug.crash "nettoNytte gave Nothing"
     in
-        Charting.samples field.stepSize sampleFunc
-            |> List.map generateData
-            |> List.filterMap identity
+    Charting.samples field.stepSize sampleFunc
+        |> List.map generateData
+        |> List.filterMap identity
 
 
 graphData tiltak state =
@@ -111,9 +115,9 @@ graphData tiltak state =
         maybeField =
             maybeFieldToGraph tiltak state
     in
-        case maybeField of
-            Nothing ->
-                []
+    case maybeField of
+        Nothing ->
+            []
 
-            Just field ->
-                graphDataForField tiltak state field
+        Just field ->
+            graphDataForField tiltak state field

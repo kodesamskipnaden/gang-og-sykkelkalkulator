@@ -1,6 +1,6 @@
 module TestSupport exposing (..)
 
-import Expect exposing (Expectation)
+import Expect exposing (Expectation, FloatingPointTolerance(..))
 import Test exposing (Test, describe, only, skip, test)
 import Tiltak exposing (TiltakAccessor)
 import TiltakStates exposing (TiltakStates)
@@ -60,81 +60,71 @@ type alias CheckWithStateFunction =
     String -> TiltakAccessor (TiltakStates -> Maybe Float) -> (Float -> Expectation) -> Test
 
 
-tiltakSuite : CheckWithStateFunction -> ExpectedRecord -> Test
+
+-- tiltakSuite : CheckWithStateFunction -> ExpectedRecord -> Test
+
+
 tiltakSuite checkWithState expectedRecord =
+    -- let expectWithin4decimals value =
     Test.concat
-        [ describe "nytte calculcations"
+        [ describe "yearly nytte"
             [ checkWithState
-                "yearlySyklistNytte"
-                .yearlySyklistNytte
-                (closeTo expectedRecord.yearlySyklistNytte 2)
-            , checkWithState
                 "yearlySyklistNytteInklOverfoert"
                 .yearlySyklistNytteInklOverfoert
                 (closeTo expectedRecord.yearlySyklistNytteInklOverfoert 2)
             , checkWithState
                 "yearlyFotgjengerNytteInklOverfoert"
                 .yearlyFotgjengerNytteInklOverfoert
-                (closeTo expectedRecord.yearlyFotgjengerNytteInklOverfoert 2)
-            , checkWithState
-                "yearlyTrafikantNytte"
-                .yearlyTrafikantNytte
-                (closeTo expectedRecord.yearlyTrafikantNytte 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlyFotgjengerNytteInklOverfoert)
             , checkWithState
                 "yearlyTrafikantNytteInklOverfoert"
                 .yearlyTrafikantNytteInklOverfoert
-                (closeTo expectedRecord.yearlyTrafikantNytteInklOverfoert 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlyTrafikantNytteInklOverfoert)
             , checkWithState
                 "yearlyHelsegevinstNytteInklOverfoert"
                 .yearlyHelsegevinstNytteInklOverfoert
-                (closeTo expectedRecord.yearlyHelsegevinstNytteInklOverfoert 2)
-            , checkWithState
-                "yearlyTSGevinstNytte"
-                .yearlyTSGevinstNytte
-                (closeTo expectedRecord.yearlyTSGevinstNytte 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
             , checkWithState
                 "yearlyTSGevinstNytteInklOverfoert"
                 .yearlyTSGevinstNytteInklOverfoert
-                (closeTo expectedRecord.yearlyTSGevinstNytteInklOverfoert 2)
+                (Expect.within (Absolute 0.001) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
             , checkWithState
                 "yearlyEksterneEffekterNytteInklOverfoert"
                 .yearlyEksterneEffekterNytteInklOverfoert
-                (closeTo expectedRecord.yearlyEksterneEffekterNytteInklOverfoert 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
             , checkWithState
-                "nytte"
-                .nytte
-                (closeTo expectedRecord.nytte 2)
-            , checkWithState
+                "yearlyNytteInklOverfoertSum"
+                .yearlyNytteInklOverfoertSum
+                (Expect.within (Absolute 0.001) expectedRecord.yearlyNytteInklOverfoertSum)
+            ]
+        , describe "nytte over analyseperioden"
+            [ checkWithState
                 "nytteInklOverfoert"
                 .nytteInklOverfoert
-                (closeTo expectedRecord.nytteInklOverfoert 2)
-            , checkWithState
-                "nettoNytteInklOverfoert"
-                .nettoNytteInklOverfoert
-                (closeTo expectedRecord.nettoNytteInklOverfoert 1)
+                (Expect.within (Absolute 0.01) expectedRecord.nytteInklOverfoert)
             ]
         , describe "kost calculations"
             [ checkWithState
                 "investeringsKostInklRestverdi"
                 .investeringsKostInklRestverdi
-                (closeTo expectedRecord.investeringsKostInklRestverdi 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.investeringsKostInklRestverdi)
             , checkWithState
                 "driftOgVedlihKost"
                 .driftOgVedlihKost
-                (closeTo expectedRecord.driftOgVedlihKost 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.driftOgVedlihKost)
             , checkWithState
                 "kostUtenSkyggepris"
                 .kostUtenSkyggepris
-                (closeTo expectedRecord.kostUtenSkyggepris 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.kostUtenSkyggepris)
             , checkWithState
                 "skyggepris"
                 .skyggepris
-                (closeTo expectedRecord.skyggepris 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.skyggepris)
             ]
         , describe "nettonytte calculations"
             [ checkWithState
-                "nettoNytte"
-                .nettoNytte
-                (closeTo expectedRecord.nettoNytte 2)
+                "nettoNytteInklOverfoert"
+                .nettoNytteInklOverfoert
+                (closeTo expectedRecord.nettoNytteInklOverfoert 1)
             ]
         ]

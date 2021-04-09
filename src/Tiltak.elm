@@ -91,21 +91,15 @@ type alias Hooks specificState =
 
 type alias TiltakRecordPartial a =
     { a
-        | syklistNytte : StateCalculationMethod
-        , fotgjengerNytte : StateCalculationMethod
-        , trafikantNytte : StateCalculationMethod
-        , tsGevinstNytte : StateCalculationMethod
-        , syklistNytteInklOverfoert : StateCalculationMethod
+        | syklistNytteInklOverfoert : StateCalculationMethod
         , fotgjengerNytteInklOverfoert : StateCalculationMethod
         , trafikantNytteInklOverfoert : StateCalculationMethod
         , helseGevinstNytteInklOverfoert : StateCalculationMethod
         , tsGevinstNytteInklOverfoert : StateCalculationMethod
         , eksterneEffekterNytteInklOverfoert : StateCalculationMethod
-        , nytte : StateCalculationMethod
         , nytteInklOverfoert : StateCalculationMethod
         , skyggepris : StateCalculationMethod
         , kostUtenSkyggepris : StateCalculationMethod
-        , nettoNytte : StateCalculationMethod
         , nettoNytteInklOverfoert : StateCalculationMethod
         , yearlySyklistNytte : StateCalculationMethod
         , yearlyFotgjengerNytte : StateCalculationMethod
@@ -117,6 +111,7 @@ type alias TiltakRecordPartial a =
         , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
         , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
         , yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
+        , yearlyNytteInklOverfoertSum : StateCalculationMethod
         , skyggeprisHelper : StateCalculationMethod
         , yearlyTSGevinstNytteOverfoert : StateCalculationMethod
         , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
@@ -160,9 +155,9 @@ analyse tiltak tiltakStates =
             bindTiltak tiltak tiltakStates
     in
     { analysePeriode = 40
-    , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
+    , isProfitable = f .nettoNytteInklOverfoert |> Maybe.map (\value -> value > 0)
     , syklistNytte = f .syklistNytteInklOverfoert
-    , fotgjengerNytte = f .fotgjengerNytte
+    , fotgjengerNytte = f .fotgjengerNytteInklOverfoert
     , trafikantNytte = f .trafikantNytteInklOverfoert
     , helseGevinstNytte = f .helseGevinstNytteInklOverfoert
     , tsGevinstNytte = f .tsGevinstNytteInklOverfoert
