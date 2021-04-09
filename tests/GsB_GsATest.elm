@@ -40,24 +40,25 @@ tiltakSuiteInProgress checkWithState expectedRecord =
                 .yearlyEksterneEffekterNytteInklOverfoert
                 (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
             ]
-        , describe "kost calculations"
-            [ checkWithState
-                "investeringsKostInklRestverdi"
-                .investeringsKostInklRestverdi
-                (Expect.within (Absolute 0.0001) expectedRecord.investeringsKostInklRestverdi)
-            , checkWithState
-                "driftOgVedlihKost"
-                .driftOgVedlihKost
-                (Expect.within (Absolute 0.0001) expectedRecord.driftOgVedlihKost)
-            , checkWithState
-                "kostUtenSkyggepris"
-                .kostUtenSkyggepris
-                (closeTo expectedRecord.kostUtenSkyggepris 2)
-            , checkWithState
-                "skyggepris"
-                .skyggepris
-                (Expect.within (Absolute 0.0001) expectedRecord.skyggepris)
-            ]
+
+        -- , describe "kost calculations"
+        --     [ checkWithState
+        --         "investeringsKostInklRestverdi"
+        --         .investeringsKostInklRestverdi
+        --         (Expect.within (Absolute 0.0001) expectedRecord.investeringsKostInklRestverdi)
+        --     , checkWithState
+        --         "driftOgVedlihKost"
+        --         .driftOgVedlihKost
+        --         (Expect.within (Absolute 0.0001) expectedRecord.driftOgVedlihKost)
+        --     , checkWithState
+        --         "kostUtenSkyggepris"
+        --         .kostUtenSkyggepris
+        --         (closeTo expectedRecord.kostUtenSkyggepris 2)
+        --     , checkWithState
+        --         "skyggepris"
+        --         .skyggepris
+        --         (Expect.within (Absolute 0.0001) expectedRecord.skyggepris)
+        --     ]
         ]
 
 
