@@ -273,17 +273,20 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
         receiver =
             bindTiltak this state
 
+        boundFotgjengerForutsetninger =
+            fotgjengerForutsetninger this state
+
         overfoertNytte =
             Maybe.map
                 (\fotgjengerNytte ->
                     fotgjengerNytte / 2
                 )
-                (yearlyFotgjengerNyttePerTur state (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this))
+                (yearlyFotgjengerNyttePerTur state (boundFotgjengerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this))
     in
     Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlyFotgjengerNytte)
         overfoertNytte
-        (wtpNytte this state)
+        (wtpNytte this state boundFotgjengerForutsetninger)
         gsB_GsA.oppetidPercent.value
 
 
@@ -291,14 +294,17 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
 -- yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
 
 
-wtpNytte this state =
+wtpNytte this state brukerForutsetninger =
     let
         totalReiseDistanceKm =
-            (fotgjengerForutsetninger this state).totalReiseDistanceKm
+            brukerForutsetninger.totalReiseDistanceKm
+
+        turerPerYearMaybe =
+            brukerForutsetninger.turerPerYearMaybe
 
         distanseMaybe =
             Maybe.map
-                (\lengdeGangVei -> min lengdeGangVei totalReiseDistanceKm)
+                (\lengdeVei -> min lengdeVei totalReiseDistanceKm)
                 state.gsB_GsA.lengdeVeiKm.value
 
         wtp =
@@ -307,8 +313,8 @@ wtpNytte this state =
         turerPlussMaybe =
             Maybe.map2
                 (\antallTurer overfoerteTurer -> antallTurer + 0.5 * overfoerteTurer)
-                state.gsB_GsA.gangturerPerYear.value
-                (fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this)
+                turerPerYearMaybe
+                (brukerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this)
     in
     Maybe.map2 (\distanse turerPluss -> distanse * turerPluss * wtp)
         distanseMaybe

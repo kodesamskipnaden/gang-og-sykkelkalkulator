@@ -76,31 +76,19 @@ sykkelSuite =
                     , installationCost = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 5.0e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
-                    , lengdeVeiKm = Just 1 |> formattedValue
+                    , lengdeVeiKm = Just 2.3 |> formattedValue
                     , oppetidPercent = Just 0.8 |> formattedValue
                     , preferredToGraph = ""
                     }
             }
 
         expectedRecord =
-            { yearlySyklistNytte = 49156.67
-            , yearlySyklistNytteInklOverfoert = 50385.58
+            { yearlySyklistNytteInklOverfoert = 50385.58
             , yearlyFotgjengerNytteInklOverfoert = 0
-            , yearlyTrafikantNytte = 0
             , yearlyTrafikantNytteInklOverfoert = 8356.14
             , yearlyHelsegevinstNytteInklOverfoert = 228000
-            , yearlyTSGevinstNytte = 1403.56
             , yearlyTSGevinstNytteInklOverfoert = -32586.05
             , yearlyEksterneEffekterNytteInklOverfoert = 2514.2
-            , yearlyNytteInklOverfoertSum = 0 -- finn ut hva dette skal være seinere
-            , driftOgVedlihKost = -4393995.8
-            , investeringsKostInklRestverdi = 0
-            , kostUtenSkyggepris = -4393995.8
-            , nettoNytte = -4038217.4327044
-            , nettoNytteInklOverfoert = 994558.98
-            , nytte = 1234577.53
-            , nytteInklOverfoert = 6267353.95
-            , skyggepris = -878799.16
             }
 
         checkWithState : CheckWithStateFunction
@@ -114,10 +102,26 @@ sykkelSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA sykkelvei"
-        [ skip <| tiltakSuite checkWithState expectedRecord
+        [ skip <| tiltakSuiteInProgress checkWithState expectedRecord
         , test "overfoerteSykkelturer" <|
             \() ->
                 BasicTiltak.yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
+        , test "overfoerteGangturer" <|
+            \() ->
+                BasicTiltak.yearlyOverfoerteGangturer tiltak state |> checkMaybe (Expect.equal 0)
+        , test
+            "tidsbesparelseMinPerTurSyklende"
+          <|
+            \() ->
+                GsB_GsA.tidsbesparelseMinPerTurSyklende state
+                    |> checkMaybe (Expect.within (Absolute 0.00001) 2.4167)
+        , test
+            "wtpNytte"
+          <|
+            \() ->
+                GsB_GsA.syklistForutsetninger tiltak state
+                    |> GsB_GsA.wtpNytte tiltak state
+                    |> checkMaybe (Expect.within (Absolute 0.00001) 372485)
         ]
 
 
@@ -189,6 +193,7 @@ fotgjengerSuite =
             "wtpNytte"
           <|
             \() ->
-                GsB_GsA.wtpNytte tiltak state
+                GsB_GsA.fotgjengerForutsetninger tiltak state
+                    |> GsB_GsA.wtpNytte tiltak state
                     |> checkMaybe (Expect.within (Absolute 0.00001) 323900)
         ]
