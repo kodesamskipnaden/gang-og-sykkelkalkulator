@@ -154,6 +154,18 @@ yearlyTSGevinstNytte ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger this state |> object.yearlyTSGevinstNytteForBrukere this state)
 
 
+yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =
+    Maybe.map2
+        (\turerPerYear lengde ->
+            min lengde brukerForutsetninger.totalReiseDistanceKm
+                * turerPerYear
+                * brukerForutsetninger.tsKostnad
+                * brukerForutsetninger.tsGevinstTiltak
+        )
+        brukerForutsetninger.turerPerYearMaybe
+        (record.basicState state).lengdeVeiKm.value
+
+
 yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
     let
         nytte =
@@ -249,18 +261,6 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
         (yearlyOverfoerteTurer this brukerForutsetninger)
         (Just brukerForutsetninger.totalReiseDistanceKm)
         (Just brukerForutsetninger.helseGevinstBruker)
-
-
-yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =
-    Maybe.map2
-        (\turerPerYear lengde ->
-            min lengde brukerForutsetninger.totalReiseDistanceKm
-                * turerPerYear
-                * brukerForutsetninger.tsKostnad
-                * brukerForutsetninger.tsGevinstTiltak
-        )
-        brukerForutsetninger.turerPerYearMaybe
-        (record.basicState state).lengdeVeiKm.value
 
 
 yearlySyklistNytte : StateCalculationMethod
@@ -458,7 +458,7 @@ basicSyklistForutsetninger ((Tiltak object) as this) state =
     { andelNyeBrukereFraBil = overfoert.bil
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
     , andelNyeBrukereGenererte = overfoert.genererte
-    , tsKostnad = verdisettinger.tsKostnadSykkel
+    , tsKostnad = verifiserteVerdisettinger.tsKostnadSykkel
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
@@ -477,8 +477,8 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
     , andelNyeBrukereGenererte = overfoert.genererte
     , tsKostnad = verifiserteVerdisettinger.tsKostnadGange
-    , eksterneKostnader = verdisettinger.eksterneKostnaderGange
-    , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
+    , eksterneKostnader = verdisettinger.eksterneKostnaderGange -- hvorfor er ikke denne verifiserte
+    , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm -- hvor er ikke denne verifisert
     , helseGevinstBruker = verifiserteVerdisettinger.helseGevinstGange
     , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value
     , tsGevinstTiltak = 0

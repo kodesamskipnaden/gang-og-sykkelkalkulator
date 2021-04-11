@@ -24,26 +24,22 @@ verifiserteVerdisettinger =
         -- kr pr km syklet
         23.3515893
     , tsKostnadGange = 1.8333
+    , tsKostnadSykkel = 2.0
     }
 
 
 verdisettinger =
     -- alle verdier i NOK
-    { tsKostnadSykkel = 3.50891113
-    , tsKostnadBil = 0.2639315
+    { tsKostnadBil = 0.2639315
     , tsKostnadKollektiv = 0.0125062
 
     -- skadereduksjon %
     , tsGevinstLEDLysSyklende = 100 / 100
     , tsGevinstLEDLysGaaende = 0 / 100
-    , tsGevinstGsB_GsASyklende = 1 / 100
-    , tsGevinstGsB_GsAGaaende = 20 / 100
 
     -- Etterspørselseffekter
     , sykkelBedreBelysningLED = 5 / 100
     , fotgjengerBedreBelysningLED = 5 / 100
-    , sykkelGsB_GsA = 5 / 100
-    , fotgjengerGsB_GsA = 5 / 100
 
     -- Overføring
     , andelNyeSyklisterFraBil = 40 / 100

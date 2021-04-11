@@ -31,16 +31,14 @@ tiltakSuiteInProgress checkWithState expectedRecord =
                 "yearlyHelsegevinstNytteInklOverfoert"
                 .yearlyHelsegevinstNytteInklOverfoert
                 (Expect.within (Absolute 0.001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
-            , skip <|
-                checkWithState
-                    "yearlyTSGevinstNytteInklOverfoert"
-                    .yearlyTSGevinstNytteInklOverfoert
-                    (Expect.within (Absolute 0.001) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
-            , skip <|
-                checkWithState
-                    "yearlyEksterneEffekterNytteInklOverfoert"
-                    .yearlyEksterneEffekterNytteInklOverfoert
-                    (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
+            , checkWithState
+                "yearlyTSGevinstNytteInklOverfoert"
+                .yearlyTSGevinstNytteInklOverfoert
+                (Expect.within (Absolute 0.01) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
+            , checkWithState
+                "yearlyEksterneEffekterNytteInklOverfoert"
+                .yearlyEksterneEffekterNytteInklOverfoert
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
             ]
 
         -- , describe "kost calculations"
@@ -90,8 +88,15 @@ sykkelSuite =
             , yearlyFotgjengerNytteInklOverfoert = 0
             , yearlyTrafikantNytteInklOverfoert = 4939.1761
             , yearlyHelsegevinstNytteInklOverfoert = 291894.8659
-            , yearlyTSGevinstNytteInklOverfoert = 0
-            , yearlyEksterneEffekterNytteInklOverfoert = 0
+            , yearlyTSGevinstNytteInklOverfoert = -21072.01 -- denne var veldig upresis???
+            , yearlyEksterneEffekterNytteInklOverfoert = 3978.4353
+            , nytteInklOverfoert = 20053553.3028
+            , yearlyNytteInklOverfoertSum = 821262.5495
+            , skyggepris = -1775411.8173
+            , driftOgVedlihKost = -8877059.0867
+            , investeringsKostInklRestverdi = 0
+            , kostUtenSkyggepris = -8877059.0867
+            , nettoNytteInklOverfoert = 9401082.3988
             }
 
         checkWithState : CheckWithStateFunction
@@ -105,7 +110,7 @@ sykkelSuite =
                         |> checkMaybe expectation
     in
     describe "GsB_GsA sykkelvei"
-        [ tiltakSuiteInProgress checkWithState expectedRecord
+        [ tiltakSuite checkWithState expectedRecord
         , test "overfoerteSykkelturer" <|
             \() ->
                 BasicTiltak.yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)

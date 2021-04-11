@@ -135,6 +135,7 @@ nivaaForutsetninger nivaa =
         LavTilHoey ->
             { etterspoerselsEffekt = 5 / 100
             , tsGevinstGaaende = 0.454545455
+            , tsGevinstSyklende = 0.0149254
             , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 17) * 60
             , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 5.3) * 60
             , wtp = 3.16
@@ -150,22 +151,19 @@ nivaaForutsetninger nivaa =
             Debug.crash "Not Implemented"
 
 
-etterspoerselsEffektFotgjengerGsB_GsA nivaa =
-    (nivaaForutsetninger nivaa).etterspoerselsEffekt
-
-
-tsGevinstGaaende nivaa =
-    (nivaaForutsetninger nivaa).tsGevinstGaaende
-
-
-syklistForutsetninger this state =
+syklistForutsetninger ((Tiltak object) as this) state =
     let
         basic =
             BasicTiltak.basicSyklistForutsetninger this state
+
+        basicState =
+            object.basicState state
     in
     { basic
-        | tsGevinstTiltak = verdisettinger.tsGevinstGsB_GsASyklende
-        , etterspoerselsEffekt = verdisettinger.sykkelGsB_GsA
+        | tsGevinstTiltak = (nivaaForutsetninger basicState.nivaa).tsGevinstSyklende
+
+        -- etterspoerselsEffekt varierer IKKE mellom fotgjenger og syklist
+        , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
     }
 
 
@@ -178,9 +176,10 @@ fotgjengerForutsetninger ((Tiltak object) as this) state =
             object.basicState state
     in
     { basic
-        | tsGevinstTiltak = tsGevinstGaaende basicState.nivaa
-        , etterspoerselsEffekt =
-            etterspoerselsEffektFotgjengerGsB_GsA basicState.nivaa
+        | tsGevinstTiltak = (nivaaForutsetninger basicState.nivaa).tsGevinstGaaende
+
+        -- etterspoerselsEffekt varierer IKKE mellom fotgjenger og syklist
+        , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
     }
 
 
