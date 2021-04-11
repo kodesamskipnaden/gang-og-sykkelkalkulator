@@ -462,7 +462,7 @@ basicSyklistForutsetninger ((Tiltak object) as this) state =
     , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
-    , helseGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    , helseGevinstBruker = verifiserteVerdisettinger.helseTSGevinstSykkel
     , tsGevinstTiltak = 0
     , etterspoerselsEffekt = 0
     }

@@ -30,7 +30,7 @@ tiltakSuiteInProgress checkWithState expectedRecord =
             , checkWithState
                 "yearlyHelsegevinstNytteInklOverfoert"
                 .yearlyHelsegevinstNytteInklOverfoert
-                (Expect.within (Absolute 0.0001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
+                (Expect.within (Absolute 0.001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
             , skip <|
                 checkWithState
                     "yearlyTSGevinstNytteInklOverfoert"

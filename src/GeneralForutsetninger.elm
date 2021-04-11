@@ -20,6 +20,9 @@ verifiserteVerdisettinger =
     , helseGevinstGange =
         -- kr pr km gange
         61.3491315
+    , helseTSGevinstSykkel =
+        -- kr pr km syklet
+        23.3515893
     , tsKostnadGange = 1.8333
     }
 
@@ -60,9 +63,6 @@ verdisettinger =
     , eksterneKostnaderGange =
         -- kr pr P-km
         0
-    , helseTSGevinstSykkel =
-        -- kr pr km syklet
-        22.8
     , syklistTotalReiseDistanceKm = 5
     , fotgjengerTotalReiseDistanceKm = 2
     }
