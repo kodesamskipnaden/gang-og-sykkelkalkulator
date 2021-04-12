@@ -88,15 +88,15 @@ sykkelSuite =
             , yearlyFotgjengerNytteInklOverfoert = 0
             , yearlyTrafikantNytteInklOverfoert = 4939.1761
             , yearlyHelsegevinstNytteInklOverfoert = 291894.8659
-            , yearlyTSGevinstNytteInklOverfoert = -21072.01 -- denne var veldig upresis???
+            , yearlyTSGevinstNytteInklOverfoert = -21072.01 -- denne var veldig upresis
             , yearlyEksterneEffekterNytteInklOverfoert = 3978.4353
-            , nytteInklOverfoert = 20053553.3028
-            , yearlyNytteInklOverfoertSum = 821262.5495
+            , yearlyNytteInklOverfoertSum = 821262.55
+            , nytteInklOverfoert = 20053553.3 -- upresis
             , skyggepris = -1775411.8173
             , driftOgVedlihKost = -8877059.0867
             , investeringsKostInklRestverdi = 0
             , kostUtenSkyggepris = -8877059.0867
-            , nettoNytteInklOverfoert = 9401082.3988
+            , nettoNytteInklOverfoert = 9401082.4 --upresis
             }
 
         checkWithState : CheckWithStateFunction

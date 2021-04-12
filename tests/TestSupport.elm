@@ -71,7 +71,7 @@ tiltakSuite checkWithState expectedRecord =
             [ checkWithState
                 "yearlySyklistNytteInklOverfoert"
                 .yearlySyklistNytteInklOverfoert
-                (closeTo expectedRecord.yearlySyklistNytteInklOverfoert 2)
+                (Expect.within (Absolute 0.0001) expectedRecord.yearlySyklistNytteInklOverfoert)
             , checkWithState
                 "yearlyFotgjengerNytteInklOverfoert"
                 .yearlyFotgjengerNytteInklOverfoert
@@ -83,11 +83,11 @@ tiltakSuite checkWithState expectedRecord =
             , checkWithState
                 "yearlyHelsegevinstNytteInklOverfoert"
                 .yearlyHelsegevinstNytteInklOverfoert
-                (Expect.within (Absolute 0.0001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
+                (Expect.within (Absolute 0.001) expectedRecord.yearlyHelsegevinstNytteInklOverfoert)
             , checkWithState
                 "yearlyTSGevinstNytteInklOverfoert"
                 .yearlyTSGevinstNytteInklOverfoert
-                (Expect.within (Absolute 0.001) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
+                (Expect.within (Absolute 0.01) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
             , checkWithState
                 "yearlyEksterneEffekterNytteInklOverfoert"
                 .yearlyEksterneEffekterNytteInklOverfoert
@@ -95,13 +95,13 @@ tiltakSuite checkWithState expectedRecord =
             , checkWithState
                 "yearlyNytteInklOverfoertSum"
                 .yearlyNytteInklOverfoertSum
-                (Expect.within (Absolute 0.001) expectedRecord.yearlyNytteInklOverfoertSum)
+                (Expect.within (Absolute 0.01) expectedRecord.yearlyNytteInklOverfoertSum)
             ]
         , describe "nytte over analyseperioden"
             [ checkWithState
                 "nytteInklOverfoert"
                 .nytteInklOverfoert
-                (Expect.within (Absolute 0.01) expectedRecord.nytteInklOverfoert)
+                (Expect.within (Absolute 0.5) expectedRecord.nytteInklOverfoert)
             ]
         , describe "kost calculations"
             [ checkWithState
@@ -125,6 +125,6 @@ tiltakSuite checkWithState expectedRecord =
             [ checkWithState
                 "nettoNytteInklOverfoert"
                 .nettoNytteInklOverfoert
-                (closeTo expectedRecord.nettoNytteInklOverfoert 1)
+                (Expect.within (Absolute 0.5) expectedRecord.nettoNytteInklOverfoert)
             ]
         ]
