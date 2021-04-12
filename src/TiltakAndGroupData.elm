@@ -8,23 +8,14 @@ import Tiltak.LEDLys as LEDLys
 
 alleTyper : List Group
 alleTyper =
-    [ Belysning
-    , Vedlikehold
+    [ GruppoA
     ]
-
-
-
--- TODO: organize simple tiltak in a Collection with tiltak and
--- initial state paired together
 
 
 tiltakForGroup : Group -> List Tiltak
 tiltakForGroup gruppeType =
     case gruppeType of
-        Belysning ->
-            [ LEDLys.tiltak ]
-
-        Vedlikehold ->
+        GruppoA ->
             [ GsB_GsA.tiltak ]
 
 
