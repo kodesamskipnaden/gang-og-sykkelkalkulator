@@ -130,13 +130,30 @@ levetid =
 
 
 nivaaForutsetninger nivaa =
+    let
+        hastighet =
+            { syklende =
+                { lav = 13.1, middels = 15.7, hoey = 17 }
+            , gaaende =
+                { lav = 4.4, middels = 4.9, hoey = 5.3 }
+            }
+
+        tidsbesparelseMinutterPerKilometer fraKmt tilKmt =
+            (1 / fraKmt - 1 / tilKmt) * 60
+    in
     case nivaa of
         LavTilHoey ->
             { etterspoerselsEffekt = 5 / 100
             , tsGevinstGaaende = 0.454545455
             , tsGevinstSyklende = 0.014925373
-            , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 17) * 60
-            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 5.3) * 60
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer
+                    hastighet.syklende.lav
+                    hastighet.syklende.hoey
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer
+                    hastighet.gaaende.lav
+                    hastighet.gaaende.hoey
             , wtp = 3.16
             , annuiserteDriftsKostnaderPerKm = 195000
             }
@@ -145,8 +162,14 @@ nivaaForutsetninger nivaa =
             { etterspoerselsEffekt = 4 / 100
             , tsGevinstGaaende = 0.151515152
             , tsGevinstSyklende = 0.004975124
-            , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 15.7) * 60
-            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 4.9) * 60
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer
+                    hastighet.syklende.lav
+                    hastighet.syklende.middels
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer
+                    hastighet.gaaende.lav
+                    hastighet.gaaende.middels
             , wtp = 2.51
             , annuiserteDriftsKostnaderPerKm = 37000
             }
@@ -155,8 +178,14 @@ nivaaForutsetninger nivaa =
             { etterspoerselsEffekt = 1 / 100
             , tsGevinstGaaende = 0.357142857
             , tsGevinstSyklende = 0.01
-            , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 15.7 - 1 / 17) * 60
-            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.9 - 1 / 5.3) * 60
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer
+                    hastighet.syklende.middels
+                    hastighet.syklende.hoey
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer
+                    hastighet.gaaende.middels
+                    hastighet.gaaende.hoey
             , wtp = 0.65
             , annuiserteDriftsKostnaderPerKm = 158000
             }
