@@ -23,8 +23,3 @@ initialTiltakStates =
     { ledLys = LEDLys.initialState
     , gsB_GsA = GsB_GsA.initialState
     }
-
-
-alleTiltak : List Tiltak
-alleTiltak =
-    [ LEDLys.tiltak, GsB_GsA.tiltak ]
