@@ -39,7 +39,6 @@ type alias BrukerForutsetninger =
     , tsKostnad : Float
     , turerPerYearMaybe : Maybe Float
     , totalReiseDistanceKm : Float
-    , etterspoerselsEffekt : Float
     , helseGevinstBruker : Float
     }
 
@@ -65,6 +64,17 @@ type alias BrukerforutsetningStateCalculationMethod =
 -}
 
 
+type alias NivaaForutsetninger =
+    { etterspoerselsEffekt : Float
+    , tidsbesparelseGaaendeMinutterPerKilometer : Float
+    , tidsbesparelseSyklendeMinutterPerKilometer : Float
+    , tsGevinstGaaende : Float
+    , tsGevinstSyklende : Float
+    , wtp : Float
+    , annuiserteDriftsKostnaderPerKm : Float
+    }
+
+
 type alias TiltakRecordHooks =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
@@ -77,6 +87,7 @@ type alias TiltakRecordHooks =
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
     , yearlyFotgjengerNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
+    , nivaaForutsetninger : Nivaa -> NivaaForutsetninger
     }
 
 

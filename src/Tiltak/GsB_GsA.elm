@@ -58,6 +58,7 @@ tiltakRecordImplementation =
     , yearlyFotgjengerNyttePerTur = yearlyFotgjengerNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
+    , nivaaForutsetninger = nivaaForutsetninger
     }
 
 
@@ -203,7 +204,7 @@ syklistForutsetninger ((Tiltak object) as this) state =
         | tsGevinstTiltak = (nivaaForutsetninger basicState.nivaa).tsGevinstSyklende
 
         -- etterspoerselsEffekt varierer IKKE mellom fotgjenger og syklist
-        , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
+        -- , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
     }
 
 
@@ -219,7 +220,7 @@ fotgjengerForutsetninger ((Tiltak object) as this) state =
         | tsGevinstTiltak = (nivaaForutsetninger basicState.nivaa).tsGevinstGaaende
 
         -- etterspoerselsEffekt varierer IKKE mellom fotgjenger og syklist
-        , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
+        -- , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
     }
 
 
@@ -244,7 +245,7 @@ tidsbesparelseMinPerTurGaaende { gsB_GsA } =
 
 
 yearlyGangturer this state =
-    fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this
+    fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this state
 
 
 yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
@@ -300,7 +301,7 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\fotgjengerNytte ->
                     fotgjengerNytte / 2
                 )
-                (yearlyFotgjengerNyttePerTur state (boundFotgjengerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this))
+                (yearlyFotgjengerNyttePerTur state (boundFotgjengerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
     in
     Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlyFotgjengerNytte)
@@ -322,7 +323,7 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\syklistNytte ->
                     syklistNytte / 2
                 )
-                (yearlySyklistNyttePerTur state (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this))
+                (yearlySyklistNyttePerTur state (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
     in
     Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlySyklistNytte)
@@ -355,7 +356,7 @@ wtpNytte this state brukerForutsetninger =
             Maybe.map2
                 (\antallTurer overfoerteTurer -> antallTurer + 0.5 * overfoerteTurer)
                 turerPerYearMaybe
-                (brukerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this)
+                (brukerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state)
     in
     Maybe.map2 (\distanse turerPluss -> distanse * turerPluss * wtp)
         distanseMaybe

@@ -61,7 +61,21 @@ tiltakRecordImplementation =
     , yearlyFotgjengerNyttePerTur = \_ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
+    , nivaaForutsetninger = nivaaForutsetninger
     }
+
+
+nivaaForutsetninger nivaa =
+    case nivaa of
+        _ ->
+            { annuiserteDriftsKostnaderPerKm = 0
+            , etterspoerselsEffekt = 0
+            , tidsbesparelseGaaendeMinutterPerKilometer = 0
+            , tidsbesparelseSyklendeMinutterPerKilometer = 0
+            , tsGevinstGaaende = 0
+            , tsGevinstSyklende = 0
+            , wtp = 0
+            }
 
 
 initialState : LEDLysState
@@ -124,7 +138,6 @@ syklistForutsetninger this state =
     in
     { basic
         | tsGevinstTiltak = 0 -- verdisettinger.tsGevinstLEDLysSyklende
-        , etterspoerselsEffekt = 0 -- verdisettinger.sykkelBedreBelysningLED
     }
 
 
@@ -135,7 +148,6 @@ fotgjengerForutsetninger this state =
     in
     { basic
         | tsGevinstTiltak = 0 --- verdisettinger.tsGevinstLEDLysGaaende
-        , etterspoerselsEffekt = 0 -- verdisettinger.fotgjengerBedreBelysningLED
     }
 
 
