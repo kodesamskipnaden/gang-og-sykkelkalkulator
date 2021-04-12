@@ -87,7 +87,7 @@ tiltakSuite checkWithState expectedRecord =
             , checkWithState
                 "yearlyTSGevinstNytteInklOverfoert"
                 .yearlyTSGevinstNytteInklOverfoert
-                (Expect.within (Absolute 0.01) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
+                (Expect.within (Absolute 0.001) expectedRecord.yearlyTSGevinstNytteInklOverfoert)
             , checkWithState
                 "yearlyEksterneEffekterNytteInklOverfoert"
                 .yearlyEksterneEffekterNytteInklOverfoert
@@ -95,13 +95,13 @@ tiltakSuite checkWithState expectedRecord =
             , checkWithState
                 "yearlyNytteInklOverfoertSum"
                 .yearlyNytteInklOverfoertSum
-                (Expect.within (Absolute 0.01) expectedRecord.yearlyNytteInklOverfoertSum)
+                (Expect.within (Absolute 0.001) expectedRecord.yearlyNytteInklOverfoertSum)
             ]
         , describe "nytte over analyseperioden"
             [ checkWithState
                 "nytteInklOverfoert"
                 .nytteInklOverfoert
-                (Expect.within (Absolute 0.5) expectedRecord.nytteInklOverfoert)
+                (Expect.within (Absolute 0.01) expectedRecord.nytteInklOverfoert)
             ]
         , describe "kost calculations"
             [ checkWithState
@@ -125,6 +125,6 @@ tiltakSuite checkWithState expectedRecord =
             [ checkWithState
                 "nettoNytteInklOverfoert"
                 .nettoNytteInklOverfoert
-                (Expect.within (Absolute 0.5) expectedRecord.nettoNytteInklOverfoert)
+                (Expect.within (Absolute 0.01) expectedRecord.nettoNytteInklOverfoert)
             ]
         ]
