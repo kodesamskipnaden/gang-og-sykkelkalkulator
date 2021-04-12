@@ -135,7 +135,7 @@ nivaaForutsetninger nivaa =
         LavTilHoey ->
             { etterspoerselsEffekt = 5 / 100
             , tsGevinstGaaende = 0.454545455
-            , tsGevinstSyklende = 0.0149254
+            , tsGevinstSyklende = 0.014925373
             , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 17) * 60
             , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 5.3) * 60
             , wtp = 3.16
@@ -143,8 +143,14 @@ nivaaForutsetninger nivaa =
             }
 
         LavTilMiddels ->
-            -- { etterspoerselsEffekt = 4 / 100 }
-            Debug.crash "Not Implemented"
+            { etterspoerselsEffekt = 4 / 100
+            , tsGevinstGaaende = 0.151515152
+            , tsGevinstSyklende = 0.004975124
+            , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 15.7) * 60
+            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 / 1 / 4.9) * 60
+            , wtp = 2.51
+            , annuiserteDriftsKostnaderPerKm = 37000
+            }
 
         MiddelsTilHoey ->
             -- { etterspoerselsEffekt = 1 / 100 }
