@@ -46,10 +46,6 @@ createCheckWithState state =
     checkWithState
 
 
-
--- organiser med sub describes for hver case tror jeg.
-
-
 sykkelSuite : Test
 sykkelSuite =
     let
@@ -172,49 +168,84 @@ sykkelSuite =
 fotgjengerSuite : Test
 fotgjengerSuite =
     let
-        state =
-            { initialState
-                | gsB_GsA =
-                    { basicGsBTestState
-                        | nivaa = LavTilHoey
-                        , sted = Storby
-                        , sykkelturerPerYear = Just 0 |> formattedValue
-                        , gangturerPerYear = Just 5.0e4 |> formattedValue
-                    }
-            }
-
-        expectedRecord =
-            { yearlySyklistNytteInklOverfoert = 0
-            , yearlyFotgjengerNytteInklOverfoert = 864623.7934
-            , yearlyTrafikantNytteInklOverfoert = 1975.6705
-            , yearlyHelsegevinstNytteInklOverfoert = 306745.6575
-            , yearlyTSGevinstNytteInklOverfoert = 74363.3766
-            , yearlyEksterneEffekterNytteInklOverfoert = 1591.3741
-            , yearlyNytteInklOverfoertSum = 1249299.8719
-            , investeringsKostInklRestverdi = 0
-            , driftOgVedlihKost = -8877059.0867
-            , kostUtenSkyggepris = -8877059.0867
-            , skyggepris = -1775411.8173
-            , nytteInklOverfoert = 30505350.07
-            , nettoNytteInklOverfoert = 19852879.1659
+        fotgjengerGsBState =
+            { basicGsBTestState
+                | sykkelturerPerYear = Just 0 |> formattedValue
+                , gangturerPerYear = Just 5.0e4 |> formattedValue
             }
     in
     describe "GsB_GsA fotgjengervei"
-        [ tiltakSuite (createCheckWithState state) expectedRecord
-        , test "overfoerteGangturer" <|
-            \() ->
-                BasicTiltak.yearlyOverfoerteGangturer tiltak state |> checkMaybe (Expect.equal 2500)
-        , test
-            "tidsbesparelseMinPerTurGaaende"
-          <|
-            \() ->
-                GsB_GsA.tidsbesparelseMinPerTurGaaende state
-                    |> checkMaybe (Expect.within (Absolute 0.00001) 5.3259)
-        , test
-            "wtpNytte"
-          <|
-            \() ->
-                GsB_GsA.fotgjengerForutsetninger tiltak state
-                    |> GsB_GsA.wtpNytte tiltak state
-                    |> checkMaybe (Expect.within (Absolute 0.00001) 323900)
+        [ let
+            state =
+                { initialState
+                    | gsB_GsA =
+                        { fotgjengerGsBState
+                            | nivaa = LavTilHoey
+                            , sted = Spredtbygd
+                        }
+                }
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 0
+                , yearlyFotgjengerNytteInklOverfoert = 864623.7934
+                , yearlyTrafikantNytteInklOverfoert = 0
+                , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
+                , yearlyTSGevinstNytteInklOverfoert = 74524.3951
+                , yearlyEksterneEffekterNytteInklOverfoert = 422.1363
+                , yearlyNytteInklOverfoertSum = 1246315.9822
+                , nytteInklOverfoert = 30432489.5798
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -8877059.0867
+                , kostUtenSkyggepris = -8877059.0867
+                , skyggepris = -1775411.8173
+                , nettoNytteInklOverfoert = 19780018.6757
+                }
+          in
+          describe "Spredtbygd LavTilHøy"
+            [ tiltakSuite (createCheckWithState state) expectedRecord ]
+        , let
+            state =
+                { initialState
+                    | gsB_GsA =
+                        { fotgjengerGsBState
+                            | nivaa = LavTilHoey
+                            , sted = Storby
+                        }
+                }
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 0
+                , yearlyFotgjengerNytteInklOverfoert = 864623.7934
+                , yearlyTrafikantNytteInklOverfoert = 1975.6705
+                , yearlyHelsegevinstNytteInklOverfoert = 306745.6575
+                , yearlyTSGevinstNytteInklOverfoert = 74363.3766
+                , yearlyEksterneEffekterNytteInklOverfoert = 1591.3741
+                , yearlyNytteInklOverfoertSum = 1249299.8719
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -8877059.0867
+                , kostUtenSkyggepris = -8877059.0867
+                , skyggepris = -1775411.8173
+                , nytteInklOverfoert = 30505350.07
+                , nettoNytteInklOverfoert = 19852879.1659
+                }
+          in
+          describe "Storby LavTilHøy"
+            [ tiltakSuite (createCheckWithState state) expectedRecord
+            , test "overfoerteGangturer" <|
+                \() ->
+                    BasicTiltak.yearlyOverfoerteGangturer tiltak state |> checkMaybe (Expect.equal 2500)
+            , test
+                "tidsbesparelseMinPerTurGaaende"
+              <|
+                \() ->
+                    GsB_GsA.tidsbesparelseMinPerTurGaaende state
+                        |> checkMaybe (Expect.within (Absolute 0.00001) 5.3259)
+            , test
+                "wtpNytte"
+              <|
+                \() ->
+                    GsB_GsA.fotgjengerForutsetninger tiltak state
+                        |> GsB_GsA.wtpNytte tiltak state
+                        |> checkMaybe (Expect.within (Absolute 0.00001) 323900)
+            ]
         ]

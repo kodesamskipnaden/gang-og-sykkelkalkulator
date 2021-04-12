@@ -430,6 +430,23 @@ stedsForutsetninger sted =
             , koekostnadBiler = 1.3171136
             }
 
+        Spredtbygd ->
+            { overfoertFra =
+                { bil = 70 / 100
+                , kollektivtransport = 20 / 100
+                , genererte = 10 / 100
+                }
+            , tsKostnader =
+                { bil = 0.092307692
+                , kollektivtransport = 0.036
+                }
+            , oevrigeEksterneKostnader =
+                { bil = 0.1
+                , kollektivtransport = 0.072136348
+                }
+            , koekostnadBiler = 0.0
+            }
+
         _ ->
             Debug.crash "Not implemented"
 
