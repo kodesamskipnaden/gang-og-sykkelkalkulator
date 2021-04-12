@@ -418,7 +418,11 @@ driftOgVedlihKost specificState =
 stedsForutsetninger sted =
     case sted of
         Storby ->
-            { overfoertFra = { bil = 30 / 100, kollektivtransport = 50 / 100, genererte = 20 / 100 }
+            { overfoertFra =
+                { bil = 30 / 100
+                , kollektivtransport = 50 / 100
+                , genererte = 20 / 100
+                }
             , tsKostnader =
                 { bil = 0.0981818
                 , kollektivtransport = 0.0203143
@@ -447,8 +451,22 @@ stedsForutsetninger sted =
             , koekostnadBiler = 0.0
             }
 
-        _ ->
-            Debug.crash "Not implemented"
+        LitenBy ->
+            { overfoertFra =
+                { bil = 50 / 100
+                , kollektivtransport = 30 / 100
+                , genererte = 20 / 100
+                }
+            , tsKostnader =
+                { bil = 0.096503497
+                , kollektivtransport = 0.023581731
+                }
+            , oevrigeEksterneKostnader =
+                { bil = 0.355979021
+                , kollektivtransport = 0.160726336
+                }
+            , koekostnadBiler = 0.17972028
+            }
 
 
 overfoertFra sted =

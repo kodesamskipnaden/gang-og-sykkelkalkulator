@@ -181,6 +181,34 @@ fotgjengerSuite =
                     | gsB_GsA =
                         { fotgjengerGsBState
                             | nivaa = LavTilHoey
+                            , sted = LitenBy
+                        }
+                }
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 0
+                , yearlyFotgjengerNytteInklOverfoert = 864623.7934
+                , yearlyTrafikantNytteInklOverfoert = 449.3007
+                , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
+                , yearlyTSGevinstNytteInklOverfoert = 74441.9495
+                , yearlyEksterneEffekterNytteInklOverfoert = 1131.0371
+                , yearlyNytteInklOverfoertSum = 1247391.738
+                , nytteInklOverfoert = 30458757.3388
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -8877059.0867
+                , kostUtenSkyggepris = -8877059.0867
+                , skyggepris = -1775411.8173
+                , nettoNytteInklOverfoert = 19806286.4347
+                }
+          in
+          describe "Liten by LavTilHøy"
+            [ tiltakSuite (createCheckWithState state) expectedRecord ]
+        , let
+            state =
+                { initialState
+                    | gsB_GsA =
+                        { fotgjengerGsBState
+                            | nivaa = LavTilHoey
                             , sted = Spredtbygd
                         }
                 }
