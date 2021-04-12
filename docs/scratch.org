@@ -1,0 +1,21 @@
+* EKSISTERENDE
+** Min(totalLengde, lengdeVeiKm) * antallGangturer * TSkostnad_gange * risikoReduksjonGående (tiltak, nivå)
+   
+   MIN($B$12;$B$6) * $B$10 * TSkostnad_gange * VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;13;FALSE())
+
+
+* Overført fra bil
+** + totalLengde * antallOverfoertFraBil * (tskostnadBil(sted) - TSkostnad_gange)
+   
+   +$B$12*F19*(VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;14;FALSE())-TSkostnad_gange)
+
+
+* Overført fra kollektiv
+** + totalLengde * antallOverfoertFraKollektiv * (tsKostnadKollektiv(sted) - TSkostnad_gange)
+
+   +$B$12*F20*(VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;15;FALSE())-TSkostnad_gange)
+
+* Nygenererte
+** - totalLengde * antallNyGenererte * TSkostnad_gange
+
+   -$B$12*F22*TSkostnad_gange

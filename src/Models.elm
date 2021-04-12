@@ -7,8 +7,7 @@ import TiltakStates exposing (TiltakStates)
 
 
 type Group
-    = Belysning
-    | Vedlikehold
+    = GruppoA
 
 
 type Page

@@ -37,11 +37,9 @@ type alias BrukerForutsetninger =
     , andelNyeBrukereGenererte : Float
     , tsGevinstTiltak : Float
     , tsKostnad : Float
-    , eksterneKostnader : Float
     , turerPerYearMaybe : Maybe Float
     , totalReiseDistanceKm : Float
-    , etterspoerselsEffekt : Float
-    , helseTSGevinstBruker : Float
+    , helseGevinstBruker : Float
     }
 
 
@@ -66,6 +64,17 @@ type alias BrukerforutsetningStateCalculationMethod =
 -}
 
 
+type alias NivaaForutsetninger =
+    { etterspoerselsEffekt : Float
+    , tidsbesparelseGaaendeMinutterPerKilometer : Float
+    , tidsbesparelseSyklendeMinutterPerKilometer : Float
+    , tsGevinstGaaende : Float
+    , tsGevinstSyklende : Float
+    , wtp : Float
+    , annuiserteDriftsKostnaderPerKm : Float
+    }
+
+
 type alias TiltakRecordHooks =
     { title : Tiltak -> String
     , fields : Tiltak -> List Field
@@ -77,7 +86,8 @@ type alias TiltakRecordHooks =
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
-    , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
+    , yearlyFotgjengerNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
+    , nivaaForutsetninger : Nivaa -> NivaaForutsetninger
     }
 
 
@@ -91,21 +101,15 @@ type alias Hooks specificState =
 
 type alias TiltakRecordPartial a =
     { a
-        | syklistNytte : StateCalculationMethod
-        , fotgjengerNytte : StateCalculationMethod
-        , trafikantNytte : StateCalculationMethod
-        , tsGevinstNytte : StateCalculationMethod
-        , syklistNytteInklOverfoert : StateCalculationMethod
+        | syklistNytteInklOverfoert : StateCalculationMethod
         , fotgjengerNytteInklOverfoert : StateCalculationMethod
         , trafikantNytteInklOverfoert : StateCalculationMethod
         , helseGevinstNytteInklOverfoert : StateCalculationMethod
         , tsGevinstNytteInklOverfoert : StateCalculationMethod
         , eksterneEffekterNytteInklOverfoert : StateCalculationMethod
-        , nytte : StateCalculationMethod
         , nytteInklOverfoert : StateCalculationMethod
         , skyggepris : StateCalculationMethod
         , kostUtenSkyggepris : StateCalculationMethod
-        , nettoNytte : StateCalculationMethod
         , nettoNytteInklOverfoert : StateCalculationMethod
         , yearlySyklistNytte : StateCalculationMethod
         , yearlyFotgjengerNytte : StateCalculationMethod
@@ -117,11 +121,13 @@ type alias TiltakRecordPartial a =
         , yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
         , yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
         , yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
+        , yearlyNytteInklOverfoertSum : StateCalculationMethod
         , skyggeprisHelper : StateCalculationMethod
         , yearlyTSGevinstNytteOverfoert : StateCalculationMethod
         , yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
         , yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
         , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
+        , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
         , yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String
@@ -160,9 +166,9 @@ analyse tiltak tiltakStates =
             bindTiltak tiltak tiltakStates
     in
     { analysePeriode = 40
-    , isProfitable = f .nettoNytte |> Maybe.map (\value -> value > 0)
+    , isProfitable = f .nettoNytteInklOverfoert |> Maybe.map (\value -> value > 0)
     , syklistNytte = f .syklistNytteInklOverfoert
-    , fotgjengerNytte = f .fotgjengerNytte
+    , fotgjengerNytte = f .fotgjengerNytteInklOverfoert
     , trafikantNytte = f .trafikantNytteInklOverfoert
     , helseGevinstNytte = f .helseGevinstNytteInklOverfoert
     , tsGevinstNytte = f .tsGevinstNytteInklOverfoert

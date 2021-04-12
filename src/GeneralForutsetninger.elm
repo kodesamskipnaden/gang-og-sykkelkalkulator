@@ -8,66 +8,47 @@ module GeneralForutsetninger exposing (..)
 -- Vi kunne uttrykt nivå bestemte verdier ved å lagre 2 tall (sjekk med nils). Enten lav til høy og lav til middels (så kan man regne ut differansen for å finne ut middels til høy).
 
 
-verdisettinger =
-    -- alle verdier i NOK
-    { reisetidSykkel =
-        -- VoT_Sykkel
-        -- kr. pr min pr syklist
-        147.47 / 60
-    , reisetidGange =
+verifiserteVerdisettinger =
+    { voTGange =
         -- VoT_Gange
         -- kr pr. min pr. gangtur
         2.77293673883309
-    , tsKostnadSykkel = 3.50891113
-    , tsKostnadBil = 0.2639315
-    , tsKostnadKollektiv = 0.0125062
-    , tsKostnadGange = 5.2089111
-
-    -- skadereduksjon %
-    , tsGevinstLEDLysSyklende = 100 / 100
-    , tsGevinstLEDLysGaaende = 0 / 100
-    , tsGevinstGsB_GsASyklende = 1 / 100
-    , tsGevinstGsB_GsAGaaende = 20 / 100
-
-    -- Etterspørselseffekter
-    , sykkelBedreBelysningLED = 5 / 100
-    , fotgjengerBedreBelysningLED = 5 / 100
-    , sykkelGsB_GsA = 5 / 100
-    , fotgjengerGsB_GsA = 5 / 100
-
-    -- Overføring
-    , andelNyeSyklisterFraBil = 40 / 100
-    , andelNyeFotgjengereFraBil = 40 / 100
-    , andelNyeSyklisterFraKollektivtransport = 35 / 100
-    , andelNyeFotgjengereFraKollektivtransport = 35 / 100
-    , andelNyeSyklisterGenererte = 25 / 100
-    , andelNyeFotgjengereGenererte = 25 / 100
-
-    -- Andre verdier
-    , koekostnadBiler =
-        -- kr pr km per bil
-        2.0890356
-    , eksterneKostnaderBil =
-        -- kr pr P-km
-        0.4428013
-    , eksterneKostnaderSykkel =
-        -- kr pr P-km
-        0
-    , eksterneKostnaderGange =
-        -- kr pr P-km
-        0
-    , eksterneKostnaderKollektiv =
-        -- kr pr P-km
-        0.2122847
+    , voTSykkel =
+        -- VoT_Sykkel
+        -- kr. pr min pr syklist
+        147.47 / 60
+    , helseGevinstGange =
+        -- kr pr km gange
+        61.3491315
     , helseTSGevinstSykkel =
         -- kr pr km syklet
-        22.8
-    , helseTSGevinstGange =
-        -- kr pr km gange
-        59.9
+        23.3515893
+    , tsKostnadGange = 1.8333
+    , tsKostnadSykkel = 2.0
     , syklistTotalReiseDistanceKm = 5
     , fotgjengerTotalReiseDistanceKm = 2
     }
+
+
+
+-- verdisettinger =
+--     -- alle verdier i NOK
+--     { tsKostnadBil = 0.2639315
+--     , tsKostnadKollektiv = 0.0125062
+--     -- skadereduksjon %
+--     , tsGevinstLEDLysSyklende = 100 / 100
+--     , tsGevinstLEDLysGaaende = 0 / 100
+--     -- Etterspørselseffekter
+--     , sykkelBedreBelysningLED = 5 / 100
+--     , fotgjengerBedreBelysningLED = 5 / 100
+--     -- Overføring
+--     , andelNyeSyklisterFraBil = 40 / 100
+--     , andelNyeFotgjengereFraBil = 40 / 100
+--     , andelNyeSyklisterFraKollektivtransport = 35 / 100
+--     , andelNyeFotgjengereFraKollektivtransport = 35 / 100
+--     , andelNyeSyklisterGenererte = 25 / 100
+--     , andelNyeFotgjengereGenererte = 25 / 100
+--     }
 
 
 drente : Float

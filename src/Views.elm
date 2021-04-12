@@ -16,10 +16,7 @@ import TiltakView
 groupIcon : Group -> Assets.Image
 groupIcon group =
     case group of
-        Belysning ->
-            Assets.holdeplasser
-
-        Vedlikehold ->
+        GruppoA ->
             Assets.informasjon
 
 
@@ -120,10 +117,7 @@ ulike aktører, tiltakets nettonåverdi og nettonytte per budsjettkrone (nytteko
                 ]
             , Grid.row []
                 [ Grid.col []
-                    [ groupPanel Belysning
-                    ]
-                , Grid.col []
-                    [ groupPanel Vedlikehold
+                    [ groupPanel GruppoA
                     ]
                 ]
             ]

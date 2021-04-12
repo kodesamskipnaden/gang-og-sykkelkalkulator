@@ -6,8 +6,7 @@ import FormattedValue exposing (..)
 
 type alias SimpleCommonPartial a =
     { a
-        | yearlyMaintenance : FormattedValue Float
-        , installationCost : FormattedValue Float
+        | installationCost : FormattedValue Float
     }
 
 
@@ -15,8 +14,12 @@ type alias SimpleCommonState =
     SimpleCommonPartial BasicState
 
 
+type alias YearlyMaintenancePartial a =
+    { a | yearlyMaintenance : FormattedValue Float }
+
+
 type alias LEDLysState =
-    SimpleCommonState
+    YearlyMaintenancePartial SimpleCommonState
 
 
 type alias GsB_GsAStatePartial a =

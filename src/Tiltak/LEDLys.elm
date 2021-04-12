@@ -15,7 +15,7 @@ import FormattedValue
         , value
         , yearlyMaintenance
         )
-import GeneralForutsetninger exposing (verdisettinger)
+import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
@@ -58,10 +58,24 @@ tiltakRecordImplementation =
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
+    , yearlyFotgjengerNyttePerTur = \_ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
-    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
+    , nivaaForutsetninger = nivaaForutsetninger
     }
+
+
+nivaaForutsetninger nivaa =
+    case nivaa of
+        _ ->
+            { annuiserteDriftsKostnaderPerKm = 0
+            , etterspoerselsEffekt = 0
+            , tidsbesparelseGaaendeMinutterPerKilometer = 0
+            , tidsbesparelseSyklendeMinutterPerKilometer = 0
+            , tsGevinstGaaende = 0
+            , tsGevinstSyklende = 0
+            , wtp = 0
+            }
 
 
 initialState : LEDLysState
@@ -123,8 +137,7 @@ syklistForutsetninger this state =
             BasicTiltak.basicSyklistForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysSyklende
-        , etterspoerselsEffekt = verdisettinger.sykkelBedreBelysningLED
+        | tsGevinstTiltak = 0 -- verdisettinger.tsGevinstLEDLysSyklende
     }
 
 
@@ -134,42 +147,20 @@ fotgjengerForutsetninger this state =
             BasicTiltak.basicFotgjengerForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysGaaende
-        , etterspoerselsEffekt = verdisettinger.fotgjengerBedreBelysningLED
+        | tsGevinstTiltak = 0 --- verdisettinger.tsGevinstLEDLysGaaende
     }
 
 
-yearlySyklistNyttePerTur _ antallTurer =
-    Maybe.map
-        (\a -> a * verdisettinger.reisetidSykkel * tidsbesparelseMinutterPerTur)
+tidsbesparelseMinPerTurSyklende { gsB_GsA } =
+    Just 5
+
+
+
+-- fiks dette
+
+
+yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
+    Maybe.map2
+        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
         antallTurer
-
-
-yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
-    let
-        nyeTurerFunc =
-            BasicTiltak.nyeTurerFra this brukerForutsetninger
-
-        beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
-            nyeTurerFraBil
-                * (verdisettinger.tsKostnadBil
-                    - brukerForutsetninger.tsKostnad
-                    * (1 - brukerForutsetninger.tsGevinstTiltak)
-                  )
-                + nyeTurerFraKollektiv
-                * (verdisettinger.tsKostnadKollektiv
-                    - brukerForutsetninger.tsKostnad
-                    * (1 - brukerForutsetninger.tsGevinstTiltak)
-                  )
-                - nyeTurerFraGenererte
-                * brukerForutsetninger.tsKostnad
-                * (1 - brukerForutsetninger.tsGevinstTiltak)
-    in
-    Maybe.map2 (*)
-        (Just brukerForutsetninger.totalReiseDistanceKm)
-        (Maybe.map3
-            beregning
-            (nyeTurerFunc .andelNyeBrukereFraBil)
-            (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
-            (nyeTurerFunc .andelNyeBrukereGenererte)
-        )
+        (tidsbesparelseMinPerTurSyklende state)
