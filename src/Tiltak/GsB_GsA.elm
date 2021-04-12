@@ -147,14 +147,20 @@ nivaaForutsetninger nivaa =
             , tsGevinstGaaende = 0.151515152
             , tsGevinstSyklende = 0.004975124
             , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 13.1 - 1 / 15.7) * 60
-            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 / 1 / 4.9) * 60
+            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.4 - 1 / 4.9) * 60
             , wtp = 2.51
             , annuiserteDriftsKostnaderPerKm = 37000
             }
 
         MiddelsTilHoey ->
-            -- { etterspoerselsEffekt = 1 / 100 }
-            Debug.crash "Not Implemented"
+            { etterspoerselsEffekt = 1 / 100
+            , tsGevinstGaaende = 0.357142857
+            , tsGevinstSyklende = 0.01
+            , tidsbesparelseSyklendeMinutterPerKilometer = (1 / 15.7 - 1 / 17) * 60
+            , tidsbesparelseGaaendeMinutterPerKilometer = (1 / 4.9 - 1 / 5.3) * 60
+            , wtp = 0.65
+            , annuiserteDriftsKostnaderPerKm = 158000
+            }
 
 
 syklistForutsetninger ((Tiltak object) as this) state =

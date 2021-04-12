@@ -67,6 +67,34 @@ sykkelSuite =
                 { initialState
                     | gsB_GsA =
                         { sykkelGsBState
+                            | nivaa = MiddelsTilHoey
+                            , sted = Storby
+                        }
+                }
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 126511.8852
+                , yearlyFotgjengerNytteInklOverfoert = 0
+                , yearlyTrafikantNytteInklOverfoert = 987.8352
+                , yearlyHelsegevinstNytteInklOverfoert = 58378.9732
+                , yearlyTSGevinstNytteInklOverfoert = -2600.9708
+                , yearlyEksterneEffekterNytteInklOverfoert = 795.6871
+                , yearlyNytteInklOverfoertSum = 184073.4099
+                , nytteInklOverfoert = 4494696.5364
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -7192694.0292
+                , kostUtenSkyggepris = -7192694.0292
+                , skyggepris = -1438538.8058
+                , nettoNytteInklOverfoert = -4136536.2986
+                }
+          in
+          describe "MiddelsTilHøy Storby"
+            [ tiltakSuite (createCheckWithState state) expectedRecord ]
+        , let
+            state =
+                { initialState
+                    | gsB_GsA =
+                        { sykkelGsBState
                             | nivaa = LavTilMiddels
                             , sted = Storby
                         }
@@ -81,10 +109,10 @@ sykkelSuite =
                 , yearlyEksterneEffekterNytteInklOverfoert = 3182.7482
                 , yearlyNytteInklOverfoertSum = 632670.7742
                 , nytteInklOverfoert = 15448527.5142
+                , investeringsKostInklRestverdi = 0
                 , driftOgVedlihKost = -1684365.0575
                 , kostUtenSkyggepris = -1684365.0575
                 , skyggepris = -336873.0115
-                , investeringsKostInklRestverdi = 0
                 , nettoNytteInklOverfoert = 13427289.4452
                 }
           in
