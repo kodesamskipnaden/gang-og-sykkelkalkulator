@@ -284,16 +284,10 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
             stedsForutsetninger sted |> .oevrigeEksterneKostnader
 
         overfoertFraBilNyttePerKm nyeTurerFraBil =
-            nyeTurerFraBil
-                * (eksterneKostnader.bil
-                    - brukerForutsetninger.eksterneKostnader
-                  )
+            nyeTurerFraBil * eksterneKostnader.bil
 
         overfoertFraKollektivNyttePerKm nyeTurerFraKollektiv =
-            nyeTurerFraKollektiv
-                * (eksterneKostnader.kollektivtransport
-                    - brukerForutsetninger.eksterneKostnader
-                  )
+            nyeTurerFraKollektiv * eksterneKostnader.kollektivtransport
 
         nytte nyeTurerFraBil nyeTurerFraKollektiv =
             brukerForutsetninger.totalReiseDistanceKm
@@ -507,7 +501,6 @@ basicSyklistForutsetninger ((Tiltak object) as this) state =
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
     , andelNyeBrukereGenererte = overfoert.genererte
     , tsKostnad = verifiserteVerdisettinger.tsKostnadSykkel
-    , eksterneKostnader = verdisettinger.eksterneKostnaderSykkel
     , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
     , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
     , helseGevinstBruker = verifiserteVerdisettinger.helseTSGevinstSykkel
@@ -525,7 +518,6 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
     , andelNyeBrukereGenererte = overfoert.genererte
     , tsKostnad = verifiserteVerdisettinger.tsKostnadGange
-    , eksterneKostnader = verdisettinger.eksterneKostnaderGange -- hvorfor er ikke denne verifiserte
     , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm -- hvor er ikke denne verifisert
     , helseGevinstBruker = verifiserteVerdisettinger.helseGevinstGange
     , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value

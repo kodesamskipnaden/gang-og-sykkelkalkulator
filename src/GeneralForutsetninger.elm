@@ -53,12 +53,6 @@ verdisettinger =
     , koekostnadBiler =
         -- kr pr km per bil
         2.0890356
-    , eksterneKostnaderSykkel =
-        -- kr pr P-km
-        0
-    , eksterneKostnaderGange =
-        -- kr pr P-km
-        0
     , syklistTotalReiseDistanceKm = 5
     , fotgjengerTotalReiseDistanceKm = 2
     }

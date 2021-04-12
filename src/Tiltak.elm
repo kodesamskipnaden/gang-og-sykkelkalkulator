@@ -37,7 +37,6 @@ type alias BrukerForutsetninger =
     , andelNyeBrukereGenererte : Float
     , tsGevinstTiltak : Float
     , tsKostnad : Float
-    , eksterneKostnader : Float
     , turerPerYearMaybe : Maybe Float
     , totalReiseDistanceKm : Float
     , etterspoerselsEffekt : Float
