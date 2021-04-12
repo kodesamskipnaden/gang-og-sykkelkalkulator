@@ -51,9 +51,7 @@ sykkelSuite =
     let
         sykkelGsBState =
             { basicGsBTestState
-                | nivaa = LavTilHoey
-                , sted = Storby
-                , sykkelturerPerYear = Just 5.0e4 |> formattedValue
+                | sykkelturerPerYear = Just 5.0e4 |> formattedValue
                 , gangturerPerYear = Just 0 |> formattedValue
             }
     in

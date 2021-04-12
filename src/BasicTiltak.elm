@@ -415,6 +415,27 @@ driftOgVedlihKost specificState =
         |> Maybe.map negate
 
 
+type alias StedsForutsetninger =
+    { koekostnadBiler : Float
+    , overfoertFra :
+        { bil : Float
+        , kollektivtransport : Float
+        , genererte : Float
+        }
+    , tsKostnader :
+        { bil : Float
+        , kollektivtransport : Float
+        }
+    , oevrigeEksterneKostnader :
+        { bil : Float
+        , kollektivtransport : Float
+        }
+    }
+
+
+stedsForutsetninger :
+    Sted
+    -> StedsForutsetninger
 stedsForutsetninger sted =
     case sted of
         Storby ->
@@ -469,20 +490,12 @@ stedsForutsetninger sted =
             }
 
 
-overfoertFra sted =
-    (stedsForutsetninger sted).overfoertFra
-
-
-koekostnadBiler sted =
-    (stedsForutsetninger sted).koekostnadBiler
-
-
 overfoertFraHelper (Tiltak object) state =
     let
         basicState =
             object.basicState state
     in
-    overfoertFra basicState.sted
+    (stedsForutsetninger basicState.sted).overfoertFra
 
 
 basicSyklistForutsetninger ((Tiltak object) as this) state =
