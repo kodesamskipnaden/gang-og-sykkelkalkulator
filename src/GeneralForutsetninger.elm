@@ -25,6 +25,8 @@ verifiserteVerdisettinger =
         23.3515893
     , tsKostnadGange = 1.8333
     , tsKostnadSykkel = 2.0
+    , syklistTotalReiseDistanceKm = 5
+    , fotgjengerTotalReiseDistanceKm = 2
     }
 
 
@@ -53,8 +55,6 @@ verdisettinger =
     , koekostnadBiler =
         -- kr pr km per bil
         2.0890356
-    , syklistTotalReiseDistanceKm = 5
-    , fotgjengerTotalReiseDistanceKm = 2
     }
 
 
