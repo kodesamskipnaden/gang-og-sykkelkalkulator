@@ -14,7 +14,7 @@ import FormattedValue
         , sykkelturerPerYear
         , value
         )
-import GeneralForutsetninger exposing (verdisettinger, verifiserteVerdisettinger)
+import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import SpecificStates exposing (GsB_GsAState)
 import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
@@ -58,7 +58,6 @@ tiltakRecordImplementation =
     , yearlyFotgjengerNyttePerTur = yearlyFotgjengerNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
-    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     }
 
 
@@ -213,36 +212,6 @@ tidsbesparelseMinPerTurGaaende { gsB_GsA } =
     Maybe.map2 (*)
         gsB_GsA.lengdeVeiKm.value
         (Just tidsbesparelseMinPerKm)
-
-
-yearlyTSGevinstNytteOverfoertForBrukere ((Tiltak object) as this) state brukerForutsetninger =
-    let
-        nyeTurerFunc =
-            BasicTiltak.nyeTurerFra this brukerForutsetninger
-
-        tsKostnader =
-            (object.basicState state).sted |> BasicTiltak.stedsForutsetninger |> .tsKostnader
-
-        beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
-            brukerForutsetninger.totalReiseDistanceKm
-                * (nyeTurerFraBil
-                    * (tsKostnader.bil
-                        - brukerForutsetninger.tsKostnad
-                      )
-                    + (nyeTurerFraKollektiv
-                        * (tsKostnader.kollektivtransport
-                            - brukerForutsetninger.tsKostnad
-                          )
-                      )
-                    - nyeTurerFraGenererte
-                    * brukerForutsetninger.tsKostnad
-                  )
-    in
-    Maybe.map3
-        beregning
-        (nyeTurerFunc .andelNyeBrukereFraBil)
-        (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
-        (nyeTurerFunc .andelNyeBrukereGenererte)
 
 
 yearlyGangturer this state =

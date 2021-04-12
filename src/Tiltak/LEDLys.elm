@@ -15,7 +15,7 @@ import FormattedValue
         , value
         , yearlyMaintenance
         )
-import GeneralForutsetninger exposing (verdisettinger, verifiserteVerdisettinger)
+import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
@@ -61,7 +61,6 @@ tiltakRecordImplementation =
     , yearlyFotgjengerNyttePerTur = \_ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
-    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     }
 
 
@@ -124,8 +123,8 @@ syklistForutsetninger this state =
             BasicTiltak.basicSyklistForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysSyklende
-        , etterspoerselsEffekt = verdisettinger.sykkelBedreBelysningLED
+        | tsGevinstTiltak = 0 -- verdisettinger.tsGevinstLEDLysSyklende
+        , etterspoerselsEffekt = 0 -- verdisettinger.sykkelBedreBelysningLED
     }
 
 
@@ -135,8 +134,8 @@ fotgjengerForutsetninger this state =
             BasicTiltak.basicFotgjengerForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = verdisettinger.tsGevinstLEDLysGaaende
-        , etterspoerselsEffekt = verdisettinger.fotgjengerBedreBelysningLED
+        | tsGevinstTiltak = 0 --- verdisettinger.tsGevinstLEDLysGaaende
+        , etterspoerselsEffekt = 0 -- verdisettinger.fotgjengerBedreBelysningLED
     }
 
 
@@ -153,33 +152,3 @@ yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
         (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
         antallTurer
         (tidsbesparelseMinPerTurSyklende state)
-
-
-yearlyTSGevinstNytteOverfoertForBrukere this state brukerForutsetninger =
-    let
-        nyeTurerFunc =
-            BasicTiltak.nyeTurerFra this brukerForutsetninger
-
-        beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
-            nyeTurerFraBil
-                * (verdisettinger.tsKostnadBil
-                    - brukerForutsetninger.tsKostnad
-                    * (1 - brukerForutsetninger.tsGevinstTiltak)
-                  )
-                + nyeTurerFraKollektiv
-                * (verdisettinger.tsKostnadKollektiv
-                    - brukerForutsetninger.tsKostnad
-                    * (1 - brukerForutsetninger.tsGevinstTiltak)
-                  )
-                - nyeTurerFraGenererte
-                * brukerForutsetninger.tsKostnad
-                * (1 - brukerForutsetninger.tsGevinstTiltak)
-    in
-    Maybe.map2 (*)
-        (Just brukerForutsetninger.totalReiseDistanceKm)
-        (Maybe.map3
-            beregning
-            (nyeTurerFunc .andelNyeBrukereFraBil)
-            (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
-            (nyeTurerFunc .andelNyeBrukereGenererte)
-        )

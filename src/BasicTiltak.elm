@@ -9,7 +9,7 @@ import FormattedValue
         , installationCost
         , value
         )
-import GeneralForutsetninger exposing (verdisettinger, verifiserteVerdisettinger)
+import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import Maybe.Extra
 import Regex
 import Tiltak exposing (..)
@@ -174,6 +174,36 @@ yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
     Maybe.map2 (+)
         (object.syklistForutsetninger this state |> nytte)
         (object.fotgjengerForutsetninger this state |> nytte)
+
+
+yearlyTSGevinstNytteOverfoertForBrukere ((Tiltak object) as this) state brukerForutsetninger =
+    let
+        nyeTurerFunc =
+            nyeTurerFra this brukerForutsetninger
+
+        tsKostnader =
+            (object.basicState state).sted |> stedsForutsetninger |> .tsKostnader
+
+        beregning nyeTurerFraBil nyeTurerFraKollektiv nyeTurerFraGenererte =
+            brukerForutsetninger.totalReiseDistanceKm
+                * (nyeTurerFraBil
+                    * (tsKostnader.bil
+                        - brukerForutsetninger.tsKostnad
+                      )
+                    + (nyeTurerFraKollektiv
+                        * (tsKostnader.kollektivtransport
+                            - brukerForutsetninger.tsKostnad
+                          )
+                      )
+                    - nyeTurerFraGenererte
+                    * brukerForutsetninger.tsKostnad
+                  )
+    in
+    Maybe.map3
+        beregning
+        (nyeTurerFunc .andelNyeBrukereFraBil)
+        (nyeTurerFunc .andelNyeBrukereFraKollektivtransport)
+        (nyeTurerFunc .andelNyeBrukereGenererte)
 
 
 yearlyTSGevinstNytteInklOverfoert : StateCalculationMethod
@@ -361,7 +391,7 @@ basicTiltakRecord hooks =
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
-    , yearlyTSGevinstNytteOverfoertForBrukere = hooks.yearlyTSGevinstNytteOverfoertForBrukere
+    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , syklistForutsetninger = hooks.syklistForutsetninger
     , fotgjengerForutsetninger = hooks.fotgjengerForutsetninger
     }

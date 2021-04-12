@@ -30,32 +30,25 @@ verifiserteVerdisettinger =
     }
 
 
-verdisettinger =
-    -- alle verdier i NOK
-    { tsKostnadBil = 0.2639315
-    , tsKostnadKollektiv = 0.0125062
 
-    -- skadereduksjon %
-    , tsGevinstLEDLysSyklende = 100 / 100
-    , tsGevinstLEDLysGaaende = 0 / 100
-
-    -- Etterspørselseffekter
-    , sykkelBedreBelysningLED = 5 / 100
-    , fotgjengerBedreBelysningLED = 5 / 100
-
-    -- Overføring
-    , andelNyeSyklisterFraBil = 40 / 100
-    , andelNyeFotgjengereFraBil = 40 / 100
-    , andelNyeSyklisterFraKollektivtransport = 35 / 100
-    , andelNyeFotgjengereFraKollektivtransport = 35 / 100
-    , andelNyeSyklisterGenererte = 25 / 100
-    , andelNyeFotgjengereGenererte = 25 / 100
-
-    -- Andre verdier
-    , koekostnadBiler =
-        -- kr pr km per bil
-        2.0890356
-    }
+-- verdisettinger =
+--     -- alle verdier i NOK
+--     { tsKostnadBil = 0.2639315
+--     , tsKostnadKollektiv = 0.0125062
+--     -- skadereduksjon %
+--     , tsGevinstLEDLysSyklende = 100 / 100
+--     , tsGevinstLEDLysGaaende = 0 / 100
+--     -- Etterspørselseffekter
+--     , sykkelBedreBelysningLED = 5 / 100
+--     , fotgjengerBedreBelysningLED = 5 / 100
+--     -- Overføring
+--     , andelNyeSyklisterFraBil = 40 / 100
+--     , andelNyeFotgjengereFraBil = 40 / 100
+--     , andelNyeSyklisterFraKollektivtransport = 35 / 100
+--     , andelNyeFotgjengereFraKollektivtransport = 35 / 100
+--     , andelNyeSyklisterGenererte = 25 / 100
+--     , andelNyeFotgjengereGenererte = 25 / 100
+--     }
 
 
 drente : Float

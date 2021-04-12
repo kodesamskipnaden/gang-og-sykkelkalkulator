@@ -63,15 +63,15 @@ sykkelSuite =
                         state
                         |> checkMaybe expectation
     in
-    describe "LEDLys sykkelvei"
-        [ skip <|
-            tiltakSuite checkWithState expectedRecord
-        , test
-            "flupps"
-          <|
-            \() ->
-                yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
-        ]
+    skip <|
+        describe "LEDLys sykkelvei"
+            [ tiltakSuite checkWithState expectedRecord
+            , test
+                "overfoerte sykkelturer"
+              <|
+                \() ->
+                    yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
+            ]
 
 
 gangOgSykkelSuite : Test
@@ -160,9 +160,10 @@ gangOgSykkelSuite =
     in
     describe "LEDLys gang og sykkelvei"
         [ skip <| tiltakSuite checkWithState expectedRecord
-        , test "flupps" <|
-            \() ->
-                yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
+        , skip <|
+            test "yearlyOverfoerteSykkelturer" <|
+                \() ->
+                    yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
         , skip <|
             test "analyse" <|
                 \() ->
