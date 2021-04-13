@@ -28,7 +28,11 @@ tiltak =
     Tiltak
         { basicTiltakRecord
             | yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
-            , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
+            , yearlySyklistNytteInklOverfoert =
+                \this state ->
+                    Maybe.map2 (*)
+                        state.gsB_GsA.oppetidPercent.value
+                        (basicTiltakRecord.yearlySyklistNytteInklOverfoert this state)
         }
 
 
@@ -282,26 +286,4 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
         (receiver .yearlyFotgjengerNytte)
         overfoertNytte
         (receiver .wtpNytte boundFotgjengerForutsetninger)
-        gsB_GsA.oppetidPercent.value
-
-
-yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
-    let
-        receiver =
-            bindTiltak this state
-
-        boundSyklistForutsetninger =
-            receiver .syklistForutsetninger
-
-        overfoertNytte =
-            Maybe.map
-                (\syklistNytte ->
-                    syklistNytte / 2
-                )
-                (receiver .yearlySyklistNyttePerTur (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
-    in
-    Maybe.map4 (\a b c x -> x * (a + b + c))
-        (receiver .yearlySyklistNytte)
-        overfoertNytte
-        (receiver .wtpNytte boundSyklistForutsetninger)
         gsB_GsA.oppetidPercent.value
