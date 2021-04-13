@@ -67,7 +67,7 @@ sykkelSuite =
                 }
 
             expectedRecord =
-                { yearlySyklistNytteInklOverfoert = 154055.5544
+                { yearlySyklistNytteInklOverfoert = 354327.775
                 , yearlyFotgjengerNytteInklOverfoert = 0
                 , yearlyTrafikantNytteInklOverfoert = 0
                 , yearlyHelsegevinstNytteInklOverfoert = 0

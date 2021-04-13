@@ -65,15 +65,28 @@ tiltakRecordImplementation =
 
 
 nivaaForutsetninger nivaa =
+    let
+        hastighet =
+            { syklende =
+                { lav = 16.7, middels = 17.0, hoey = 17.3 }
+            , gaaende =
+                { lav = 4.9, middels = 5.0, hoey = 5.1 }
+            }
+
+        tidsbesparelseMinutterPerKilometer fraKmt tilKmt =
+            (1 / fraKmt - 1 / tilKmt) * 60
+    in
     case nivaa of
         LavTilHoey ->
             { annuiserteDriftsKostnaderPerKm = 0
-            , etterspoerselsEffekt = 0
-            , tidsbesparelseGaaendeMinutterPerKilometer = 0
-            , tidsbesparelseSyklendeMinutterPerKilometer = 0
+            , etterspoerselsEffekt = 4.3 / 100
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.gaaende.lav hastighet.gaaende.hoey
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.syklende.lav hastighet.syklende.hoey
             , tsGevinstGaaende = 0
             , tsGevinstSyklende = 0
-            , wtp = 0
+            , wtp = 2.71
             }
 
         _ ->
