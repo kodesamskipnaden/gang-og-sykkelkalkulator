@@ -85,8 +85,8 @@ type alias TiltakRecordHooks =
     , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
-    , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
-    , yearlyFotgjengerNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
+    , yearlySyklistNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
+    , yearlyFotgjengerNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
     , nivaaForutsetninger : Nivaa -> NivaaForutsetninger
     }
 
@@ -129,6 +129,7 @@ type alias TiltakRecordPartial a =
         , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
         , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
         , yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+        , tidsbesparelseMinPerTurSyklende : StateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String
         , preferredField : Tiltak -> TiltakStates -> Maybe Field
@@ -144,7 +145,6 @@ type alias TiltakAccessor a =
     TiltakRecord -> Tiltak -> a
 
 
-sendTo : Tiltak -> TiltakAccessor a -> a
 sendTo ((Tiltak object) as this) recordAccessor =
     recordAccessor object this
 
@@ -154,7 +154,6 @@ getAttr (Tiltak object) accessor =
     accessor object
 
 
-bindTiltak : Tiltak -> a -> (TiltakAccessor (a -> b) -> b)
 bindTiltak tiltak tiltakStates =
     \accessor -> sendTo tiltak accessor tiltakStates
 

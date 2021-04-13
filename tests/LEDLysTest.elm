@@ -12,48 +12,12 @@ import Tiltak.LEDLys as LEDLys exposing (tiltak)
 import TiltakAndGroupData
 
 
-sykkelSuite : Test
-sykkelSuite =
+initialState =
+    TiltakAndGroupData.initialTiltakStates
+
+
+createCheckWithState state =
     let
-        initialState =
-            TiltakAndGroupData.initialTiltakStates
-
-        state =
-            { initialState
-                | ledLys =
-                    { nivaa = LavTilHoey
-                    , sted = Storby
-                    , installationCost = Just 1.0e6 |> formattedValue
-                    , yearlyMaintenance = Just 0 |> formattedValue
-                    , sykkelturerPerYear = Just 1.5e4 |> formattedValue
-                    , gangturerPerYear = Just 0 |> formattedValue
-                    , lengdeVeiKm = Just 1 |> formattedValue
-                    , preferredToGraph = ""
-                    }
-            }
-
-        expectedRecord =
-            { yearlySyklistNytte = 18433.75
-            , yearlySyklistNytteInklOverfoert = 18894.59
-            , yearlyFotgjengerNytteInklOverfoert = 0
-            , yearlyTrafikantNytte = 0
-            , yearlyTrafikantNytteInklOverfoert = 3133.55
-            , yearlyHelsegevinstNytteInklOverfoert = 85500
-            , yearlyTSGevinstNytte = 52633.67
-            , yearlyTSGevinstNytteInklOverfoert = 53045.98
-            , yearlyEksterneEffekterNytteInklOverfoert = 942.83
-            , yearlyNytteInklOverfoertSum = 0 -- finn ut seinere hva dette skal være
-            , nytte = 1735321.1
-            , nytteInklOverfoert = 3943913.91
-            , investeringsKostInklRestverdi = -1.0e6
-            , driftOgVedlihKost = 0
-            , kostUtenSkyggepris = -1.0e6
-            , skyggepris = -2.0e5
-            , nettoNytte = 535321.1
-            , nettoNytteInklOverfoert = 2743913.91
-            }
-
-        checkWithState : CheckWithStateFunction
         checkWithState description accessor expectation =
             test description <|
                 \() ->
@@ -63,15 +27,70 @@ sykkelSuite =
                         state
                         |> checkMaybe expectation
     in
-    skip <|
-        describe "LEDLys sykkelvei"
-            [ tiltakSuite checkWithState expectedRecord
+    checkWithState
+
+
+basicLEDTestState =
+    let
+        initialLedLys =
+            initialState.ledLys
+    in
+    { initialLedLys
+        | nivaa = LavTilHoey
+        , sted = Storby
+        , installationCost = Just 0 |> formattedValue
+        , sykkelturerPerYear = Nothing |> formattedValue
+        , gangturerPerYear = Nothing |> formattedValue
+        , lengdeVeiKm = Just 2.3 |> formattedValue
+        , preferredToGraph = ""
+    }
+
+
+sykkelSuite : Test
+sykkelSuite =
+    let
+        sykkelLedLysState =
+            { basicLEDTestState
+                | sykkelturerPerYear = Just 5.0e4 |> formattedValue
+                , gangturerPerYear = Just 0 |> formattedValue
+            }
+    in
+    describe "LEDLys sykkelvei"
+        [ let
+            state =
+                { initialState
+                    | ledLys =
+                        { sykkelLedLysState
+                            | nivaa = LavTilHoey
+                            , sted = Storby
+                        }
+                }
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 154055.5544
+                , yearlyFotgjengerNytteInklOverfoert = 0
+                , yearlyTrafikantNytteInklOverfoert = 0
+                , yearlyHelsegevinstNytteInklOverfoert = 0
+                , yearlyTSGevinstNytteInklOverfoert = 0
+                , yearlyEksterneEffekterNytteInklOverfoert = 0
+                , yearlyNytteInklOverfoertSum = 0
+                , nytteInklOverfoert = 0
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = 0
+                , kostUtenSkyggepris = 0
+                , skyggepris = 0
+                , nettoNytteInklOverfoert = 0
+                }
+          in
+          describe "Storby Lav til Høy"
+            [ tiltakSuite (createCheckWithState state) expectedRecord
             , test
                 "overfoerte sykkelturer"
               <|
                 \() ->
                     yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
             ]
+        ]
 
 
 gangOgSykkelSuite : Test

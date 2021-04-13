@@ -37,6 +37,7 @@ toDomId string =
         |> String.join "-"
 
 
+maybeSum : List (Maybe number) -> Maybe number
 maybeSum listOfMaybes =
     Maybe.Extra.combine listOfMaybes |> Maybe.map List.sum
 
@@ -286,7 +287,7 @@ yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
         overfoertNytte =
             Maybe.map
                 (\a -> a / 2)
-                (object.yearlySyklistNyttePerTur state (object.syklistForutsetninger this state |> yearlyOverfoerteTurer this state))
+                (object.yearlySyklistNyttePerTur this state (object.syklistForutsetninger this state |> yearlyOverfoerteTurer this state))
     in
     Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
 
@@ -301,11 +302,11 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
 
 yearlySyklistNytte : StateCalculationMethod
 yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
-    object.yearlySyklistNyttePerTur state (object.basicState state).sykkelturerPerYear.value
+    object.yearlySyklistNyttePerTur this state (object.basicState state).sykkelturerPerYear.value
 
 
 yearlyFotgjengerNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
-    object.yearlyFotgjengerNyttePerTur state (object.basicState state).gangturerPerYear.value
+    object.yearlyFotgjengerNyttePerTur this state (object.basicState state).gangturerPerYear.value
 
 
 yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
@@ -334,6 +335,19 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
     Maybe.map2 nytte
         (nyeTurer .andelNyeBrukereFraBil)
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
+
+
+tidsbesparelseMinPerTurSyklende ((Tiltak object) as this) state =
+    let
+        basicState =
+            object.basicState state
+
+        tidsbesparelseMinPerKm =
+            (object.nivaaForutsetninger basicState.nivaa).tidsbesparelseSyklendeMinutterPerKilometer
+    in
+    Maybe.map2 (*)
+        basicState.lengdeVeiKm.value
+        (Just tidsbesparelseMinPerKm)
 
 
 defaults =
@@ -382,6 +396,7 @@ basicTiltakRecord hooks =
     , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
     , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
     , yearlyNytteInklOverfoertSum = yearlyNytteInklOverfoertSum
+    , tidsbesparelseMinPerTurSyklende = tidsbesparelseMinPerTurSyklende
     , title = hooks.title
     , fields = hooks.fields
     , preferredField = preferredField hooks.specificStateFocus

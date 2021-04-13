@@ -224,23 +224,16 @@ fotgjengerForutsetninger ((Tiltak object) as this) state =
     }
 
 
-tidsbesparelseMinPerTurSyklende { gsB_GsA } =
+tidsbesparelseMinPerTurGaaende ((Tiltak object) as this) state =
     let
+        basicState =
+            object.basicState state
+
         tidsbesparelseMinPerKm =
-            (nivaaForutsetninger gsB_GsA.nivaa).tidsbesparelseSyklendeMinutterPerKilometer
+            (nivaaForutsetninger basicState.nivaa).tidsbesparelseGaaendeMinutterPerKilometer
     in
     Maybe.map2 (*)
-        gsB_GsA.lengdeVeiKm.value
-        (Just tidsbesparelseMinPerKm)
-
-
-tidsbesparelseMinPerTurGaaende { gsB_GsA } =
-    let
-        tidsbesparelseMinPerKm =
-            (nivaaForutsetninger gsB_GsA.nivaa).tidsbesparelseGaaendeMinutterPerKilometer
-    in
-    Maybe.map2 (*)
-        gsB_GsA.lengdeVeiKm.value
+        basicState.lengdeVeiKm.value
         (Just tidsbesparelseMinPerKm)
 
 
@@ -248,18 +241,22 @@ yearlyGangturer this state =
     fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this state
 
 
-yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
+yearlySyklistNyttePerTur this state antallTurer =
+    let
+        receiver =
+            bindTiltak this state
+    in
     Maybe.map2
         (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
         antallTurer
-        (tidsbesparelseMinPerTurSyklende state)
+        (receiver .tidsbesparelseMinPerTurSyklende)
 
 
-yearlyFotgjengerNyttePerTur ({ gsB_GsA } as state) antallTurer =
+yearlyFotgjengerNyttePerTur this state antallTurer =
     Maybe.map2
         (\a b -> a * b * verifiserteVerdisettinger.voTGange)
         antallTurer
-        (tidsbesparelseMinPerTurGaaende state)
+        (tidsbesparelseMinPerTurGaaende this state)
 
 
 
@@ -301,7 +298,7 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\fotgjengerNytte ->
                     fotgjengerNytte / 2
                 )
-                (yearlyFotgjengerNyttePerTur state (boundFotgjengerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
+                (yearlyFotgjengerNyttePerTur this state (boundFotgjengerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
     in
     Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlyFotgjengerNytte)
@@ -323,7 +320,7 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
                 (\syklistNytte ->
                     syklistNytte / 2
                 )
-                (yearlySyklistNyttePerTur state (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
+                (yearlySyklistNyttePerTur this state (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
     in
     Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlySyklistNytte)
@@ -332,12 +329,11 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
         gsB_GsA.oppetidPercent.value
 
 
-
--- yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
-
-
-wtpNytte this state brukerForutsetninger =
+wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
     let
+        basicState =
+            object.basicState state
+
         totalReiseDistanceKm =
             brukerForutsetninger.totalReiseDistanceKm
 
@@ -347,10 +343,10 @@ wtpNytte this state brukerForutsetninger =
         distanseMaybe =
             Maybe.map
                 (\lengdeVei -> min lengdeVei totalReiseDistanceKm)
-                state.gsB_GsA.lengdeVeiKm.value
+                basicState.lengdeVeiKm.value
 
         wtp =
-            (nivaaForutsetninger state.gsB_GsA.nivaa).wtp
+            (nivaaForutsetninger basicState.nivaa).wtp
 
         turerPlussMaybe =
             Maybe.map2

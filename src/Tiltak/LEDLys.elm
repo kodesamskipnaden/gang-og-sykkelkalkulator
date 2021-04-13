@@ -58,7 +58,7 @@ tiltakRecordImplementation =
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
-    , yearlyFotgjengerNyttePerTur = \_ _ -> Nothing
+    , yearlyFotgjengerNyttePerTur = \_ _ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , nivaaForutsetninger = nivaaForutsetninger
@@ -151,16 +151,12 @@ fotgjengerForutsetninger this state =
     }
 
 
-tidsbesparelseMinPerTurSyklende { gsB_GsA } =
-    Just 5
-
-
-
--- fiks dette
-
-
-yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
+yearlySyklistNyttePerTur this state antallTurer =
+    let
+        receiver =
+            bindTiltak this state
+    in
     Maybe.map2
         (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
         antallTurer
-        (tidsbesparelseMinPerTurSyklende state)
+        (receiver .tidsbesparelseMinPerTurSyklende)

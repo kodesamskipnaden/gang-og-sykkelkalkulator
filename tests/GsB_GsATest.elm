@@ -150,7 +150,7 @@ sykkelSuite =
                 "tidsbesparelseMinPerTurSyklende"
               <|
                 \() ->
-                    GsB_GsA.tidsbesparelseMinPerTurSyklende state
+                    BasicTiltak.tidsbesparelseMinPerTurSyklende tiltak state
                         |> checkMaybe (Expect.within (Absolute 0.00001) 2.4167)
             , test
                 "wtpNytte"
@@ -264,7 +264,7 @@ fotgjengerSuite =
                 "tidsbesparelseMinPerTurGaaende"
               <|
                 \() ->
-                    GsB_GsA.tidsbesparelseMinPerTurGaaende state
+                    GsB_GsA.tidsbesparelseMinPerTurGaaende tiltak state
                         |> checkMaybe (Expect.within (Absolute 0.00001) 5.3259)
             , test
                 "wtpNytte"
