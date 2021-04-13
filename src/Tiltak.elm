@@ -85,7 +85,6 @@ type alias TiltakRecordHooks =
     , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
-    , yearlySyklistNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
     , yearlyFotgjengerNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
     , nivaaForutsetninger : Nivaa -> NivaaForutsetninger
     }
@@ -97,6 +96,10 @@ type alias HooksPartial a specificState =
 
 type alias Hooks specificState =
     HooksPartial TiltakRecordHooks specificState
+
+
+type alias TiltakMethod =
+    Tiltak -> TiltakStates
 
 
 type alias TiltakRecordPartial a =
@@ -130,6 +133,8 @@ type alias TiltakRecordPartial a =
         , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
         , yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
         , tidsbesparelseMinPerTurSyklende : StateCalculationMethod
+        , yearlySyklistNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
+        , wtpNytte : BrukerforutsetningStateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String
         , preferredField : Tiltak -> TiltakStates -> Maybe Field

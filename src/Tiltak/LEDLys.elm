@@ -57,7 +57,6 @@ tiltakRecordImplementation =
             }
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
-    , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , yearlyFotgjengerNyttePerTur = \_ _ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
@@ -67,7 +66,7 @@ tiltakRecordImplementation =
 
 nivaaForutsetninger nivaa =
     case nivaa of
-        _ ->
+        LavTilHoey ->
             { annuiserteDriftsKostnaderPerKm = 0
             , etterspoerselsEffekt = 0
             , tidsbesparelseGaaendeMinutterPerKilometer = 0
@@ -76,6 +75,9 @@ nivaaForutsetninger nivaa =
             , tsGevinstSyklende = 0
             , wtp = 0
             }
+
+        _ ->
+            Debug.crash "Helvete"
 
 
 initialState : LEDLysState
@@ -127,10 +129,6 @@ levetid =
     40
 
 
-tidsbesparelseMinutterPerTur =
-    0.5
-
-
 syklistForutsetninger this state =
     let
         basic =
@@ -149,14 +147,3 @@ fotgjengerForutsetninger this state =
     { basic
         | tsGevinstTiltak = 0 --- verdisettinger.tsGevinstLEDLysGaaende
     }
-
-
-yearlySyklistNyttePerTur this state antallTurer =
-    let
-        receiver =
-            bindTiltak this state
-    in
-    Maybe.map2
-        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
-        antallTurer
-        (receiver .tidsbesparelseMinPerTurSyklende)

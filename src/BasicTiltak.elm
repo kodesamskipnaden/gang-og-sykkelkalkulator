@@ -284,12 +284,21 @@ yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
         receiver =
             bindTiltak this state
 
+        boundSyklistForutsetninger =
+            receiver .syklistForutsetninger
+
         overfoertNytte =
             Maybe.map
+                -- bare halvparten nytte for overførte turer
                 (\a -> a / 2)
-                (object.yearlySyklistNyttePerTur this state (object.syklistForutsetninger this state |> yearlyOverfoerteTurer this state))
+                (receiver .yearlySyklistNyttePerTur
+                    (boundSyklistForutsetninger |> yearlyOverfoerteTurer this state)
+                )
     in
-    Maybe.map2 (+) (receiver .yearlySyklistNytte) overfoertNytte
+    Maybe.map3 (\a b c -> a + b + c)
+        (receiver .yearlySyklistNytte)
+        overfoertNytte
+        (receiver .wtpNytte boundSyklistForutsetninger)
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
@@ -350,6 +359,47 @@ tidsbesparelseMinPerTurSyklende ((Tiltak object) as this) state =
         (Just tidsbesparelseMinPerKm)
 
 
+yearlySyklistNyttePerTur this state antallTurer =
+    let
+        receiver =
+            bindTiltak this state
+    in
+    Maybe.map2
+        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
+        antallTurer
+        (receiver .tidsbesparelseMinPerTurSyklende)
+
+
+wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
+    let
+        basicState =
+            object.basicState state
+
+        totalReiseDistanceKm =
+            brukerForutsetninger.totalReiseDistanceKm
+
+        turerPerYearMaybe =
+            brukerForutsetninger.turerPerYearMaybe
+
+        distanseMaybe =
+            Maybe.map
+                (\lengdeVei -> min lengdeVei totalReiseDistanceKm)
+                basicState.lengdeVeiKm.value
+
+        wtp =
+            (object.nivaaForutsetninger basicState.nivaa).wtp
+
+        turerPlussMaybe =
+            Maybe.map2
+                (\antallTurer overfoerteTurer -> antallTurer + 0.5 * overfoerteTurer)
+                turerPerYearMaybe
+                (brukerForutsetninger |> yearlyOverfoerteTurer this state)
+    in
+    Maybe.map2 (\distanse turerPluss -> distanse * turerPluss * wtp)
+        distanseMaybe
+        turerPlussMaybe
+
+
 defaults =
     { syklistNytteInklOverfoert = syklistNytteInklOverfoert
     , fotgjengerNytteInklOverfoert = fotgjengerNytteInklOverfoert
@@ -386,7 +436,7 @@ basicTiltakRecord hooks =
     , domId = defaults.domId
     , skyggepris = defaults.skyggepris
     , yearlySyklistNytte = yearlySyklistNytte
-    , yearlySyklistNytteInklOverfoert = \_ _ -> Nothing
+    , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
     , yearlyFotgjengerNytte = yearlyFotgjengerNytte
     , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
     , yearlyTrafikantNytte = \_ _ -> Just 0
@@ -397,6 +447,13 @@ basicTiltakRecord hooks =
     , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
     , yearlyNytteInklOverfoertSum = yearlyNytteInklOverfoertSum
     , tidsbesparelseMinPerTurSyklende = tidsbesparelseMinPerTurSyklende
+    , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
+    , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
+    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
+    , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
+    , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
+    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
+    , wtpNytte = wtpNytte
     , title = hooks.title
     , fields = hooks.fields
     , preferredField = preferredField hooks.specificStateFocus
@@ -406,13 +463,7 @@ basicTiltakRecord hooks =
     , stedFocus = hooks.stedFocus
     , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
-    , yearlySyklistNyttePerTur = hooks.yearlySyklistNyttePerTur
     , yearlyFotgjengerNyttePerTur = hooks.yearlyFotgjengerNyttePerTur
-    , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
-    , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
-    , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
-    , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
-    , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , syklistForutsetninger = hooks.syklistForutsetninger
     , fotgjengerForutsetninger = hooks.fotgjengerForutsetninger
     , nivaaForutsetninger = hooks.nivaaForutsetninger

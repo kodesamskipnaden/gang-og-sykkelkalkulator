@@ -54,7 +54,6 @@ tiltakRecordImplementation =
             }
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
-    , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , yearlyFotgjengerNyttePerTur = yearlyFotgjengerNyttePerTur
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
@@ -241,17 +240,6 @@ yearlyGangturer this state =
     fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this state
 
 
-yearlySyklistNyttePerTur this state antallTurer =
-    let
-        receiver =
-            bindTiltak this state
-    in
-    Maybe.map2
-        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
-        antallTurer
-        (receiver .tidsbesparelseMinPerTurSyklende)
-
-
 yearlyFotgjengerNyttePerTur this state antallTurer =
     Maybe.map2
         (\a b -> a * b * verifiserteVerdisettinger.voTGange)
@@ -303,7 +291,7 @@ yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
     Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlyFotgjengerNytte)
         overfoertNytte
-        (wtpNytte this state boundFotgjengerForutsetninger)
+        (receiver .wtpNytte boundFotgjengerForutsetninger)
         gsB_GsA.oppetidPercent.value
 
 
@@ -313,50 +301,20 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
             bindTiltak this state
 
         boundSyklistForutsetninger =
-            syklistForutsetninger this state
+            receiver .syklistForutsetninger
 
         overfoertNytte =
             Maybe.map
                 (\syklistNytte ->
                     syklistNytte / 2
                 )
-                (yearlySyklistNyttePerTur this state (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
+                (receiver .yearlySyklistNyttePerTur (boundSyklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state))
     in
     Maybe.map4 (\a b c x -> x * (a + b + c))
         (receiver .yearlySyklistNytte)
         overfoertNytte
-        (wtpNytte this state boundSyklistForutsetninger)
+        (receiver .wtpNytte boundSyklistForutsetninger)
         gsB_GsA.oppetidPercent.value
-
-
-wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
-    let
-        basicState =
-            object.basicState state
-
-        totalReiseDistanceKm =
-            brukerForutsetninger.totalReiseDistanceKm
-
-        turerPerYearMaybe =
-            brukerForutsetninger.turerPerYearMaybe
-
-        distanseMaybe =
-            Maybe.map
-                (\lengdeVei -> min lengdeVei totalReiseDistanceKm)
-                basicState.lengdeVeiKm.value
-
-        wtp =
-            (nivaaForutsetninger basicState.nivaa).wtp
-
-        turerPlussMaybe =
-            Maybe.map2
-                (\antallTurer overfoerteTurer -> antallTurer + 0.5 * overfoerteTurer)
-                turerPerYearMaybe
-                (brukerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this state)
-    in
-    Maybe.map2 (\distanse turerPluss -> distanse * turerPluss * wtp)
-        distanseMaybe
-        turerPlussMaybe
 
 
 yearlyDriftOgVedlikeholdsKostnad ((Tiltak object) as this) state =

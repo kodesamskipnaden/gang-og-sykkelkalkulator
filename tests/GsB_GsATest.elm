@@ -122,6 +122,9 @@ sykkelSuite =
                         }
                 }
 
+            receiver =
+                Tiltak.bindTiltak tiltak state
+
             expectedRecord =
                 { yearlySyklistNytteInklOverfoert = 541522.0903
                 , yearlyFotgjengerNytteInklOverfoert = 0
@@ -156,8 +159,8 @@ sykkelSuite =
                 "wtpNytte"
               <|
                 \() ->
-                    GsB_GsA.syklistForutsetninger tiltak state
-                        |> GsB_GsA.wtpNytte tiltak state
+                    receiver .syklistForutsetninger
+                        |> receiver .wtpNytte
                         |> checkMaybe (Expect.within (Absolute 0.00001) 372485)
             ]
         ]
@@ -239,6 +242,9 @@ fotgjengerSuite =
                         }
                 }
 
+            receiver =
+                Tiltak.bindTiltak tiltak state
+
             expectedRecord =
                 { yearlySyklistNytteInklOverfoert = 0
                 , yearlyFotgjengerNytteInklOverfoert = 864623.7934
@@ -270,8 +276,8 @@ fotgjengerSuite =
                 "wtpNytte"
               <|
                 \() ->
-                    GsB_GsA.fotgjengerForutsetninger tiltak state
-                        |> GsB_GsA.wtpNytte tiltak state
+                    receiver .fotgjengerForutsetninger
+                        |> receiver .wtpNytte
                         |> checkMaybe (Expect.within (Absolute 0.00001) 323900)
             ]
         ]
