@@ -201,9 +201,6 @@ syklistForutsetninger ((Tiltak object) as this) state =
     in
     { basic
         | tsGevinstTiltak = (nivaaForutsetninger basicState.nivaa).tsGevinstSyklende
-
-        -- etterspoerselsEffekt varierer IKKE mellom fotgjenger og syklist
-        -- , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
     }
 
 
@@ -217,9 +214,6 @@ fotgjengerForutsetninger ((Tiltak object) as this) state =
     in
     { basic
         | tsGevinstTiltak = (nivaaForutsetninger basicState.nivaa).tsGevinstGaaende
-
-        -- etterspoerselsEffekt varierer IKKE mellom fotgjenger og syklist
-        -- , etterspoerselsEffekt = (nivaaForutsetninger basicState.nivaa).etterspoerselsEffekt
     }
 
 

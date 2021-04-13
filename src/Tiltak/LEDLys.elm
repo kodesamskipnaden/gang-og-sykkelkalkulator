@@ -15,7 +15,6 @@ import FormattedValue
         , value
         , yearlyMaintenance
         )
-import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
 
@@ -78,14 +77,14 @@ nivaaForutsetninger nivaa =
     in
     case nivaa of
         LavTilHoey ->
-            { annuiserteDriftsKostnaderPerKm = 0
+            { annuiserteDriftsKostnaderPerKm = 99309
             , etterspoerselsEffekt = 4.3 / 100
             , tidsbesparelseGaaendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer hastighet.gaaende.lav hastighet.gaaende.hoey
             , tidsbesparelseSyklendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer hastighet.syklende.lav hastighet.syklende.hoey
-            , tsGevinstGaaende = 0
-            , tsGevinstSyklende = 0
+            , tsGevinstGaaende = 0.1
+            , tsGevinstSyklende = 0.136363636
             , wtp = 2.71
             }
 
@@ -142,21 +141,30 @@ levetid =
     40
 
 
-syklistForutsetninger this state =
+syklistForutsetninger ((Tiltak object) as this) state =
     let
+        basicState =
+            object.basicState state
+
+        receiver =
+            bindTiltak this state
+
         basic =
             BasicTiltak.basicSyklistForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = 0 -- verdisettinger.tsGevinstLEDLysSyklende
+        | tsGevinstTiltak = (object.nivaaForutsetninger basicState.nivaa).tsGevinstSyklende
     }
 
 
-fotgjengerForutsetninger this state =
+fotgjengerForutsetninger ((Tiltak object) as this) state =
     let
+        basicState =
+            object.basicState state
+
         basic =
-            BasicTiltak.basicFotgjengerForutsetninger this state
+            BasicTiltak.basicSyklistForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = 0 --- verdisettinger.tsGevinstLEDLysGaaende
+        | tsGevinstTiltak = (object.nivaaForutsetninger basicState.nivaa).tsGevinstGaaende
     }
