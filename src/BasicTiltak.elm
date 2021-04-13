@@ -226,15 +226,13 @@ yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
 
 nyeTurerFra ((Tiltak object) as this) state brukerForutsetninger andelsAccessor =
     let
-        nivaaForutsetninger =
-            object.basicState state
-                |> .nivaa
-                |> object.nivaaForutsetninger
+        receiver =
+            bindTiltak this state
     in
     Maybe.map3
         (\a b c -> a * b * c)
         brukerForutsetninger.turerPerYearMaybe
-        (Just nivaaForutsetninger.etterspoerselsEffekt)
+        (Just (receiver .nivaaForutsetninger).etterspoerselsEffekt)
         (andelsAccessor brukerForutsetninger |> Just)
 
 
@@ -351,8 +349,11 @@ tidsbesparelseMinPerTurSyklende ((Tiltak object) as this) state =
         basicState =
             object.basicState state
 
+        receiver =
+            bindTiltak this state
+
         tidsbesparelseMinPerKm =
-            (object.nivaaForutsetninger basicState.nivaa).tidsbesparelseSyklendeMinutterPerKilometer
+            (receiver .nivaaForutsetninger).tidsbesparelseSyklendeMinutterPerKilometer
     in
     Maybe.map2 (*)
         basicState.lengdeVeiKm.value
@@ -386,8 +387,11 @@ wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
                 (\lengdeVei -> min lengdeVei totalReiseDistanceKm)
                 basicState.lengdeVeiKm.value
 
+        receiver =
+            bindTiltak this state
+
         wtp =
-            (object.nivaaForutsetninger basicState.nivaa).wtp
+            (receiver .nivaaForutsetninger).wtp
 
         turerPlussMaybe =
             Maybe.map2
@@ -404,9 +408,12 @@ yearlyDriftOgVedlikeholdsKostnad ((Tiltak object) as this) state =
     let
         basicState =
             object.basicState state
+
+        receiver =
+            bindTiltak this state
     in
     basicState.lengdeVeiKm.value
-        |> Maybe.map (\lengde -> lengde * (object.nivaaForutsetninger basicState.nivaa).annuiserteDriftsKostnaderPerKm)
+        |> Maybe.map (\lengde -> lengde * (receiver .nivaaForutsetninger).annuiserteDriftsKostnaderPerKm)
 
 
 driftOgVedlihKost ((Tiltak object) as this) state =

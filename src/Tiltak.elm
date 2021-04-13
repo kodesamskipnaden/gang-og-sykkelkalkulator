@@ -3,7 +3,11 @@ module Tiltak exposing (..)
 import BasicState exposing (BasicState, Nivaa, Sted)
 import Field exposing (Field)
 import Focus exposing (Focus)
-import TiltakStates exposing (TiltakStates)
+import TiltakStates
+
+
+type alias TiltakStates =
+    TiltakStates.TiltakStates
 
 
 type alias AnalyseData =
@@ -85,7 +89,7 @@ type alias TiltakRecordHooks =
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , yearlyFotgjengerNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
-    , nivaaForutsetninger : Nivaa -> NivaaForutsetninger
+    , nivaaForutsetninger : Tiltak -> TiltakStates -> NivaaForutsetninger
     }
 
 
@@ -159,6 +163,7 @@ getAttr (Tiltak object) accessor =
     accessor object
 
 
+bindTiltak : Tiltak -> a -> (TiltakRecord -> Tiltak -> a -> b) -> b
 bindTiltak tiltak tiltakStates =
     \accessor -> sendTo tiltak accessor tiltakStates
 

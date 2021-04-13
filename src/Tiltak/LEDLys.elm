@@ -16,7 +16,7 @@ import FormattedValue
         , yearlyMaintenance
         )
 import SpecificStates exposing (LEDLysState)
-import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
+import Tiltak exposing (Hooks, NivaaForutsetninger, StateCalculationMethod, Tiltak(..), TiltakStates, bindTiltak, sendTo)
 
 
 tiltak : Tiltak
@@ -60,8 +60,12 @@ tiltakRecordImplementation =
     }
 
 
-nivaaForutsetninger nivaa =
+nivaaForutsetninger : Tiltak -> TiltakStates -> NivaaForutsetninger
+nivaaForutsetninger ((Tiltak object) as this) state =
     let
+        basicState =
+            object.basicState state
+
         hastighet =
             { syklende =
                 { lav = 16.7, middels = 17.0, hoey = 17.3 }
@@ -72,7 +76,7 @@ nivaaForutsetninger nivaa =
         tidsbesparelseMinutterPerKilometer fraKmt tilKmt =
             (1 / fraKmt - 1 / tilKmt) * 60
     in
-    case nivaa of
+    case basicState.nivaa of
         LavTilHoey ->
             { annuiserteDriftsKostnaderPerKm = 99309
             , etterspoerselsEffekt = 4.3 / 100
@@ -94,7 +98,6 @@ initialState =
     { nivaa = LavTilHoey
     , sted = Storby
     , installationCost = formattedValueDefault
-    , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue
     , lengdeVeiKm = formattedValueDefault
@@ -127,7 +130,6 @@ fields =
 fieldDefinitions : List SimpleField
 fieldDefinitions =
     [ Field.installationCostSimpleField specificState
-    , Field.yearlyMaintenanceSimpleField specificState
     , Field.lengdeVeiKmSimpleField specificState
     , Field.sykkelturerPerYearSimpleField specificState
     , Field.gangturerPerYearSimpleField specificState
@@ -138,27 +140,27 @@ levetid =
     40
 
 
-syklistForutsetninger ((Tiltak object) as this) state =
+syklistForutsetninger this state =
     let
-        basicState =
-            object.basicState state
+        receiver =
+            bindTiltak this state
 
         basic =
             BasicTiltak.basicSyklistForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = (object.nivaaForutsetninger basicState.nivaa).tsGevinstSyklende
+        | tsGevinstTiltak = (receiver .nivaaForutsetninger).tsGevinstSyklende
     }
 
 
-fotgjengerForutsetninger ((Tiltak object) as this) state =
+fotgjengerForutsetninger this state =
     let
-        basicState =
-            object.basicState state
+        receiver =
+            bindTiltak this state
 
         basic =
             BasicTiltak.basicFotgjengerForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = (object.nivaaForutsetninger basicState.nivaa).tsGevinstGaaende
+        | tsGevinstTiltak = (receiver .nivaaForutsetninger).tsGevinstGaaende
     }
