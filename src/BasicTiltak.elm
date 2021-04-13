@@ -400,6 +400,22 @@ wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
         turerPlussMaybe
 
 
+yearlyDriftOgVedlikeholdsKostnad ((Tiltak object) as this) state =
+    let
+        basicState =
+            object.basicState state
+    in
+    basicState.lengdeVeiKm.value
+        |> Maybe.map (\lengde -> lengde * (object.nivaaForutsetninger basicState.nivaa).annuiserteDriftsKostnaderPerKm)
+
+
+driftOgVedlihKost ((Tiltak object) as this) state =
+    Maybe.map
+        (\yearlyKostnad -> yearlyKostnad * GeneralForutsetninger.afaktor)
+        (yearlyDriftOgVedlikeholdsKostnad this state)
+        |> Maybe.map negate
+
+
 defaults =
     { syklistNytteInklOverfoert = syklistNytteInklOverfoert
     , fotgjengerNytteInklOverfoert = fotgjengerNytteInklOverfoert
@@ -454,6 +470,7 @@ basicTiltakRecord hooks =
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , wtpNytte = wtpNytte
+    , driftOgVedlihKost = driftOgVedlihKost
     , title = hooks.title
     , fields = hooks.fields
     , preferredField = preferredField hooks.specificStateFocus
@@ -461,7 +478,6 @@ basicTiltakRecord hooks =
     , basicState = hooks.basicState
     , nivaaFocus = hooks.nivaaFocus
     , stedFocus = hooks.stedFocus
-    , driftOgVedlihKost = hooks.driftOgVedlihKost
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
     , yearlyFotgjengerNyttePerTur = hooks.yearlyFotgjengerNyttePerTur
     , syklistForutsetninger = hooks.syklistForutsetninger
@@ -502,13 +518,6 @@ investeringsKostInklRestverdi specificState levetid =
     specificState
         |> Focus.get (installationCost => value)
         |> Maybe.map ((*) <| GeneralForutsetninger.investeringsFaktor levetid)
-        |> Maybe.map negate
-
-
-driftOgVedlihKost : { specificState | yearlyMaintenance : FormattedValue Float } -> Maybe Float
-driftOgVedlihKost specificState =
-    specificState.yearlyMaintenance.value
-        |> Maybe.map ((*) GeneralForutsetninger.afaktor)
         |> Maybe.map negate
 
 

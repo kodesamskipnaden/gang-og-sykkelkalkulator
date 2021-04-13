@@ -42,9 +42,6 @@ tiltakRecordImplementation =
             BasicTiltak.investeringsKostInklRestverdi
                 ledLys
                 levetid
-    , driftOgVedlihKost =
-        \_ { ledLys } ->
-            BasicTiltak.driftOgVedlihKost ledLys
     , basicState =
         \{ ledLys } ->
             { sykkelturerPerYear = ledLys.sykkelturerPerYear

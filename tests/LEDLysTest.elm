@@ -72,14 +72,14 @@ sykkelSuite =
                 , yearlyTrafikantNytteInklOverfoert = 4247.691
                 , yearlyHelsegevinstNytteInklOverfoert = 251029.5847
                 , yearlyTSGevinstNytteInklOverfoert = 10289.462
-                , yearlyEksterneEffekterNytteInklOverfoert = 0
-                , yearlyNytteInklOverfoertSum = 0
-                , nytteInklOverfoert = 0
+                , yearlyEksterneEffekterNytteInklOverfoert = 3421.454
+                , yearlyNytteInklOverfoertSum = 623315.9675
+                , nytteInklOverfoert = 15220102.252
                 , investeringsKostInklRestverdi = 0
-                , driftOgVedlihKost = 0
-                , kostUtenSkyggepris = 0
-                , skyggepris = 0
-                , nettoNytteInklOverfoert = 0
+                , driftOgVedlihKost = -4520881.3377
+                , kostUtenSkyggepris = -4520881.3377
+                , skyggepris = -904176.2675
+                , nettoNytteInklOverfoert = 9795044.6468
                 }
           in
           describe "Storby Lav til Høy"
@@ -88,7 +88,7 @@ sykkelSuite =
                 "overfoerte sykkelturer"
               <|
                 \() ->
-                    yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
+                    yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2150)
             ]
         ]
 

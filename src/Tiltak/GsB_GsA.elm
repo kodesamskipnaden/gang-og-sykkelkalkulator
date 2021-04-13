@@ -42,7 +42,6 @@ tiltakRecordImplementation =
             BasicTiltak.investeringsKostInklRestverdi
                 gsB_GsA
                 levetid
-    , driftOgVedlihKost = driftOgVedlihKost
     , basicState =
         \{ gsB_GsA } ->
             { sykkelturerPerYear = gsB_GsA.sykkelturerPerYear
@@ -309,15 +308,3 @@ yearlySyklistNytteInklOverfoert this ({ gsB_GsA } as state) =
         overfoertNytte
         (receiver .wtpNytte boundSyklistForutsetninger)
         gsB_GsA.oppetidPercent.value
-
-
-yearlyDriftOgVedlikeholdsKostnad ((Tiltak object) as this) state =
-    state.gsB_GsA.lengdeVeiKm.value
-        |> Maybe.map (\lengde -> lengde * (nivaaForutsetninger state.gsB_GsA.nivaa).annuiserteDriftsKostnaderPerKm)
-
-
-driftOgVedlihKost ((Tiltak object) as this) state =
-    Maybe.map
-        (\yearlyKostnad -> yearlyKostnad * GeneralForutsetninger.afaktor)
-        (yearlyDriftOgVedlikeholdsKostnad this state)
-        |> Maybe.map negate

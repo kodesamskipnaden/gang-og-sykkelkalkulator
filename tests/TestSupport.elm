@@ -91,7 +91,7 @@ tiltakSuite checkWithState expectedRecord =
             , checkWithState
                 "yearlyEksterneEffekterNytteInklOverfoert"
                 .yearlyEksterneEffekterNytteInklOverfoert
-                (Expect.within (Absolute 0.0001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
+                (Expect.within (Absolute 0.001) expectedRecord.yearlyEksterneEffekterNytteInklOverfoert)
             , checkWithState
                 "yearlyNytteInklOverfoertSum"
                 .yearlyNytteInklOverfoertSum

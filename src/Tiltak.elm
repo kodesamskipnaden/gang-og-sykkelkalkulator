@@ -81,7 +81,6 @@ type alias TiltakRecordHooks =
     , basicState : TiltakStates -> BasicState
     , nivaaFocus : Focus TiltakStates Nivaa
     , stedFocus : Focus TiltakStates Sted
-    , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
@@ -135,6 +134,7 @@ type alias TiltakRecordPartial a =
         , tidsbesparelseMinPerTurSyklende : StateCalculationMethod
         , yearlySyklistNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
         , wtpNytte : BrukerforutsetningStateCalculationMethod
+        , driftOgVedlihKost : StateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String
         , preferredField : Tiltak -> TiltakStates -> Maybe Field
