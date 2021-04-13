@@ -146,9 +146,6 @@ syklistForutsetninger ((Tiltak object) as this) state =
         basicState =
             object.basicState state
 
-        receiver =
-            bindTiltak this state
-
         basic =
             BasicTiltak.basicSyklistForutsetninger this state
     in
@@ -163,7 +160,7 @@ fotgjengerForutsetninger ((Tiltak object) as this) state =
             object.basicState state
 
         basic =
-            BasicTiltak.basicSyklistForutsetninger this state
+            BasicTiltak.basicFotgjengerForutsetninger this state
     in
     { basic
         | tsGevinstTiltak = (object.nivaaForutsetninger basicState.nivaa).tsGevinstGaaende
