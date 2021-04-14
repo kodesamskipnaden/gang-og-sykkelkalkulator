@@ -266,14 +266,11 @@ yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state bruke
 
         koekostnad =
             (stedsForutsetninger basicState.sted).koekostnadBiler
-
-        overfoertNytte =
-            Maybe.map3 (\a b c -> a * b * c)
-                (Just brukerForutsetninger.totalReiseDistanceKm)
-                (nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraBil)
-                (Just koekostnad)
     in
-    Maybe.map2 (+) (receiver .yearlyTrafikantNytte) overfoertNytte
+    Maybe.map3 (\a b c -> a * b * c)
+        (Just brukerForutsetninger.totalReiseDistanceKm)
+        (nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraBil)
+        (Just koekostnad)
 
 
 yearlySyklistNytteInklOverfoert : StateCalculationMethod
@@ -289,14 +286,39 @@ yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
             Maybe.map
                 -- bare halvparten nytte for overførte turer
                 (\a -> a / 2)
-                (receiver .yearlySyklistNyttePerTur
-                    (boundSyklistForutsetninger |> yearlyOverfoerteTurer this state)
+                (boundSyklistForutsetninger
+                    |> yearlyOverfoerteTurer this state
+                    |> receiver .yearlySyklistNyttePerTur
                 )
     in
     Maybe.map3 (\a b c -> a + b + c)
         (receiver .yearlySyklistNytte)
         overfoertNytte
         (receiver .wtpNytte boundSyklistForutsetninger)
+
+
+yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
+    let
+        receiver =
+            bindTiltak this state
+
+        boundFotgjengerForutsetninger =
+            receiver .fotgjengerForutsetninger
+
+        overfoertNytte =
+            Maybe.map
+                (\fotgjengerNytte ->
+                    fotgjengerNytte / 2
+                )
+                (boundFotgjengerForutsetninger
+                    |> yearlyOverfoerteTurer this state
+                    |> receiver .yearlyFotgjengerNyttePerTur
+                )
+    in
+    Maybe.map3 (\a b c -> a + b + c)
+        (receiver .yearlyFotgjengerNytte)
+        overfoertNytte
+        (receiver .wtpNytte boundFotgjengerForutsetninger)
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
@@ -346,14 +368,30 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
 
 tidsbesparelseMinPerTurSyklende ((Tiltak object) as this) state =
     let
-        basicState =
-            object.basicState state
-
         receiver =
             bindTiltak this state
 
+        basicState =
+            object.basicState state
+
         tidsbesparelseMinPerKm =
             (receiver .nivaaForutsetninger).tidsbesparelseSyklendeMinutterPerKilometer
+    in
+    Maybe.map2 (*)
+        basicState.lengdeVeiKm.value
+        (Just tidsbesparelseMinPerKm)
+
+
+tidsbesparelseMinPerTurGaaende ((Tiltak object) as this) state =
+    let
+        receiver =
+            bindTiltak this state
+
+        basicState =
+            object.basicState state
+
+        tidsbesparelseMinPerKm =
+            (receiver .nivaaForutsetninger).tidsbesparelseGaaendeMinutterPerKilometer
     in
     Maybe.map2 (*)
         basicState.lengdeVeiKm.value
@@ -369,6 +407,17 @@ yearlySyklistNyttePerTur this state antallTurer =
         (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
         antallTurer
         (receiver .tidsbesparelseMinPerTurSyklende)
+
+
+yearlyFotgjengerNyttePerTur this state antallTurer =
+    let
+        receiver =
+            bindTiltak this state
+    in
+    Maybe.map2
+        (\a b -> a * b * verifiserteVerdisettinger.voTGange)
+        antallTurer
+        (receiver .tidsbesparelseMinPerTurGaaende)
 
 
 wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
@@ -461,8 +510,7 @@ basicTiltakRecord hooks =
     , yearlySyklistNytte = yearlySyklistNytte
     , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
     , yearlyFotgjengerNytte = yearlyFotgjengerNytte
-    , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Nothing
-    , yearlyTrafikantNytte = \_ _ -> Just 0
+    , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
     , yearlyTSGevinstNytte = yearlyTSGevinstNytte
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
     , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
@@ -470,6 +518,7 @@ basicTiltakRecord hooks =
     , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
     , yearlyNytteInklOverfoertSum = yearlyNytteInklOverfoertSum
     , tidsbesparelseMinPerTurSyklende = tidsbesparelseMinPerTurSyklende
+    , tidsbesparelseMinPerTurGaaende = tidsbesparelseMinPerTurGaaende
     , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , yearlyTrafikantNytteInklOverfoertForBruker = defaults.yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
@@ -486,7 +535,7 @@ basicTiltakRecord hooks =
     , nivaaFocus = hooks.nivaaFocus
     , stedFocus = hooks.stedFocus
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
-    , yearlyFotgjengerNyttePerTur = hooks.yearlyFotgjengerNyttePerTur
+    , yearlyFotgjengerNyttePerTur = yearlyFotgjengerNyttePerTur
     , syklistForutsetninger = hooks.syklistForutsetninger
     , fotgjengerForutsetninger = hooks.fotgjengerForutsetninger
     , nivaaForutsetninger = hooks.nivaaForutsetninger

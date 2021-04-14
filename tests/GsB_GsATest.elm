@@ -270,7 +270,7 @@ fotgjengerSuite =
                 "tidsbesparelseMinPerTurGaaende"
               <|
                 \() ->
-                    GsB_GsA.tidsbesparelseMinPerTurGaaende tiltak state
+                    receiver .tidsbesparelseMinPerTurGaaende
                         |> checkMaybe (Expect.within (Absolute 0.00001) 5.3259)
             , test
                 "wtpNytte"

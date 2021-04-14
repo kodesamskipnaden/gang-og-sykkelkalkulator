@@ -53,7 +53,6 @@ tiltakRecordImplementation =
             }
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
-    , yearlyFotgjengerNyttePerTur = \_ _ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , nivaaForutsetninger = nivaaForutsetninger
