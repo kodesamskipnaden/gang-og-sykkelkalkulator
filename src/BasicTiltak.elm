@@ -690,3 +690,16 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value
     , tsGevinstTiltak = 0
     }
+
+
+createBasicState :
+    BasicStatePartial a
+    -> BasicState
+createBasicState specificState =
+    { sykkelturerPerYear = specificState.sykkelturerPerYear
+    , gangturerPerYear = specificState.gangturerPerYear
+    , preferredToGraph = specificState.preferredToGraph
+    , lengdeVeiKm = specificState.lengdeVeiKm
+    , nivaa = specificState.nivaa
+    , sted = specificState.sted
+    }

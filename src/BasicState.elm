@@ -1,4 +1,4 @@
-module BasicState exposing (BasicState, Nivaa(..), Sted(..))
+module BasicState exposing (BasicState, BasicStatePartial, Nivaa(..), Sted(..))
 
 import FormattedValue exposing (FormattedValue)
 
@@ -23,11 +23,16 @@ type Sted
     | Spredtbygd
 
 
-type alias BasicState =
-    { sykkelturerPerYear : FormattedValue Float
-    , gangturerPerYear : FormattedValue Float
-    , preferredToGraph : String
-    , lengdeVeiKm : FormattedValue Float
-    , nivaa : Nivaa
-    , sted : Sted
+type alias BasicStatePartial a =
+    { a
+        | sykkelturerPerYear : FormattedValue Float
+        , gangturerPerYear : FormattedValue Float
+        , preferredToGraph : String
+        , lengdeVeiKm : FormattedValue Float
+        , nivaa : Nivaa
+        , sted : Sted
     }
+
+
+type alias BasicState =
+    BasicStatePartial {}

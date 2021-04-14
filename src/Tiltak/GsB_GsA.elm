@@ -51,13 +51,7 @@ tiltakRecordImplementation =
                 levetid
     , basicState =
         \{ gsB_GsA } ->
-            { sykkelturerPerYear = gsB_GsA.sykkelturerPerYear
-            , gangturerPerYear = gsB_GsA.gangturerPerYear
-            , preferredToGraph = gsB_GsA.preferredToGraph
-            , lengdeVeiKm = gsB_GsA.lengdeVeiKm
-            , nivaa = gsB_GsA.nivaa
-            , sted = gsB_GsA.sted
-            }
+            BasicTiltak.createBasicState gsB_GsA
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , syklistForutsetninger = syklistForutsetninger

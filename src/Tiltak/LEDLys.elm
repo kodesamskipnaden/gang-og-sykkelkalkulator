@@ -44,13 +44,7 @@ tiltakRecordImplementation =
                 levetid
     , basicState =
         \{ ledLys } ->
-            { sykkelturerPerYear = ledLys.sykkelturerPerYear
-            , gangturerPerYear = ledLys.gangturerPerYear
-            , preferredToGraph = ledLys.preferredToGraph
-            , lengdeVeiKm = ledLys.lengdeVeiKm
-            , nivaa = ledLys.nivaa
-            , sted = ledLys.sted
-            }
+            BasicTiltak.createBasicState ledLys
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , syklistForutsetninger = syklistForutsetninger

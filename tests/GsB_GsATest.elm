@@ -153,7 +153,7 @@ sykkelSuite =
                 "tidsbesparelseMinPerTurSyklende"
               <|
                 \() ->
-                    BasicTiltak.tidsbesparelseMinPerTurSyklende tiltak state
+                    receiver .tidsbesparelseMinPerTurSyklende
                         |> checkMaybe (Expect.within (Absolute 0.00001) 2.4167)
             , test
                 "wtpNytte"
