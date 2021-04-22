@@ -210,6 +210,18 @@ nyeTurerFra this state brukerForutsetninger andelsAccessor =
         (andelsAccessor brukerForutsetninger |> Just)
 
 
+yearlyOverfoerteTurer : BrukerforutsetningStateCalculationMethod
+yearlyOverfoerteTurer this state brukerForutsetninger =
+    let
+        receiver =
+            nyeTurerFra this state brukerForutsetninger
+    in
+    Maybe.map3 (\a b c -> a + b + c)
+        (receiver .andelNyeBrukereFraBil)
+        (receiver .andelNyeBrukereFraKollektivtransport)
+        (receiver .andelNyeBrukereGenererte)
+
+
 investeringsKostInklRestverdi :
     { specificState
         | installationCost : FormattedValue Float

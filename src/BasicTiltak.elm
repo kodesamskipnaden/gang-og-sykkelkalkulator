@@ -6,6 +6,42 @@ import TiltakForutsetninger
 import TiltakSupport
 
 
+yearlyDirekteNyttePerTurForBruker : BrukerForutsetninger -> Maybe Float -> Maybe Float
+yearlyDirekteNyttePerTurForBruker brukerForutsetninger antallTurerMaybe =
+    Maybe.map2
+        (\a b -> a * b * brukerForutsetninger.voTBruker)
+        antallTurerMaybe
+        brukerForutsetninger.tidsbesparelseMinPerTur
+
+
+yearlyDirekteNytteForBruker : BrukerForutsetninger -> Maybe Float
+yearlyDirekteNytteForBruker brukerForutsetninger =
+    yearlyDirekteNyttePerTurForBruker
+        brukerForutsetninger
+        brukerForutsetninger.turerPerYearMaybe
+
+
+yearlyDirekteNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+yearlyDirekteNytteInklOverfoertForBruker this state brukerForutsetninger =
+    let
+        receiver =
+            bindTiltak this state
+
+        overfoertNytte =
+            Maybe.map
+                -- bare halvparten nytte for overførte turer
+                (\a -> a / 2)
+                (brukerForutsetninger
+                    |> TiltakSupport.yearlyOverfoerteTurer this state
+                    |> yearlyDirekteNyttePerTurForBruker brukerForutsetninger
+                )
+    in
+    Maybe.map3 (\a b c -> a + b + c)
+        (brukerForutsetninger |> yearlyDirekteNytteForBruker)
+        overfoertNytte
+        (receiver .wtpNytte brukerForutsetninger)
+
+
 yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
 yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) state =
     let
@@ -111,18 +147,6 @@ yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger this state |> nytte)
 
 
-yearlyOverfoerteTurer : BrukerforutsetningStateCalculationMethod
-yearlyOverfoerteTurer this state brukerForutsetninger =
-    let
-        receiver =
-            TiltakSupport.nyeTurerFra this state brukerForutsetninger
-    in
-    Maybe.map3 (\a b c -> a + b + c)
-        (receiver .andelNyeBrukereFraBil)
-        (receiver .andelNyeBrukereFraKollektivtransport)
-        (receiver .andelNyeBrukereGenererte)
-
-
 yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
 yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
     let
@@ -141,32 +165,11 @@ yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state bruke
         (Just koekostnad)
 
 
-yearlyDirekteNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
-yearlyDirekteNytteInklOverfoertForBruker this state brukerForutsetninger =
-    let
-        receiver =
-            bindTiltak this state
-
-        overfoertNytte =
-            Maybe.map
-                -- bare halvparten nytte for overførte turer
-                (\a -> a / 2)
-                (brukerForutsetninger
-                    |> yearlyOverfoerteTurer this state
-                    |> yearlyDirekteNyttePerTurForBruker brukerForutsetninger
-                )
-    in
-    Maybe.map3 (\a b c -> a + b + c)
-        (brukerForutsetninger |> yearlyDirekteNytteForBruker)
-        overfoertNytte
-        (receiver .wtpNytte brukerForutsetninger)
-
-
 yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
     Maybe.map3
         (\a b c -> a * b * c)
-        (yearlyOverfoerteTurer this state brukerForutsetninger)
+        (TiltakSupport.yearlyOverfoerteTurer this state brukerForutsetninger)
         (Just brukerForutsetninger.totalReiseDistanceKm)
         (Just brukerForutsetninger.helseGevinstBruker)
 
@@ -200,21 +203,6 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
 
 
-yearlyDirekteNyttePerTurForBruker : BrukerForutsetninger -> Maybe Float -> Maybe Float
-yearlyDirekteNyttePerTurForBruker brukerForutsetninger antallTurerMaybe =
-    Maybe.map2
-        (\a b -> a * b * brukerForutsetninger.voTBruker)
-        antallTurerMaybe
-        brukerForutsetninger.tidsbesparelseMinPerTur
-
-
-yearlyDirekteNytteForBruker : BrukerForutsetninger -> Maybe Float
-yearlyDirekteNytteForBruker brukerForutsetninger =
-    yearlyDirekteNyttePerTurForBruker
-        brukerForutsetninger
-        brukerForutsetninger.turerPerYearMaybe
-
-
 wtpNytte : BrukerforutsetningStateCalculationMethod
 wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
     let
@@ -242,7 +230,7 @@ wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
             Maybe.map2
                 (\antallTurer overfoerteTurer -> antallTurer + 0.5 * overfoerteTurer)
                 turerPerYearMaybe
-                (brukerForutsetninger |> yearlyOverfoerteTurer this state)
+                (brukerForutsetninger |> TiltakSupport.yearlyOverfoerteTurer this state)
     in
     Maybe.map2 (\distanse turerPluss -> distanse * turerPluss * wtp)
         distanseMaybe

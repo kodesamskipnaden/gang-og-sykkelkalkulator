@@ -1,7 +1,6 @@
 module LEDLysTest exposing (..)
 
 import BasicState exposing (..)
-import BasicTiltak
 import Expect
 import FormattedValue exposing (formattedValue)
 import Maybe.Extra
@@ -10,6 +9,7 @@ import TestSupport exposing (..)
 import Tiltak exposing (analyse, sendTo)
 import Tiltak.LEDLys as LEDLys exposing (tiltak)
 import TiltakAndGroupData
+import TiltakSupport
 
 
 initialState =
@@ -92,7 +92,7 @@ sykkelSuite =
               <|
                 \() ->
                     tiltakReceiver .syklistForutsetninger
-                        |> BasicTiltak.yearlyOverfoerteTurer tiltak state
+                        |> TiltakSupport.yearlyOverfoerteTurer tiltak state
                         |> checkMaybe (Expect.equal 2150)
             ]
         ]
@@ -186,7 +186,7 @@ gangOgSykkelSuite =
         , skip <|
             test "yearlyOverfoerteSykkelturer" <|
                 \() ->
-                    tiltakReceiver .syklistForutsetninger |> BasicTiltak.yearlyOverfoerteTurer tiltak state |> checkMaybe (closeTo 750 2)
+                    tiltakReceiver .syklistForutsetninger |> TiltakSupport.yearlyOverfoerteTurer tiltak state |> checkMaybe (closeTo 750 2)
         , skip <|
             test "analyse" <|
                 \() ->

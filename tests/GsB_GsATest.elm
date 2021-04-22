@@ -1,7 +1,6 @@
 module GsB_GsATest exposing (..)
 
 import BasicState exposing (..)
-import BasicTiltak
 import Expect exposing (FloatingPointTolerance(..))
 import FormattedValue exposing (formattedValue)
 import Test exposing (Test, describe, only, skip, test)
@@ -9,6 +8,7 @@ import TestSupport exposing (..)
 import Tiltak exposing (Tiltak(..), analyse, sendTo)
 import Tiltak.GsB_GsA as GsB_GsA exposing (tiltak)
 import TiltakAndGroupData
+import TiltakSupport
 
 
 initialState =
@@ -146,11 +146,11 @@ sykkelSuite =
             , test "overfoerteSykkelturer" <|
                 \() ->
                     receiver .syklistForutsetninger
-                        |> BasicTiltak.yearlyOverfoerteTurer tiltak state
+                        |> TiltakSupport.yearlyOverfoerteTurer tiltak state
                         |> checkMaybe (Expect.equal 2500)
             , test "overfoerteGangturer" <|
                 \() ->
-                    receiver .fotgjengerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer tiltak state |> checkMaybe (Expect.equal 0)
+                    receiver .fotgjengerForutsetninger |> TiltakSupport.yearlyOverfoerteTurer tiltak state |> checkMaybe (Expect.equal 0)
             , test
                 "tidsbesparelseMinPerTurSyklende"
               <|
@@ -268,7 +268,7 @@ fotgjengerSuite =
             , test "overfoerteGangturer" <|
                 \() ->
                     receiver .fotgjengerForutsetninger
-                        |> BasicTiltak.yearlyOverfoerteTurer tiltak state
+                        |> TiltakSupport.yearlyOverfoerteTurer tiltak state
                         |> checkMaybe (Expect.equal 2500)
             , test
                 "tidsbesparelseMinPerTurGaaende"

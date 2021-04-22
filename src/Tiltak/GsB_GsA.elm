@@ -229,21 +229,4 @@ fotgjengerForutsetninger ((Tiltak object) as this) state =
 
 yearlyGangturer : Tiltak -> Tiltak.TiltakStates -> Maybe Float
 yearlyGangturer this state =
-    fotgjengerForutsetninger this state |> BasicTiltak.yearlyOverfoerteTurer this state
-
-
-
--- eksperiment for å se hvordan man finne fellestrekk i tiltaksnytte
--- yearlyTiltakNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
---     let
---         receiver =
---             bindTiltak this state
---         overfoertNytte =
---             Maybe.map
---                 (\a -> a / 2)
---                 (object.yearlyTiltakNyttePerTur state (brukerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer this))
---     in
---     Maybe.map4 (\a b c x -> x * (a + b + c))
---         (receiver .yearlyTiltakNytteForBruker)
---         overfoertNytte
---         (wtpNytte this state brukerForutsetninger)
+    fotgjengerForutsetninger this state |> TiltakSupport.yearlyOverfoerteTurer this state
