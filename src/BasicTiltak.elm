@@ -46,6 +46,7 @@ yearlyTSGevinstNytte ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger this state |> object.yearlyTSGevinstNytteForBrukere this state)
 
 
+yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
 yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetninger =
     Maybe.map2
         (\turerPerYear lengde ->
@@ -58,6 +59,7 @@ yearlyTSGevinstNytteForBrukere ((Tiltak record) as this) state brukerForutsetnin
         (record.basicState state).lengdeVeiKm.value
 
 
+yearlyTSGevinstNytteOverfoert : StateCalculationMethod
 yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
     let
         nytte =
@@ -68,10 +70,11 @@ yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger this state |> nytte)
 
 
+yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
 yearlyTSGevinstNytteOverfoertForBrukere ((Tiltak object) as this) state brukerForutsetninger =
     let
         nyeTurerFunc =
-            nyeTurerFra this state brukerForutsetninger
+            TiltakSupport.nyeTurerFra this state brukerForutsetninger
 
         tsKostnader =
             (object.basicState state).sted |> TiltakForutsetninger.stedsForutsetninger |> .tsKostnader
@@ -105,6 +108,7 @@ yearlyTSGevinstNytteInklOverfoert ((Tiltak object) as this) state =
         (object.yearlyTSGevinstNytteOverfoert this state)
 
 
+yearlyEksterneEffekterNytteInklOverfoert : StateCalculationMethod
 yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
     let
         nytte =
@@ -115,31 +119,11 @@ yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger this state |> nytte)
 
 
-nyeTurerFra ((Tiltak object) as this) state brukerForutsetninger andelsAccessor =
-    let
-        receiver =
-            bindTiltak this state
-    in
-    Maybe.map3
-        (\a b c -> a * b * c)
-        brukerForutsetninger.turerPerYearMaybe
-        (Just (receiver .nivaaForutsetninger).etterspoerselsEffekt)
-        (andelsAccessor brukerForutsetninger |> Just)
-
-
-yearlyOverfoerteSykkelturer : StateCalculationMethod
-yearlyOverfoerteSykkelturer ((Tiltak object) as this) state =
-    object.syklistForutsetninger this state |> yearlyOverfoerteTurer this state
-
-
-yearlyOverfoerteGangturer ((Tiltak object) as this) state =
-    object.fotgjengerForutsetninger this state |> yearlyOverfoerteTurer this state
-
-
+yearlyOverfoerteTurer : BrukerforutsetningStateCalculationMethod
 yearlyOverfoerteTurer this state brukerForutsetninger =
     let
         receiver =
-            nyeTurerFra this state brukerForutsetninger
+            TiltakSupport.nyeTurerFra this state brukerForutsetninger
     in
     Maybe.map3 (\a b c -> a + b + c)
         (receiver .andelNyeBrukereFraBil)
@@ -147,6 +131,7 @@ yearlyOverfoerteTurer this state brukerForutsetninger =
         (receiver .andelNyeBrukereGenererte)
 
 
+yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
 yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
     let
         receiver =
@@ -160,58 +145,32 @@ yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state bruke
     in
     Maybe.map3 (\a b c -> a * b * c)
         (Just brukerForutsetninger.totalReiseDistanceKm)
-        (nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraBil)
+        (TiltakSupport.nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraBil)
         (Just koekostnad)
 
 
-yearlySyklistNytteInklOverfoert : StateCalculationMethod
-yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
+yearlyDirekteNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+yearlyDirekteNytteInklOverfoertForBruker this state brukerForutsetninger =
     let
         receiver =
             bindTiltak this state
-
-        boundSyklistForutsetninger =
-            receiver .syklistForutsetninger
 
         overfoertNytte =
             Maybe.map
                 -- bare halvparten nytte for overførte turer
                 (\a -> a / 2)
-                (boundSyklistForutsetninger
+                (brukerForutsetninger
                     |> yearlyOverfoerteTurer this state
-                    |> yearlyDirekteNyttePerTurForBruker this state boundSyklistForutsetninger
+                    |> yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger
                 )
     in
     Maybe.map3 (\a b c -> a + b + c)
-        (receiver .yearlySyklistNytte)
+        (brukerForutsetninger |> yearlyDirekteNytteForBruker this state)
         overfoertNytte
-        (receiver .wtpNytte boundSyklistForutsetninger)
+        (receiver .wtpNytte brukerForutsetninger)
 
 
-yearlyFotgjengerNytteInklOverfoert this state =
-    let
-        receiver =
-            bindTiltak this state
-
-        boundFotgjengerForutsetninger =
-            receiver .fotgjengerForutsetninger
-
-        overfoertNytte =
-            Maybe.map
-                (\fotgjengerNytte ->
-                    fotgjengerNytte / 2
-                )
-                (boundFotgjengerForutsetninger
-                    |> yearlyOverfoerteTurer this state
-                    |> receiver .yearlyFotgjengerNyttePerTur
-                )
-    in
-    Maybe.map3 (\a b c -> a + b + c)
-        (receiver .yearlyFotgjengerNytte)
-        overfoertNytte
-        (receiver .wtpNytte boundFotgjengerForutsetninger)
-
-
+yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
 yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
     Maybe.map3
         (\a b c -> a * b * c)
@@ -220,23 +179,11 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
         (Just brukerForutsetninger.helseGevinstBruker)
 
 
-yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte ((Tiltak object) as this) state =
-    let
-        receiver =
-            bindTiltak this state
-    in
-    receiver .syklistForutsetninger |> yearlyDirekteNytteForBruker this state
-
-
-yearlyFotgjengerNytte ((Tiltak object) as this) state =
-    object.yearlyFotgjengerNyttePerTur this state (object.basicState state).gangturerPerYear.value
-
-
+yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
 yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
     let
         nyeTurer =
-            nyeTurerFra this state brukerForutsetninger
+            TiltakSupport.nyeTurerFra this state brukerForutsetninger
 
         sted =
             (object.basicState state).sted
@@ -261,28 +208,6 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
 
 
-yearlySyklistNyttePerTur this state antallTurer =
-    let
-        receiver =
-            bindTiltak this state
-
-        brukerForutsetninger =
-            receiver .syklistForutsetninger
-    in
-    yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger antallTurer
-
-
-yearlyFotgjengerNyttePerTur this state antallTurer =
-    let
-        receiver =
-            bindTiltak this state
-
-        brukerForutsetninger =
-            receiver .fotgjengerForutsetninger
-    in
-    yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger antallTurer
-
-
 yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger antallTurerMaybe =
     Maybe.map2
         (\a b -> a * b * brukerForutsetninger.voTBruker)
@@ -298,6 +223,7 @@ yearlyDirekteNytteForBruker this state brukerForutsetninger =
         brukerForutsetninger.turerPerYearMaybe
 
 
+wtpNytte : BrukerforutsetningStateCalculationMethod
 wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
     let
         basicState =
@@ -331,25 +257,6 @@ wtpNytte ((Tiltak object) as this) state brukerForutsetninger =
         turerPlussMaybe
 
 
-yearlyDriftOgVedlikeholdsKostnad ((Tiltak object) as this) state =
-    let
-        basicState =
-            object.basicState state
-
-        receiver =
-            bindTiltak this state
-    in
-    basicState.lengdeVeiKm.value
-        |> Maybe.map (\lengde -> lengde * (receiver .nivaaForutsetninger).annuiserteDriftsKostnaderPerKm)
-
-
-driftOgVedlihKost ((Tiltak object) as this) state =
-    Maybe.map
-        (\yearlyKostnad -> yearlyKostnad * GeneralForutsetninger.afaktor)
-        (yearlyDriftOgVedlikeholdsKostnad this state)
-        |> Maybe.map negate
-
-
 defaults =
     { syklistNytteInklOverfoert = TiltakSupport.syklistNytteInklOverfoert
     , fotgjengerNytteInklOverfoert = TiltakSupport.fotgjengerNytteInklOverfoert
@@ -367,6 +274,7 @@ defaults =
     , yearlyNytteInklOverfoertSum = TiltakSupport.yearlyNytteInklOverfoertSum
     , tidsbesparelseMinPerTurSyklende = TiltakSupport.tidsbesparelseMinPerTurSyklende
     , tidsbesparelseMinPerTurGaaende = TiltakSupport.tidsbesparelseMinPerTurGaaende
+    , driftOgVedlihKost = TiltakSupport.driftOgVedlihKost
     }
 
 
@@ -388,24 +296,47 @@ basicTiltakRecord hooks =
     , yearlyNytteInklOverfoertSum = defaults.yearlyNytteInklOverfoertSum
     , tidsbesparelseMinPerTurSyklende = defaults.tidsbesparelseMinPerTurSyklende
     , tidsbesparelseMinPerTurGaaende = defaults.tidsbesparelseMinPerTurGaaende
-    , yearlySyklistNytte = yearlySyklistNytte
-    , yearlySyklistNytteInklOverfoert = yearlySyklistNytteInklOverfoert
-    , yearlyFotgjengerNytte = yearlyFotgjengerNytte
-    , yearlyFotgjengerNytteInklOverfoert = yearlyFotgjengerNytteInklOverfoert
+    , driftOgVedlihKost = defaults.driftOgVedlihKost
+    , yearlySyklistNytte =
+        \this state ->
+            let
+                receiver =
+                    bindTiltak this state
+            in
+            receiver .syklistForutsetninger |> yearlyDirekteNytteForBruker this state
+    , yearlyFotgjengerNytte =
+        \this state ->
+            let
+                receiver =
+                    bindTiltak this state
+            in
+            receiver .fotgjengerForutsetninger |> yearlyDirekteNytteForBruker this state
+    , yearlySyklistNytteInklOverfoert =
+        \this state ->
+            let
+                receiver =
+                    bindTiltak this state
+            in
+            receiver .syklistForutsetninger |> yearlyDirekteNytteInklOverfoertForBruker this state
+    , yearlyFotgjengerNytteInklOverfoert =
+        \this state ->
+            let
+                receiver =
+                    bindTiltak this state
+            in
+            receiver .fotgjengerForutsetninger |> yearlyDirekteNytteInklOverfoertForBruker this state
     , yearlyTSGevinstNytte = yearlyTSGevinstNytte
     , yearlyTrafikantNytteInklOverfoert = yearlyTrafikantNytteInklOverfoert
     , yearlyTrafikantNytteInklOverfoertForBruker = yearlyTrafikantNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteInklOverfoert = yearlyTSGevinstNytteInklOverfoert
     , yearlyHelsegevinstNytteInklOverfoert = yearlyHelsegevinstNytteInklOverfoert
     , yearlyEksterneEffekterNytteInklOverfoert = yearlyEksterneEffekterNytteInklOverfoert
-    , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
     , yearlyHelsegevinstNytteInklOverfoertForBruker = yearlyHelsegevinstNytteInklOverfoertForBruker
     , yearlyTSGevinstNytteForBrukere = yearlyTSGevinstNytteForBrukere
     , yearlyTSGevinstNytteOverfoert = yearlyTSGevinstNytteOverfoert
     , yearlyTSGevinstNytteOverfoertForBrukere = yearlyTSGevinstNytteOverfoertForBrukere
     , yearlyEksterneEffekterNytteInklOverfoertForBruker = yearlyEksterneEffekterNytteInklOverfoertForBruker
     , wtpNytte = wtpNytte
-    , driftOgVedlihKost = driftOgVedlihKost
     , title = hooks.title
     , fields = hooks.fields
     , preferredField = preferredField hooks.specificStateFocus
@@ -414,7 +345,6 @@ basicTiltakRecord hooks =
     , nivaaFocus = hooks.nivaaFocus
     , stedFocus = hooks.stedFocus
     , investeringsKostInklRestverdi = hooks.investeringsKostInklRestverdi
-    , yearlyFotgjengerNyttePerTur = yearlyFotgjengerNyttePerTur
     , syklistForutsetninger = hooks.syklistForutsetninger
     , fotgjengerForutsetninger = hooks.fotgjengerForutsetninger
     , nivaaForutsetninger = hooks.nivaaForutsetninger

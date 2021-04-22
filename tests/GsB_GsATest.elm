@@ -145,10 +145,12 @@ sykkelSuite =
             [ tiltakSuite (createCheckWithState state) expectedRecord
             , test "overfoerteSykkelturer" <|
                 \() ->
-                    BasicTiltak.yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (Expect.equal 2500)
+                    receiver .syklistForutsetninger
+                        |> BasicTiltak.yearlyOverfoerteTurer tiltak state
+                        |> checkMaybe (Expect.equal 2500)
             , test "overfoerteGangturer" <|
                 \() ->
-                    BasicTiltak.yearlyOverfoerteGangturer tiltak state |> checkMaybe (Expect.equal 0)
+                    receiver .fotgjengerForutsetninger |> BasicTiltak.yearlyOverfoerteTurer tiltak state |> checkMaybe (Expect.equal 0)
             , test
                 "tidsbesparelseMinPerTurSyklende"
               <|
@@ -265,7 +267,9 @@ fotgjengerSuite =
             [ tiltakSuite (createCheckWithState state) expectedRecord
             , test "overfoerteGangturer" <|
                 \() ->
-                    BasicTiltak.yearlyOverfoerteGangturer tiltak state |> checkMaybe (Expect.equal 2500)
+                    receiver .fotgjengerForutsetninger
+                        |> BasicTiltak.yearlyOverfoerteTurer tiltak state
+                        |> checkMaybe (Expect.equal 2500)
             , test
                 "tidsbesparelseMinPerTurGaaende"
               <|

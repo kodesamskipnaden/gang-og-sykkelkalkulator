@@ -138,8 +138,6 @@ type alias TiltakRecordPartial a =
         , yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
         , tidsbesparelseMinPerTurGaaende : StateCalculationMethod
         , tidsbesparelseMinPerTurSyklende : StateCalculationMethod
-        , yearlySyklistNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
-        , yearlyFotgjengerNyttePerTur : Tiltak -> TiltakStates -> Maybe Float -> Maybe Float
         , wtpNytte : BrukerforutsetningStateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String

@@ -162,3 +162,42 @@ tidsbesparelseMinPerTurGaaende ((Tiltak object) as this) state =
     Maybe.map2 (*)
         basicState.lengdeVeiKm.value
         (Just tidsbesparelseMinPerKm)
+
+
+yearlyDriftOgVedlikeholdsKostnad : StateCalculationMethod
+yearlyDriftOgVedlikeholdsKostnad ((Tiltak object) as this) state =
+    let
+        basicState =
+            object.basicState state
+
+        receiver =
+            bindTiltak this state
+    in
+    basicState.lengdeVeiKm.value
+        |> Maybe.map (\lengde -> lengde * (receiver .nivaaForutsetninger).annuiserteDriftsKostnaderPerKm)
+
+
+driftOgVedlihKost : StateCalculationMethod
+driftOgVedlihKost this state =
+    Maybe.map
+        (\yearlyKostnad -> yearlyKostnad * GeneralForutsetninger.afaktor)
+        (yearlyDriftOgVedlikeholdsKostnad this state)
+        |> Maybe.map negate
+
+
+nyeTurerFra :
+    Tiltak
+    -> TiltakStates
+    -> BrukerForutsetninger
+    -> (BrukerForutsetninger -> Float)
+    -> Maybe Float
+nyeTurerFra this state brukerForutsetninger andelsAccessor =
+    let
+        receiver =
+            bindTiltak this state
+    in
+    Maybe.map3
+        (\a b c -> a * b * c)
+        brukerForutsetninger.turerPerYearMaybe
+        (Just (receiver .nivaaForutsetninger).etterspoerselsEffekt)
+        (andelsAccessor brukerForutsetninger |> Just)
