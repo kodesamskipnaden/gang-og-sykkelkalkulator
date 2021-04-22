@@ -1,5 +1,12 @@
 module TiltakSupport exposing (..)
 
+import Focus exposing ((=>), Focus)
+import FormattedValue
+    exposing
+        ( FormattedValue
+        , installationCost
+        , value
+        )
 import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import Maybe.Extra
 import Regex
@@ -201,3 +208,16 @@ nyeTurerFra this state brukerForutsetninger andelsAccessor =
         brukerForutsetninger.turerPerYearMaybe
         (Just (receiver .nivaaForutsetninger).etterspoerselsEffekt)
         (andelsAccessor brukerForutsetninger |> Just)
+
+
+investeringsKostInklRestverdi :
+    { specificState
+        | installationCost : FormattedValue Float
+    }
+    -> Float
+    -> Maybe Float
+investeringsKostInklRestverdi specificState levetid =
+    specificState
+        |> Focus.get (installationCost => value)
+        |> Maybe.map ((*) <| GeneralForutsetninger.investeringsFaktor levetid)
+        |> Maybe.map negate

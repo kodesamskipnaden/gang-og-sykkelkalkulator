@@ -18,6 +18,7 @@ import FormattedValue
 import SpecificStates exposing (LEDLysState)
 import Tiltak exposing (..)
 import TiltakForutsetninger
+import TiltakSupport
 
 
 tiltak : Tiltak
@@ -40,7 +41,7 @@ tiltakRecordImplementation =
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =
         \_ { ledLys } ->
-            BasicTiltak.investeringsKostInklRestverdi
+            TiltakSupport.investeringsKostInklRestverdi
                 ledLys
                 levetid
     , basicState =

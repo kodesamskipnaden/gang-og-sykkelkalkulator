@@ -1,14 +1,6 @@
 module BasicTiltak exposing (..)
 
 import Focus exposing ((=>), Focus)
-import FormattedValue
-    exposing
-        ( FormattedValue
-        , bompengeAndel
-        , installationCost
-        , value
-        )
-import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import Tiltak exposing (..)
 import TiltakForutsetninger
 import TiltakSupport
@@ -161,11 +153,11 @@ yearlyDirekteNytteInklOverfoertForBruker this state brukerForutsetninger =
                 (\a -> a / 2)
                 (brukerForutsetninger
                     |> yearlyOverfoerteTurer this state
-                    |> yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger
+                    |> yearlyDirekteNyttePerTurForBruker brukerForutsetninger
                 )
     in
     Maybe.map3 (\a b c -> a + b + c)
-        (brukerForutsetninger |> yearlyDirekteNytteForBruker this state)
+        (brukerForutsetninger |> yearlyDirekteNytteForBruker)
         overfoertNytte
         (receiver .wtpNytte brukerForutsetninger)
 
@@ -208,17 +200,17 @@ yearlyEksterneEffekterNytteInklOverfoertForBruker ((Tiltak object) as this) stat
         (nyeTurer .andelNyeBrukereFraKollektivtransport)
 
 
-yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger antallTurerMaybe =
+yearlyDirekteNyttePerTurForBruker : BrukerForutsetninger -> Maybe Float -> Maybe Float
+yearlyDirekteNyttePerTurForBruker brukerForutsetninger antallTurerMaybe =
     Maybe.map2
         (\a b -> a * b * brukerForutsetninger.voTBruker)
         antallTurerMaybe
         brukerForutsetninger.tidsbesparelseMinPerTur
 
 
-yearlyDirekteNytteForBruker this state brukerForutsetninger =
+yearlyDirekteNytteForBruker : BrukerForutsetninger -> Maybe Float
+yearlyDirekteNytteForBruker brukerForutsetninger =
     yearlyDirekteNyttePerTurForBruker
-        this
-        state
         brukerForutsetninger
         brukerForutsetninger.turerPerYearMaybe
 
@@ -303,14 +295,14 @@ basicTiltakRecord hooks =
                 receiver =
                     bindTiltak this state
             in
-            receiver .syklistForutsetninger |> yearlyDirekteNytteForBruker this state
+            receiver .syklistForutsetninger |> yearlyDirekteNytteForBruker
     , yearlyFotgjengerNytte =
         \this state ->
             let
                 receiver =
                     bindTiltak this state
             in
-            receiver .fotgjengerForutsetninger |> yearlyDirekteNytteForBruker this state
+            receiver .fotgjengerForutsetninger |> yearlyDirekteNytteForBruker
     , yearlySyklistNytteInklOverfoert =
         \this state ->
             let
@@ -371,16 +363,3 @@ preferredField specificStateFocus tiltak tiltakStates =
     sendTo tiltak .fields
         |> List.filter filterByName
         |> List.head
-
-
-investeringsKostInklRestverdi :
-    { specificState
-        | installationCost : FormattedValue Float
-    }
-    -> Float
-    -> Maybe Float
-investeringsKostInklRestverdi specificState levetid =
-    specificState
-        |> Focus.get (installationCost => value)
-        |> Maybe.map ((*) <| GeneralForutsetninger.investeringsFaktor levetid)
-        |> Maybe.map negate

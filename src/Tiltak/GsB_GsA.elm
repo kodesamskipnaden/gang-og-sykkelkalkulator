@@ -17,6 +17,7 @@ import FormattedValue
 import SpecificStates exposing (GsB_GsAState)
 import Tiltak exposing (..)
 import TiltakForutsetninger
+import TiltakSupport
 
 
 tiltak : Tiltak
@@ -47,7 +48,7 @@ tiltakRecordImplementation =
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =
         \_ { gsB_GsA } ->
-            BasicTiltak.investeringsKostInklRestverdi
+            TiltakSupport.investeringsKostInklRestverdi
                 gsB_GsA
                 levetid
     , basicState =
