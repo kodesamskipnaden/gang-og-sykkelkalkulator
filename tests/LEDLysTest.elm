@@ -16,20 +16,6 @@ initialState =
     TiltakAndGroupData.initialTiltakStates
 
 
-createCheckWithState state =
-    let
-        checkWithState description accessor expectation =
-            test description <|
-                \() ->
-                    sendTo
-                        tiltak
-                        accessor
-                        state
-                        |> checkMaybe expectation
-    in
-    checkWithState
-
-
 basicLEDTestState =
     let
         initialLedLys =
@@ -44,6 +30,20 @@ basicLEDTestState =
         , lengdeVeiKm = Just 2.3 |> formattedValue
         , preferredToGraph = ""
     }
+
+
+createCheckWithState state =
+    let
+        checkWithState description accessor expectation =
+            test description <|
+                \() ->
+                    sendTo
+                        tiltak
+                        accessor
+                        state
+                        |> checkMaybe expectation
+    in
+    checkWithState
 
 
 sykkelSuite : Test
@@ -95,6 +95,41 @@ sykkelSuite =
                         |> TiltakSupport.yearlyOverfoerteTurer tiltak state
                         |> checkMaybe (Expect.equal 2150)
             ]
+        ]
+
+
+fotgjengerSuite : Test
+fotgjengerSuite =
+    let
+        fotgjengerLEDState =
+            { basicLEDTestState
+                | sykkelturerPerYear = Just 0 |> formattedValue
+                , gangturerPerYear = Just 5.0e4 |> formattedValue
+            }
+    in
+    describe "LEDLys fotgjengervei"
+        [ let
+            state =
+                { initialState | ledLys = { fotgjengerLEDState | nivaa = LavTilHoey, sted = Storby } }
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 0
+                , yearlyFotgjengerNytteInklOverfoert = 864623.7934
+                , yearlyTrafikantNytteInklOverfoert = 449.3007
+                , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
+                , yearlyTSGevinstNytteInklOverfoert = 74441.9495
+                , yearlyEksterneEffekterNytteInklOverfoert = 1131.0371
+                , yearlyNytteInklOverfoertSum = 1247391.738
+                , nytteInklOverfoert = 30458757.3388
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -8877059.0867
+                , kostUtenSkyggepris = -8877059.0867
+                , skyggepris = -1775411.8173
+                , nettoNytteInklOverfoert = 19806286.4347
+                }
+          in
+          describe "Storby LavTilHoey"
+            [ tiltakSuite (createCheckWithState state) expectedRecord ]
         ]
 
 
