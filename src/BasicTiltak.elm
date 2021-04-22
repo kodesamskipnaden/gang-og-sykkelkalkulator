@@ -10,124 +10,11 @@ import FormattedValue
         , value
         )
 import GeneralForutsetninger exposing (verifiserteVerdisettinger)
-import Maybe.Extra
-import Regex
 import Tiltak exposing (..)
+import TiltakSupport exposing (..)
 
 
-
-{--
-these are not valid in id's for css selectors which is what we use
-
-!"#$%&'()*+,./:;<=>?@[\]^`{|}~
-
-the toDomId function should probably just validate with a white-list
-rather than a black list like it does now
-
---}
-
-
-toDomId : String -> String
-toDomId string =
-    string
-        -- add all invalid characters in domId here
-        |> Regex.replace Regex.All (Regex.regex "[:/]") (\_ -> " ")
-        -- whitespace is handled here
-        |> String.words
-        |> String.join "-"
-
-
-maybeSum : List (Maybe number) -> Maybe number
-maybeSum listOfMaybes =
-    Maybe.Extra.combine listOfMaybes |> Maybe.map List.sum
-
-
-allYearlyNytter this state =
-    let
-        f accessor =
-            sendTo this accessor state
-    in
-    [ f .yearlySyklistNytteInklOverfoert
-    , f .yearlyFotgjengerNytteInklOverfoert
-    , f .yearlyTrafikantNytteInklOverfoert
-    , f .yearlyHelsegevinstNytteInklOverfoert
-    , f .yearlyTSGevinstNytteInklOverfoert
-    , f .yearlyEksterneEffekterNytteInklOverfoert
-    ]
-
-
-yearlyNytteInklOverfoertSum this state =
-    allYearlyNytter this state |> maybeSum
-
-
-nytteInklOverfoert : StateCalculationMethod
-nytteInklOverfoert this state =
-    allYearlyNytter this state |> List.map (Maybe.map ((*) GeneralForutsetninger.afaktorVekst)) |> maybeSum
-
-
-nettoNytteInklOverfoert : StateCalculationMethod
-nettoNytteInklOverfoert this state =
-    let
-        f =
-            bindTiltak this state
-    in
-    Maybe.map3 (\a b c -> a + b + c)
-        (f .nytteInklOverfoert)
-        (f .kostUtenSkyggepris)
-        (f .skyggepris)
-
-
-syklistNytteInklOverfoert : StateCalculationMethod
-syklistNytteInklOverfoert =
-    analysePeriodeNytteFor .yearlySyklistNytteInklOverfoert
-
-
-fotgjengerNytteInklOverfoert =
-    analysePeriodeNytteFor .yearlyFotgjengerNytteInklOverfoert
-
-
-trafikantNytteInklOverfoert : StateCalculationMethod
-trafikantNytteInklOverfoert =
-    analysePeriodeNytteFor .yearlyTrafikantNytteInklOverfoert
-
-
-helseGevinstNytteInklOverfoert =
-    analysePeriodeNytteFor .yearlyHelsegevinstNytteInklOverfoert
-
-
-tsGevinstNytteInklOverfoert : StateCalculationMethod
-tsGevinstNytteInklOverfoert =
-    analysePeriodeNytteFor .yearlyTSGevinstNytteInklOverfoert
-
-
-eksterneEffekterNytteInklOverfoert =
-    analysePeriodeNytteFor .yearlyEksterneEffekterNytteInklOverfoert
-
-
-analysePeriodeNytteFor accessor this state =
-    sendTo this accessor state |> Maybe.map ((*) GeneralForutsetninger.afaktorVekst)
-
-
-kostUtenSkyggepris : StateCalculationMethod
-kostUtenSkyggepris this state =
-    let
-        f =
-            bindTiltak this state
-    in
-    Maybe.map2 (+)
-        (f .investeringsKostInklRestverdi)
-        (f .driftOgVedlihKost)
-
-
-skyggeprisHelper this state =
-    let
-        calculation kostUtenSkyggepris =
-            kostUtenSkyggepris * GeneralForutsetninger.skyggepris
-    in
-    sendTo this .kostUtenSkyggepris state
-        |> Maybe.map calculation
-
-
+yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
 yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) state =
     let
         nytte =
@@ -138,6 +25,7 @@ yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger this state |> nytte)
 
 
+yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
 yearlyHelsegevinstNytteInklOverfoert ((Tiltak object) as this) state =
     let
         nytte =
@@ -297,7 +185,7 @@ yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
         (receiver .wtpNytte boundSyklistForutsetninger)
 
 
-yearlyFotgjengerNytteInklOverfoert this ({ gsB_GsA } as state) =
+yearlyFotgjengerNytteInklOverfoert this state =
     let
         receiver =
             bindTiltak this state
@@ -330,11 +218,11 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
 
 
 yearlySyklistNytte : StateCalculationMethod
-yearlySyklistNytte ((Tiltak object) as this) ({ ledLys } as state) =
+yearlySyklistNytte ((Tiltak object) as this) state =
     object.yearlySyklistNyttePerTur this state (object.basicState state).sykkelturerPerYear.value
 
 
-yearlyFotgjengerNytte ((Tiltak object) as this) ({ gsB_GsA } as state) =
+yearlyFotgjengerNytte ((Tiltak object) as this) state =
     object.yearlyFotgjengerNyttePerTur this state (object.basicState state).gangturerPerYear.value
 
 
@@ -689,17 +577,4 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     , helseGevinstBruker = verifiserteVerdisettinger.helseGevinstGange
     , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value
     , tsGevinstTiltak = 0
-    }
-
-
-createBasicState :
-    BasicStatePartial a
-    -> BasicState
-createBasicState specificState =
-    { sykkelturerPerYear = specificState.sykkelturerPerYear
-    , gangturerPerYear = specificState.gangturerPerYear
-    , preferredToGraph = specificState.preferredToGraph
-    , lengdeVeiKm = specificState.lengdeVeiKm
-    , nivaa = specificState.nivaa
-    , sted = specificState.sted
     }

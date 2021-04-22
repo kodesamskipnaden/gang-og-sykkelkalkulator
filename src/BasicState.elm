@@ -1,4 +1,4 @@
-module BasicState exposing (BasicState, BasicStatePartial, Nivaa(..), Sted(..))
+module BasicState exposing (BasicState, BasicStatePartial, Nivaa(..), Sted(..), createBasicState)
 
 import FormattedValue exposing (FormattedValue)
 
@@ -36,3 +36,16 @@ type alias BasicStatePartial a =
 
 type alias BasicState =
     BasicStatePartial {}
+
+
+createBasicState :
+    BasicStatePartial a
+    -> BasicState
+createBasicState specificState =
+    { sykkelturerPerYear = specificState.sykkelturerPerYear
+    , gangturerPerYear = specificState.gangturerPerYear
+    , preferredToGraph = specificState.preferredToGraph
+    , lengdeVeiKm = specificState.lengdeVeiKm
+    , nivaa = specificState.nivaa
+    , sted = specificState.sted
+    }

@@ -51,7 +51,7 @@ tiltakRecordImplementation =
                 levetid
     , basicState =
         \{ gsB_GsA } ->
-            BasicTiltak.createBasicState gsB_GsA
+            BasicState.createBasicState gsB_GsA
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , syklistForutsetninger = syklistForutsetninger

@@ -44,7 +44,7 @@ tiltakRecordImplementation =
                 levetid
     , basicState =
         \{ ledLys } ->
-            BasicTiltak.createBasicState ledLys
+            BasicState.createBasicState ledLys
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , syklistForutsetninger = syklistForutsetninger
