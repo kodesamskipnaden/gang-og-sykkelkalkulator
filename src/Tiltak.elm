@@ -44,6 +44,8 @@ type alias BrukerForutsetninger =
     , turerPerYearMaybe : Maybe Float
     , totalReiseDistanceKm : Float
     , helseGevinstBruker : Float
+    , voTBruker : Float
+    , tidsbesparelseMinPerTur : Maybe Float
     }
 
 
@@ -154,6 +156,7 @@ type alias TiltakAccessor a =
     TiltakRecord -> Tiltak -> a
 
 
+sendTo : Tiltak -> (TiltakRecord -> Tiltak -> a) -> a
 sendTo ((Tiltak object) as this) recordAccessor =
     recordAccessor object this
 
@@ -163,7 +166,7 @@ getAttr (Tiltak object) accessor =
     accessor object
 
 
-bindTiltak : Tiltak -> a -> (TiltakRecord -> Tiltak -> a -> b) -> b
+bindTiltak : Tiltak -> TiltakStates -> (TiltakRecord -> Tiltak -> TiltakStates -> a) -> a
 bindTiltak tiltak tiltakStates =
     \accessor -> sendTo tiltak accessor tiltakStates
 

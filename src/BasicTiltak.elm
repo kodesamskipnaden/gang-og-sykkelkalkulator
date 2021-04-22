@@ -17,12 +17,15 @@ import TiltakSupport
 yearlyTrafikantNytteInklOverfoert : StateCalculationMethod
 yearlyTrafikantNytteInklOverfoert ((Tiltak object) as this) state =
     let
+        receiver =
+            bindTiltak this state
+
         nytte =
-            object.yearlyTrafikantNytteInklOverfoertForBruker this state
+            receiver .yearlyTrafikantNytteInklOverfoertForBruker
     in
     Maybe.map2 (+)
-        (object.syklistForutsetninger this state |> nytte)
-        (object.fotgjengerForutsetninger this state |> nytte)
+        (receiver .syklistForutsetninger |> nytte)
+        (receiver .fotgjengerForutsetninger |> nytte)
 
 
 yearlyHelsegevinstNytteInklOverfoert : StateCalculationMethod
@@ -176,7 +179,7 @@ yearlySyklistNytteInklOverfoert ((Tiltak object) as this) state =
                 (\a -> a / 2)
                 (boundSyklistForutsetninger
                     |> yearlyOverfoerteTurer this state
-                    |> receiver .yearlySyklistNyttePerTur
+                    |> yearlyDirekteNyttePerTurForBruker this state boundSyklistForutsetninger
                 )
     in
     Maybe.map3 (\a b c -> a + b + c)
@@ -219,7 +222,11 @@ yearlyHelsegevinstNytteInklOverfoertForBruker this state brukerForutsetninger =
 
 yearlySyklistNytte : StateCalculationMethod
 yearlySyklistNytte ((Tiltak object) as this) state =
-    object.yearlySyklistNyttePerTur this state (object.basicState state).sykkelturerPerYear.value
+    let
+        receiver =
+            bindTiltak this state
+    in
+    receiver .syklistForutsetninger |> yearlyDirekteNytteForBruker this state
 
 
 yearlyFotgjengerNytte ((Tiltak object) as this) state =
@@ -258,22 +265,37 @@ yearlySyklistNyttePerTur this state antallTurer =
     let
         receiver =
             bindTiltak this state
+
+        brukerForutsetninger =
+            receiver .syklistForutsetninger
     in
-    Maybe.map2
-        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
-        antallTurer
-        (receiver .tidsbesparelseMinPerTurSyklende)
+    yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger antallTurer
 
 
 yearlyFotgjengerNyttePerTur this state antallTurer =
     let
         receiver =
             bindTiltak this state
+
+        brukerForutsetninger =
+            receiver .fotgjengerForutsetninger
     in
+    yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger antallTurer
+
+
+yearlyDirekteNyttePerTurForBruker this state brukerForutsetninger antallTurerMaybe =
     Maybe.map2
-        (\a b -> a * b * verifiserteVerdisettinger.voTGange)
-        antallTurer
-        (receiver .tidsbesparelseMinPerTurGaaende)
+        (\a b -> a * b * brukerForutsetninger.voTBruker)
+        antallTurerMaybe
+        brukerForutsetninger.tidsbesparelseMinPerTur
+
+
+yearlyDirekteNytteForBruker this state brukerForutsetninger =
+    yearlyDirekteNyttePerTurForBruker
+        this
+        state
+        brukerForutsetninger
+        brukerForutsetninger.turerPerYearMaybe
 
 
 wtpNytte ((Tiltak object) as this) state brukerForutsetninger =

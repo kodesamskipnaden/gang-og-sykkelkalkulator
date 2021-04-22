@@ -96,6 +96,9 @@ basicSyklistForutsetninger ((Tiltak object) as this) state =
     let
         overfoert =
             overfoertFraHelper this state
+
+        receiver =
+            bindTiltak this state
     in
     { andelNyeBrukereFraBil = overfoert.bil
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
@@ -104,6 +107,8 @@ basicSyklistForutsetninger ((Tiltak object) as this) state =
     , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
     , totalReiseDistanceKm = verifiserteVerdisettinger.syklistTotalReiseDistanceKm
     , helseGevinstBruker = verifiserteVerdisettinger.helseTSGevinstSykkel
+    , voTBruker = verifiserteVerdisettinger.voTSykkel
+    , tidsbesparelseMinPerTur = receiver .tidsbesparelseMinPerTurSyklende
     , tsGevinstTiltak = 0
     }
 
@@ -116,6 +121,9 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     let
         overfoert =
             overfoertFraHelper this state
+
+        receiver =
+            bindTiltak this state
     in
     { andelNyeBrukereFraBil = overfoert.bil
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
@@ -124,5 +132,7 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     , totalReiseDistanceKm = verifiserteVerdisettinger.fotgjengerTotalReiseDistanceKm
     , helseGevinstBruker = verifiserteVerdisettinger.helseGevinstGange
     , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value
+    , voTBruker = verifiserteVerdisettinger.voTGange
+    , tidsbesparelseMinPerTur = receiver .tidsbesparelseMinPerTurGaaende
     , tsGevinstTiltak = 0
     }
