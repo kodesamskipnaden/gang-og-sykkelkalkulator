@@ -23,15 +23,7 @@ import TiltakSupport
 
 tiltak : Tiltak
 tiltak =
-    let
-        basicTiltakRecord =
-            BasicTiltak.basicTiltakRecord tiltakRecordImplementation
-    in
-    Tiltak
-        { basicTiltakRecord
-            | yearlyFotgjengerNytte = \_ _ -> Just 0
-            , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
-        }
+    BasicTiltak.basicTiltakRecord tiltakRecordImplementation |> Tiltak
 
 
 tiltakRecordImplementation : Hooks LEDLysState

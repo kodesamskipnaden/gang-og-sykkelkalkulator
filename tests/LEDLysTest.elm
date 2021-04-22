@@ -110,22 +110,28 @@ fotgjengerSuite =
     describe "LEDLys fotgjengervei"
         [ let
             state =
-                { initialState | ledLys = { fotgjengerLEDState | nivaa = LavTilHoey, sted = Storby } }
+                { initialState
+                    | ledLys =
+                        { fotgjengerLEDState
+                            | nivaa = LavTilHoey
+                            , sted = Storby
+                        }
+                }
 
             expectedRecord =
                 { yearlySyklistNytteInklOverfoert = 0
-                , yearlyFotgjengerNytteInklOverfoert = 864623.7934
-                , yearlyTrafikantNytteInklOverfoert = 449.3007
-                , yearlyHelsegevinstNytteInklOverfoert = 306745.6573
-                , yearlyTSGevinstNytteInklOverfoert = 74441.9495
-                , yearlyEksterneEffekterNytteInklOverfoert = 1131.0371
-                , yearlyNytteInklOverfoertSum = 1247391.738
-                , nytteInklOverfoert = 30458757.3388
+                , yearlyFotgjengerNytteInklOverfoert = 433246.0971
+                , yearlyTrafikantNytteInklOverfoert = 1699.0766
+                , yearlyHelsegevinstNytteInklOverfoert = 263801.2653
+                , yearlyTSGevinstNytteInklOverfoert = 10620.1403
+                , yearlyEksterneEffekterNytteInklOverfoert = 1368.5817
+                , yearlyNytteInklOverfoertSum = 710735.161
+                , nytteInklOverfoert = 17354700.3264
                 , investeringsKostInklRestverdi = 0
-                , driftOgVedlihKost = -8877059.0867
-                , kostUtenSkyggepris = -8877059.0867
-                , skyggepris = -1775411.8173
-                , nettoNytteInklOverfoert = 19806286.4347
+                , driftOgVedlihKost = -4520881.3377
+                , kostUtenSkyggepris = -4520881.3377
+                , skyggepris = -904176.2675
+                , nettoNytteInklOverfoert = 11929642.7212
                 }
           in
           describe "Storby LavTilHoey"
