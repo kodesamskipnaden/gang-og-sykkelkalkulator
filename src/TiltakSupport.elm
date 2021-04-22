@@ -128,3 +128,37 @@ skyggeprisHelper this state =
     in
     sendTo this .kostUtenSkyggepris state
         |> Maybe.map calculation
+
+
+tidsbesparelseMinPerTurSyklende : StateCalculationMethod
+tidsbesparelseMinPerTurSyklende ((Tiltak object) as this) state =
+    let
+        receiver =
+            bindTiltak this state
+
+        basicState =
+            object.basicState state
+
+        tidsbesparelseMinPerKm =
+            (receiver .nivaaForutsetninger).tidsbesparelseSyklendeMinutterPerKilometer
+    in
+    Maybe.map2 (*)
+        basicState.lengdeVeiKm.value
+        (Just tidsbesparelseMinPerKm)
+
+
+tidsbesparelseMinPerTurGaaende : StateCalculationMethod
+tidsbesparelseMinPerTurGaaende ((Tiltak object) as this) state =
+    let
+        receiver =
+            bindTiltak this state
+
+        basicState =
+            object.basicState state
+
+        tidsbesparelseMinPerKm =
+            (receiver .nivaaForutsetninger).tidsbesparelseGaaendeMinutterPerKilometer
+    in
+    Maybe.map2 (*)
+        basicState.lengdeVeiKm.value
+        (Just tidsbesparelseMinPerKm)

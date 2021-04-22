@@ -15,7 +15,8 @@ import FormattedValue
         , value
         )
 import SpecificStates exposing (GsB_GsAState)
-import Tiltak exposing (Hooks, Tiltak(..), bindTiltak, sendTo)
+import Tiltak exposing (..)
+import TiltakForutsetninger
 
 
 tiltak : Tiltak
@@ -128,6 +129,10 @@ levetid =
 -- =60* [(lengde gangvei/hastighet før) - (lengde gangvei/hastighet etter)]
 
 
+nivaaForutsetninger :
+    Tiltak
+    -> TiltakStates
+    -> NivaaForutsetninger
 nivaaForutsetninger ((Tiltak object) as this) state =
     let
         basicState =
@@ -193,10 +198,11 @@ nivaaForutsetninger ((Tiltak object) as this) state =
             }
 
 
+syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
 syklistForutsetninger this state =
     let
         basic =
-            BasicTiltak.basicSyklistForutsetninger this state
+            TiltakForutsetninger.basicSyklistForutsetninger this state
 
         receiver =
             bindTiltak this state
@@ -206,10 +212,11 @@ syklistForutsetninger this state =
     }
 
 
+fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
 fotgjengerForutsetninger ((Tiltak object) as this) state =
     let
         basic =
-            BasicTiltak.basicFotgjengerForutsetninger this state
+            TiltakForutsetninger.basicFotgjengerForutsetninger this state
 
         receiver =
             bindTiltak this state

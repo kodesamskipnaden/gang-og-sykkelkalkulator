@@ -16,7 +16,8 @@ import FormattedValue
         , yearlyMaintenance
         )
 import SpecificStates exposing (LEDLysState)
-import Tiltak exposing (Hooks, NivaaForutsetninger, StateCalculationMethod, Tiltak(..), TiltakStates, bindTiltak, sendTo)
+import Tiltak exposing (..)
+import TiltakForutsetninger
 
 
 tiltak : Tiltak
@@ -133,26 +134,28 @@ levetid =
     40
 
 
+syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
 syklistForutsetninger this state =
     let
         receiver =
             bindTiltak this state
 
         basic =
-            BasicTiltak.basicSyklistForutsetninger this state
+            TiltakForutsetninger.basicSyklistForutsetninger this state
     in
     { basic
         | tsGevinstTiltak = (receiver .nivaaForutsetninger).tsGevinstSyklende
     }
 
 
+fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
 fotgjengerForutsetninger this state =
     let
         receiver =
             bindTiltak this state
 
         basic =
-            BasicTiltak.basicFotgjengerForutsetninger this state
+            TiltakForutsetninger.basicFotgjengerForutsetninger this state
     in
     { basic
         | tsGevinstTiltak = (receiver .nivaaForutsetninger).tsGevinstGaaende
