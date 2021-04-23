@@ -13,7 +13,6 @@
     "start": "nodemon --watch webpack.config.js --exec 'npm run client'",
     "test": "elm test",
     "test:watch": "elm test --watch",
-    "tdd": "npm test",
     "predeploy": "npm run build"
   },
   "dependencies": {
