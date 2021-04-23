@@ -78,46 +78,45 @@ suite =
                     , yearlyHelsegevinstNytteInklOverfoert = 62000
                     , yearlyTSGevinstNytteInklOverfoert = -1092.4132
                     , yearlyEksterneEffekterNytteInklOverfoert = 764.1293
-                    , yearlyNytteInklOverfoertSum = 184073.4099
-                    , nytteInklOverfoert = 4494696.5364
+                    , yearlyNytteInklOverfoertSum = 174910.1394
+                    , nytteInklOverfoert = 4270948.1954
                     , investeringsKostInklRestverdi = 0
                     , driftOgVedlihKost = -7192694.0292
                     , kostUtenSkyggepris = -7192694.0292
                     , skyggepris = -1438538.8058
-                    , nettoNytteInklOverfoert = -4136536.2986
+                    , nettoNytteInklOverfoert = -4360284.6397
                     }
               in
               describe "MiddelsTilHøy Storby"
                 [ tiltakSuite (createCheckWithState state) expectedRecord ]
-            , skip <|
-                let
-                    state =
-                        { initialState
-                            | gsB_GsA =
-                                { sykkelGsBState
-                                    | nivaa = LavTilMiddels
-                                    , sted = Storby
-                                }
-                        }
+            , let
+                state =
+                    { initialState
+                        | gsB_GsA =
+                            { sykkelGsBState
+                                | nivaa = LavTilMiddels
+                                , sted = Storby
+                            }
+                    }
 
-                    expectedRecord =
-                        { yearlySyklistNytteInklOverfoert = 410480.3968
-                        , yearlyFotgjengerNytteInklOverfoert = 0
-                        , yearlyTrafikantNytteInklOverfoert = 3951.3409
-                        , yearlyHelsegevinstNytteInklOverfoert = 233515.8927
-                        , yearlyTSGevinstNytteInklOverfoert = -18459.6045
-                        , yearlyEksterneEffekterNytteInklOverfoert = 3182.7482
-                        , yearlyNytteInklOverfoertSum = 632670.7742
-                        , nytteInklOverfoert = 15448527.5142
-                        , investeringsKostInklRestverdi = 0
-                        , driftOgVedlihKost = -1684365.0575
-                        , kostUtenSkyggepris = -1684365.0575
-                        , skyggepris = -336873.0115
-                        , nettoNytteInklOverfoert = 13427289.4452
-                        }
-                in
-                describe "LavTilMiddels Storby"
-                    [ tiltakSuite (createCheckWithState state) expectedRecord ]
+                expectedRecord =
+                    { yearlySyklistNytteInklOverfoert = 372910.6332
+                    , yearlyFotgjengerNytteInklOverfoert = 0
+                    , yearlyTrafikantNytteInklOverfoert = 3956.2935
+                    , yearlyHelsegevinstNytteInklOverfoert = 248000
+                    , yearlyTSGevinstNytteInklOverfoert = -11077.97
+                    , yearlyEksterneEffekterNytteInklOverfoert = 3056.5172
+                    , yearlyNytteInklOverfoertSum = 616845.4738
+                    , nytteInklOverfoert = 15062106.0175
+                    , investeringsKostInklRestverdi = 0
+                    , driftOgVedlihKost = -1684365.0575
+                    , kostUtenSkyggepris = -1684365.0575
+                    , skyggepris = -336873.0115
+                    , nettoNytteInklOverfoert = 13040867.9485
+                    }
+              in
+              describe "LavTilMiddels Storby"
+                [ tiltakSuite (createCheckWithState state) expectedRecord ]
             , skip <|
                 let
                     state =
