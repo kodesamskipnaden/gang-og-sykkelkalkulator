@@ -124,12 +124,6 @@ levetid =
     40
 
 
-
--- =60* (lengde gangvei/hastighet før - lengde gangvei hastighet etter)
--- = 60 * lengde * hastighetsdifferanse
--- =60* [(lengde gangvei/hastighet før) - (lengde gangvei/hastighet etter)]
-
-
 nivaaForutsetninger :
     Tiltak
     -> TiltakStates
@@ -151,9 +145,8 @@ nivaaForutsetninger ((Tiltak object) as this) state =
     in
     case basicState.nivaa of
         LavTilHoey ->
-            { etterspoerselsEffekt = 5 / 100
-            , tsGevinstGaaende = 0.454545455
-            , tsGevinstSyklende = 0.014925373
+            { annuiserteDriftsKostnaderPerKm = 195000
+            , etterspoerselsEffekt = 5 / 100
             , tidsbesparelseSyklendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer
                     hastighet.syklende.lav
@@ -162,14 +155,14 @@ nivaaForutsetninger ((Tiltak object) as this) state =
                 tidsbesparelseMinutterPerKilometer
                     hastighet.gaaende.lav
                     hastighet.gaaende.hoey
+            , tsGevinstSyklende = 0.027531957
+            , tsGevinstGaaende = 0.334442596
             , wtp = 3.16
-            , annuiserteDriftsKostnaderPerKm = 195000
             }
 
         LavTilMiddels ->
-            { etterspoerselsEffekt = 4 / 100
-            , tsGevinstGaaende = 0.151515152
-            , tsGevinstSyklende = 0.004975124
+            { annuiserteDriftsKostnaderPerKm = 37000
+            , etterspoerselsEffekt = 4 / 100
             , tidsbesparelseSyklendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer
                     hastighet.syklende.lav
@@ -178,14 +171,14 @@ nivaaForutsetninger ((Tiltak object) as this) state =
                 tidsbesparelseMinutterPerKilometer
                     hastighet.gaaende.lav
                     hastighet.gaaende.middels
+            , tsGevinstSyklende = 0.013765978
+            , tsGevinstGaaende = 0.141430948
             , wtp = 2.51
-            , annuiserteDriftsKostnaderPerKm = 37000
             }
 
         MiddelsTilHoey ->
-            { etterspoerselsEffekt = 1 / 100
-            , tsGevinstGaaende = 0.357142857
-            , tsGevinstSyklende = 0.01
+            { annuiserteDriftsKostnaderPerKm = 158000
+            , etterspoerselsEffekt = 1 / 100
             , tidsbesparelseSyklendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer
                     hastighet.syklende.middels
@@ -194,8 +187,9 @@ nivaaForutsetninger ((Tiltak object) as this) state =
                 tidsbesparelseMinutterPerKilometer
                     hastighet.gaaende.middels
                     hastighet.gaaende.hoey
+            , tsGevinstSyklende = 0.01
+            , tsGevinstGaaende = 0.357142857
             , wtp = 0.65
-            , annuiserteDriftsKostnaderPerKm = 158000
             }
 
 
