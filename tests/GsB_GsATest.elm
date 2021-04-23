@@ -257,18 +257,18 @@ suite =
 
                     expectedRecord =
                         { yearlySyklistNytteInklOverfoert = 0
-                        , yearlyFotgjengerNytteInklOverfoert = 864623.7934
-                        , yearlyTrafikantNytteInklOverfoert = 1975.6705
-                        , yearlyHelsegevinstNytteInklOverfoert = 306745.6575
-                        , yearlyTSGevinstNytteInklOverfoert = 74363.3766
-                        , yearlyEksterneEffekterNytteInklOverfoert = 1591.3741
-                        , yearlyNytteInklOverfoertSum = 1249299.8719
+                        , yearlyFotgjengerNytteInklOverfoert = 888002.3328
+                        , yearlyTrafikantNytteInklOverfoert = 1978.1467
+                        , yearlyHelsegevinstNytteInklOverfoert = 324500
+                        , yearlyTSGevinstNytteInklOverfoert = 28312.5216
+                        , yearlyEksterneEffekterNytteInklOverfoert = 1528.2586
+                        , yearlyNytteInklOverfoertSum = 1244321.2597
                         , investeringsKostInklRestverdi = 0
                         , driftOgVedlihKost = -8877059.0867
                         , kostUtenSkyggepris = -8877059.0867
                         , skyggepris = -1775411.8173
-                        , nytteInklOverfoert = 30505350.07
-                        , nettoNytteInklOverfoert = 19852879.1659
+                        , nytteInklOverfoert = 30383782.5336
+                        , nettoNytteInklOverfoert = 19731311.6295
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord
