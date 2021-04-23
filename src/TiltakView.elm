@@ -23,31 +23,7 @@ import TiltakStates exposing (TiltakStates)
 
 fieldLabelContent : Field -> List (Html msg)
 fieldLabelContent field =
-    case field.name of
-        "yearlyTidsbesparelseMinutter" ->
-            [ text field.title
-            , text " (se "
-            , a
-                [ target "_blank"
-                , href "https://www.toi.no/getfile.php?mmfileid=16420"
-                ]
-                [ text "rapport" ]
-            , text ")"
-            ]
-
-        "installationCost" ->
-            [ text field.title
-            , text " (se evt. veiledning i "
-            , a
-                [ target "_blank"
-                , href "https://www.toi.no/getfile.php?mmfileid=16420"
-                ]
-                [ text "rapport 1121" ]
-            , text ")"
-            ]
-
-        _ ->
-            [ text field.title ]
+    [ text field.title ]
 
 
 chart : TiltakStates -> Tiltak -> Html Msg

@@ -188,10 +188,10 @@ appFooter =
                     []
                 ]
             , div [ class "colophon" ]
-                [ text "Utvikling og design: "
-                , a [ href "http://www.72web.no" ]
-                    [ text "72web.no" ]
-                , text " ved Syver Enstad & Thomas Flemming"
+                [ text "Utvikling "
+                , a [ href "http://github.com/kodesamskipnaden" ]
+                    [ text "Kodesamskipnaden" ]
+                , text " ved Syver Enstad & Knut Aksel Røisland"
                 ]
             ]
         ]
