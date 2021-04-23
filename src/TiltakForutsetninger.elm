@@ -1,7 +1,7 @@
 module TiltakForutsetninger exposing (..)
 
 import BasicState exposing (..)
-import GeneralForutsetninger exposing (verifiserteVerdisettinger)
+import GeneralForutsetninger exposing (verdisettinger)
 import Tiltak exposing (..)
 
 
@@ -35,31 +35,17 @@ stedsForutsetninger sted =
                 , genererte = 20 / 100
                 }
             , tsKostnader =
-                { bil = 0.0981818
-                , kollektivtransport = 0.0203143
+                { bil = 0.163979652
+                , kollektivtransport = 0.020346472
                 }
             , oevrigeEksterneKostnader =
                 { bil = 0.6207036
-                , kollektivtransport = 0.2641275
+                , kollektivtransport = 0.250575631
                 }
-            , koekostnadBiler = 1.3171136
-            }
-
-        Spredtbygd ->
-            { overfoertFra =
-                { bil = 70 / 100
-                , kollektivtransport = 20 / 100
-                , genererte = 10 / 100
+            , koekostnad =
+                { bil = 1.3171136
+                , kollektivtransport = 0.069319672
                 }
-            , tsKostnader =
-                { bil = 0.092307692
-                , kollektivtransport = 0.036
-                }
-            , oevrigeEksterneKostnader =
-                { bil = 0.1
-                , kollektivtransport = 0.072136348
-                }
-            , koekostnadBiler = 0.0
             }
 
         LitenBy ->
@@ -69,14 +55,37 @@ stedsForutsetninger sted =
                 , genererte = 20 / 100
                 }
             , tsKostnader =
-                { bil = 0.096503497
-                , kollektivtransport = 0.023581731
+                { bil = 0.161355977
+                , kollektivtransport = 0.02447308
                 }
             , oevrigeEksterneKostnader =
                 { bil = 0.355979021
-                , kollektivtransport = 0.160726336
+                , kollektivtransport = 0.139331744
                 }
-            , koekostnadBiler = 0.17972028
+            , koekostnad =
+                { bil = 0.168
+                , kollektivtransport = 0.011830986
+                }
+            }
+
+        Spredtbygd ->
+            { overfoertFra =
+                { bil = 70 / 100
+                , kollektivtransport = 20 / 100
+                , genererte = 10 / 100
+                }
+            , tsKostnader =
+                { bil = 0.155149978
+                , kollektivtransport = 0.043439718
+                }
+            , oevrigeEksterneKostnader =
+                { bil = 0.1
+                , kollektivtransport = 0.072136348
+                }
+            , koekostnad =
+                { bil = 0
+                , kollektivtransport = 0
+                }
             }
 
 
@@ -103,11 +112,11 @@ basicSyklistForutsetninger ((Tiltak object) as this) state =
     { andelNyeBrukereFraBil = overfoert.bil
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
     , andelNyeBrukereGenererte = overfoert.genererte
-    , tsKostnad = verifiserteVerdisettinger.tsKostnadSykkel
+    , tsKostnad = verdisettinger.tsKostnadSykkel
     , turerPerYearMaybe = (object.basicState state).sykkelturerPerYear.value
-    , totalReiseDistanceKm = verifiserteVerdisettinger.syklistTotalReiseDistanceKm
-    , helseGevinstBruker = verifiserteVerdisettinger.helseTSGevinstSykkel
-    , voTBruker = verifiserteVerdisettinger.voTSykkel
+    , totalReiseDistanceKm = verdisettinger.syklistTotalReiseDistanceKm
+    , helseGevinstBruker = verdisettinger.helseTSGevinstSykkel
+    , voTBruker = verdisettinger.voTSykkel
     , tidsbesparelseMinPerTur = receiver .tidsbesparelseMinPerTurSyklende
     , tsGevinstTiltak = 0
     }
@@ -128,11 +137,11 @@ basicFotgjengerForutsetninger ((Tiltak object) as this) state =
     { andelNyeBrukereFraBil = overfoert.bil
     , andelNyeBrukereFraKollektivtransport = overfoert.kollektivtransport
     , andelNyeBrukereGenererte = overfoert.genererte
-    , tsKostnad = verifiserteVerdisettinger.tsKostnadGange
-    , totalReiseDistanceKm = verifiserteVerdisettinger.fotgjengerTotalReiseDistanceKm
-    , helseGevinstBruker = verifiserteVerdisettinger.helseGevinstGange
+    , tsKostnad = verdisettinger.tsKostnadGange
+    , totalReiseDistanceKm = verdisettinger.fotgjengerTotalReiseDistanceKm
+    , helseGevinstBruker = verdisettinger.helseGevinstGange
     , turerPerYearMaybe = (object.basicState state).gangturerPerYear.value
-    , voTBruker = verifiserteVerdisettinger.voTGange
+    , voTBruker = verdisettinger.voTGange
     , tidsbesparelseMinPerTur = receiver .tidsbesparelseMinPerTurGaaende
     , tsGevinstTiltak = 0
     }

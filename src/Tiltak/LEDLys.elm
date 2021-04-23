@@ -71,8 +71,8 @@ nivaaForutsetninger ((Tiltak object) as this) state =
                 tidsbesparelseMinutterPerKilometer hastighet.gaaende.lav hastighet.gaaende.hoey
             , tidsbesparelseSyklendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer hastighet.syklende.lav hastighet.syklende.hoey
-            , tsGevinstGaaende = 0.1
-            , tsGevinstSyklende = 0.136363636
+            , tsGevinstGaaende = 0.014473684
+            , tsGevinstSyklende = 0.108928571
             , wtp = 2.71
             }
 

@@ -7,7 +7,7 @@ import FormattedValue
         , installationCost
         , value
         )
-import GeneralForutsetninger exposing (verifiserteVerdisettinger)
+import GeneralForutsetninger exposing (verdisettinger)
 import Maybe.Extra
 import Regex
 import Tiltak exposing (..)
