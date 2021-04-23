@@ -107,37 +107,64 @@ fotgjengerSuite =
                 , gangturerPerYear = Just 5.0e4 |> formattedValue
             }
     in
-    skip <|
-        describe "LEDLys fotgjengervei"
-            [ let
-                state =
-                    { initialState
-                        | ledLys =
-                            { fotgjengerLEDState
-                                | nivaa = LavTilHoey
-                                , sted = Storby
-                            }
-                    }
+    describe "LEDLys fotgjengervei"
+        [ let
+            state =
+                { initialState
+                    | ledLys =
+                        { fotgjengerLEDState
+                            | nivaa = LavTilHoey
+                            , sted = Storby
+                        }
+                }
 
-                expectedRecord =
-                    { yearlySyklistNytteInklOverfoert = 0
-                    , yearlyFotgjengerNytteInklOverfoert = 433246.0971
-                    , yearlyTrafikantNytteInklOverfoert = 1699.0766
-                    , yearlyHelsegevinstNytteInklOverfoert = 263801.2653
-                    , yearlyTSGevinstNytteInklOverfoert = 10620.1403
-                    , yearlyEksterneEffekterNytteInklOverfoert = 1368.5817
-                    , yearlyNytteInklOverfoertSum = 710735.161
-                    , nytteInklOverfoert = 17354700.3264
-                    , investeringsKostInklRestverdi = 0
-                    , driftOgVedlihKost = -4520881.3377
-                    , kostUtenSkyggepris = -4520881.3377
-                    , skyggepris = -904176.2675
-                    , nettoNytteInklOverfoert = 11929642.7212
-                    }
-              in
-              describe "Storby LavTilHoey"
-                [ tiltakSuite (createCheckWithState state) expectedRecord ]
-            ]
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 0
+                , yearlyFotgjengerNytteInklOverfoert = 439285.4676
+                , yearlyTrafikantNytteInklOverfoert = 1701.2062
+                , yearlyHelsegevinstNytteInklOverfoert = 279070
+                , yearlyTSGevinstNytteInklOverfoert = -2554.3719
+                , yearlyEksterneEffekterNytteInklOverfoert = 1314.3024
+                , yearlyNytteInklOverfoertSum = 718816.6043
+                , nytteInklOverfoert = 17552032.656
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -4520881.3377
+                , kostUtenSkyggepris = -4520881.3377
+                , skyggepris = -904176.2675
+                , nettoNytteInklOverfoert = 12126975.0508
+                }
+          in
+          describe "Storby LavTilHoey"
+            [ tiltakSuite (createCheckWithState state) expectedRecord ]
+        , let
+            state =
+                { initialState
+                    | ledLys =
+                        { fotgjengerLEDState
+                            | nivaa = LavTilMiddels
+                            , sted = Storby
+                        }
+                }
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 0
+                , yearlyFotgjengerNytteInklOverfoert = 336547.3531
+                , yearlyTrafikantNytteInklOverfoert = 1542.9545
+                , yearlyHelsegevinstNytteInklOverfoert = 253110
+                , yearlyTSGevinstNytteInklOverfoert = -2248.9438
+                , yearlyEksterneEffekterNytteInklOverfoert = 1192.0417
+                , yearlyNytteInklOverfoertSum = 590143.4054
+                , nytteInklOverfoert = 14410096.0685
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -4065966.202
+                , kostUtenSkyggepris = -4065966.202
+                , skyggepris = -813193.2404
+                , nettoNytteInklOverfoert = 9530936.6261
+                }
+          in
+          describe "Storby LavTilMiddels"
+            [ tiltakSuite (createCheckWithState state) expectedRecord ]
+        ]
 
 
 gangOgSykkelSuite : Test

@@ -76,8 +76,30 @@ nivaaForutsetninger ((Tiltak object) as this) state =
             , wtp = 2.71
             }
 
-        _ ->
-            Debug.crash "Helvete"
+        LavTilMiddels ->
+            { annuiserteDriftsKostnaderPerKm = 89316
+            , etterspoerselsEffekt = 3.9 / 100
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.gaaende.lav hastighet.gaaende.middels
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.syklende.lav hastighet.syklende.middels
+            , tsGevinstGaaende = 0.013815789
+            , tsGevinstSyklende = 0.108035714
+            , wtp = 2.49
+            }
+
+        MiddelsTilHoey ->
+            { annuiserteDriftsKostnaderPerKm = 9993
+            , etterspoerselsEffekt =
+                0.4 / 100
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.gaaende.middels hastighet.gaaende.hoey
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.syklende.middels hastighet.syklende.hoey
+            , tsGevinstGaaende = 0.000667111
+            , tsGevinstSyklende = 0.001001001
+            , wtp = 0.21
+            }
 
 
 initialState : LEDLysState
