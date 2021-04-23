@@ -16,7 +16,7 @@ tiltakForGroup : Group -> List Tiltak
 tiltakForGroup gruppeType =
     case gruppeType of
         GruppoA ->
-            [ GsB_GsA.tiltak ]
+            [ GsB_GsA.tiltak, LEDLys.tiltak ]
 
 
 initialTiltakStates =
