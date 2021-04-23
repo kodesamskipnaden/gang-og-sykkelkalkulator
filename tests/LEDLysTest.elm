@@ -1,7 +1,6 @@
 module LEDLysTest exposing (..)
 
 import BasicState exposing (..)
-import BasicTiltak exposing (yearlyOverfoerteSykkelturer)
 import Expect
 import FormattedValue exposing (formattedValue)
 import Maybe.Extra
@@ -10,50 +9,31 @@ import TestSupport exposing (..)
 import Tiltak exposing (analyse, sendTo)
 import Tiltak.LEDLys as LEDLys exposing (tiltak)
 import TiltakAndGroupData
+import TiltakSupport
 
 
-sykkelSuite : Test
-sykkelSuite =
+initialState =
+    TiltakAndGroupData.initialTiltakStates
+
+
+basicLEDTestState =
     let
-        initialState =
-            TiltakAndGroupData.initialTiltakStates
+        initialLedLys =
+            initialState.ledLys
+    in
+    { initialLedLys
+        | nivaa = LavTilHoey
+        , sted = Storby
+        , installationCost = Just 0 |> formattedValue
+        , sykkelturerPerYear = Nothing |> formattedValue
+        , gangturerPerYear = Nothing |> formattedValue
+        , lengdeVeiKm = Just 2.3 |> formattedValue
+        , preferredToGraph = ""
+    }
 
-        state =
-            { initialState
-                | ledLys =
-                    { nivaa = LavTilHoey
-                    , sted = Storby
-                    , installationCost = Just 1.0e6 |> formattedValue
-                    , yearlyMaintenance = Just 0 |> formattedValue
-                    , sykkelturerPerYear = Just 1.5e4 |> formattedValue
-                    , gangturerPerYear = Just 0 |> formattedValue
-                    , lengdeVeiKm = Just 1 |> formattedValue
-                    , preferredToGraph = ""
-                    }
-            }
 
-        expectedRecord =
-            { yearlySyklistNytte = 18433.75
-            , yearlySyklistNytteInklOverfoert = 18894.59
-            , yearlyFotgjengerNytteInklOverfoert = 0
-            , yearlyTrafikantNytte = 0
-            , yearlyTrafikantNytteInklOverfoert = 3133.55
-            , yearlyHelsegevinstNytteInklOverfoert = 85500
-            , yearlyTSGevinstNytte = 52633.67
-            , yearlyTSGevinstNytteInklOverfoert = 53045.98
-            , yearlyEksterneEffekterNytteInklOverfoert = 942.83
-            , yearlyNytteInklOverfoertSum = 0 -- finn ut seinere hva dette skal være
-            , nytte = 1735321.1
-            , nytteInklOverfoert = 3943913.91
-            , investeringsKostInklRestverdi = -1.0e6
-            , driftOgVedlihKost = 0
-            , kostUtenSkyggepris = -1.0e6
-            , skyggepris = -2.0e5
-            , nettoNytte = 535321.1
-            , nettoNytteInklOverfoert = 2743913.91
-            }
-
-        checkWithState : CheckWithStateFunction
+createCheckWithState state =
+    let
         checkWithState description accessor expectation =
             test description <|
                 \() ->
@@ -63,114 +43,228 @@ sykkelSuite =
                         state
                         |> checkMaybe expectation
     in
-    skip <|
-        describe "LEDLys sykkelvei"
-            [ tiltakSuite checkWithState expectedRecord
+    checkWithState
+
+
+sykkelSuite : Test
+sykkelSuite =
+    let
+        sykkelLedLysState =
+            { basicLEDTestState
+                | sykkelturerPerYear = Just 5.0e4 |> formattedValue
+                , gangturerPerYear = Just 0 |> formattedValue
+            }
+    in
+    describe "LEDLys sykkelvei"
+        [ let
+            state =
+                { initialState
+                    | ledLys =
+                        { sykkelLedLysState
+                            | nivaa = LavTilHoey
+                            , sted = Storby
+                        }
+                }
+
+            tiltakReceiver =
+                Tiltak.bindTiltak tiltak state
+
+            expectedRecord =
+                { yearlySyklistNytteInklOverfoert = 346601.4504
+                , yearlyFotgjengerNytteInklOverfoert = 0
+                , yearlyTrafikantNytteInklOverfoert = 4253.0155
+                , yearlyHelsegevinstNytteInklOverfoert = 266600
+                , yearlyTSGevinstNytteInklOverfoert = 3102.0462
+                , yearlyEksterneEffekterNytteInklOverfoert = 3285.756
+                , yearlyNytteInklOverfoertSum = 623842.268
+                , nytteInklOverfoert = 15232953.4342
+                , investeringsKostInklRestverdi = 0
+                , driftOgVedlihKost = -4520881.3377
+                , kostUtenSkyggepris = -4520881.3377
+                , skyggepris = -904176.2675
+                , nettoNytteInklOverfoert = 9807895.829
+                }
+          in
+          describe "Storby Lav til Høy"
+            [ tiltakSuite (createCheckWithState state) expectedRecord
             , test
                 "overfoerte sykkelturer"
               <|
                 \() ->
-                    yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
+                    tiltakReceiver .syklistForutsetninger
+                        |> TiltakSupport.yearlyOverfoerteTurer tiltak state
+                        |> checkMaybe (Expect.equal 2150)
             ]
+        ]
+
+
+fotgjengerSuite : Test
+fotgjengerSuite =
+    describe "LEDLys fotgjengervei"
+        (let
+            fotgjengerLEDState =
+                { basicLEDTestState
+                    | sykkelturerPerYear = Just 0 |> formattedValue
+                    , gangturerPerYear = Just 5.0e4 |> formattedValue
+                }
+         in
+         [ describe "Storby LavTilHoey"
+            (let
+                state =
+                    { initialState
+                        | ledLys =
+                            { fotgjengerLEDState
+                                | nivaa = LavTilHoey
+                                , sted = Storby
+                            }
+                    }
+
+                expectedRecord =
+                    { yearlySyklistNytteInklOverfoert = 0
+                    , yearlyFotgjengerNytteInklOverfoert = 439285.4676
+                    , yearlyTrafikantNytteInklOverfoert = 1701.2062
+                    , yearlyHelsegevinstNytteInklOverfoert = 279070
+                    , yearlyTSGevinstNytteInklOverfoert = -2554.3719
+                    , yearlyEksterneEffekterNytteInklOverfoert = 1314.3024
+                    , yearlyNytteInklOverfoertSum = 718816.6043
+                    , nytteInklOverfoert = 17552032.656
+                    , investeringsKostInklRestverdi = 0
+                    , driftOgVedlihKost = -4520881.3377
+                    , kostUtenSkyggepris = -4520881.3377
+                    , skyggepris = -904176.2675
+                    , nettoNytteInklOverfoert = 12126975.0508
+                    }
+             in
+             [ tiltakSuite (createCheckWithState state) expectedRecord ]
+            )
+         , describe "Storby LavTilMiddels"
+            (let
+                state =
+                    { initialState
+                        | ledLys =
+                            { fotgjengerLEDState
+                                | nivaa = LavTilMiddels
+                                , sted = Storby
+                            }
+                    }
+
+                expectedRecord =
+                    { yearlySyklistNytteInklOverfoert = 0
+                    , yearlyFotgjengerNytteInklOverfoert = 336547.3531
+                    , yearlyTrafikantNytteInklOverfoert = 1542.9545
+                    , yearlyHelsegevinstNytteInklOverfoert = 253110
+                    , yearlyTSGevinstNytteInklOverfoert = -2248.9438
+                    , yearlyEksterneEffekterNytteInklOverfoert = 1192.0417
+                    , yearlyNytteInklOverfoertSum = 590143.4054
+                    , nytteInklOverfoert = 14410096.0685
+                    , investeringsKostInklRestverdi = 0
+                    , driftOgVedlihKost = -4065966.202
+                    , kostUtenSkyggepris = -4065966.202
+                    , skyggepris = -813193.2404
+                    , nettoNytteInklOverfoert = 9530936.6261
+                    }
+             in
+             [ tiltakSuite (createCheckWithState state) expectedRecord ]
+            )
+         ]
+        )
 
 
 gangOgSykkelSuite : Test
 gangOgSykkelSuite =
-    let
-        initialState =
-            TiltakAndGroupData.initialTiltakStates
-
-        state =
-            { initialState
-                | ledLys =
-                    { nivaa = LavTilHoey
-                    , sted = Storby
-                    , installationCost = Just 1.0e6 |> formattedValue
-                    , yearlyMaintenance = Just 0 |> formattedValue
-                    , sykkelturerPerYear = Just 1.5e4 |> formattedValue
-                    , gangturerPerYear = Just 2.0e4 |> formattedValue
-                    , lengdeVeiKm = Just 1 |> formattedValue
-                    , preferredToGraph = ""
-                    }
-            }
-
-        tiltakReceiver =
-            Tiltak.bindTiltak tiltak state
-
-        expectedNytteFraFotgjengerAnalyse =
-            2729345.084689
-
-        expectedNytteFraSyklistAnalyse =
-            3943913.9087
-
-        expectedKostInklSkyggepris =
-            -1.0e6 + -2.0e5
-
-        expectedRecord =
-            { yearlySyklistNytte = 18433.75
-            , yearlySyklistNytteInklOverfoert = 18894.59
-            , yearlyFotgjengerNytteInklOverfoert = 0
-            , yearlyTrafikantNytte = 0
-            , yearlyTrafikantNytteInklOverfoert =
-                3133.55 + 1671.23
-            , yearlyHelsegevinstNytteInklOverfoert =
-                85500 + 119800
-            , yearlyTSGevinstNytte = 52633.67
-            , yearlyTSGevinstNytteInklOverfoert = 53045.98 - 10197.92
-            , yearlyEksterneEffekterNytteInklOverfoert = 942.83 + 502.84
-            , yearlyNytteInklOverfoertSum = 0 -- dette sal være summen av nyttene
-            , nytte = 1735321.1
-            , nytteInklOverfoert = expectedNytteFraSyklistAnalyse + expectedNytteFraFotgjengerAnalyse
-            , investeringsKostInklRestverdi = -1.0e6
-            , driftOgVedlihKost = 0
-            , kostUtenSkyggepris = -1.0e6
-            , skyggepris = -2.0e5
-            , nettoNytte = 535321.1
-            , nettoNytteInklOverfoert =
-                expectedNytteFraSyklistAnalyse
-                    + expectedNytteFraFotgjengerAnalyse
-                    + expectedKostInklSkyggepris
-            }
-
-        checkWithState : CheckWithStateFunction
-        checkWithState description accessor expectation =
-            test description <|
-                \() ->
-                    tiltakReceiver accessor
-                        |> checkMaybe expectation
-
-        expectedAnalyse =
-            { analysePeriode = 40
-            , isProfitable = Just True
-            , syklistNytte = Just 461367.3704234241
-            , fotgjengerNytte = Just 0
-            , trafikantNytte = Just 117322.9554847516
-            , helseGevinstNytte = Just 5013006.4928190885
-            , tsGevinstNytte = Just 1046261.9706246123
-            , eksterneEffekterNytte = Just 35300.2084146674
-            , nytte = Just 6673258.997766544
-            , skyggepris = Just -200000
-            , nettoNytte = Just 5473258.997766544
-            , kostUtenSkyggepris = Just -1000000
-            , nettoNyttePerBudsjettKrone = Just 5.4732589977665445
-            }
-
-        actualAnalyse =
-            Tiltak.analyse tiltak state
-    in
     describe "LEDLys gang og sykkelvei"
-        [ skip <| tiltakSuite checkWithState expectedRecord
-        , skip <|
+        (let
+            fotgjengerLEDState =
+                { basicLEDTestState
+                    | sykkelturerPerYear = Just 5.0e4 |> formattedValue
+                    , gangturerPerYear = Just 5.0e4 |> formattedValue
+                }
+
+            state =
+                { initialState
+                    | ledLys =
+                        { fotgjengerLEDState
+                            | nivaa = LavTilHoey
+                            , sted = Storby
+                        }
+                }
+
+            tiltakReceiver =
+                Tiltak.bindTiltak tiltak state
+
+            expectedNytteFraFotgjengerAnalyse =
+                2729345.084689
+
+            expectedNytteFraSyklistAnalyse =
+                3943913.9087
+
+            expectedKostInklSkyggepris =
+                -1.0e6 + -2.0e5
+
+            expectedRecord =
+                { yearlySyklistNytte = 18433.75
+                , yearlySyklistNytteInklOverfoert = 18894.59
+                , yearlyFotgjengerNytteInklOverfoert = 0
+                , yearlyTrafikantNytte = 0
+                , yearlyTrafikantNytteInklOverfoert =
+                    3133.55 + 1671.23
+                , yearlyHelsegevinstNytteInklOverfoert =
+                    85500 + 119800
+                , yearlyTSGevinstNytte = 52633.67
+                , yearlyTSGevinstNytteInklOverfoert = 53045.98 - 10197.92
+                , yearlyEksterneEffekterNytteInklOverfoert = 942.83 + 502.84
+                , yearlyNytteInklOverfoertSum = 0 -- dette sal være summen av nyttene
+                , nytte = 1735321.1
+                , nytteInklOverfoert = expectedNytteFraSyklistAnalyse + expectedNytteFraFotgjengerAnalyse
+                , investeringsKostInklRestverdi = -1.0e6
+                , driftOgVedlihKost = 0
+                , kostUtenSkyggepris = -1.0e6
+                , skyggepris = -2.0e5
+                , nettoNytte = 535321.1
+                , nettoNytteInklOverfoert =
+                    expectedNytteFraSyklistAnalyse
+                        + expectedNytteFraFotgjengerAnalyse
+                        + expectedKostInklSkyggepris
+                }
+
+            checkWithState : CheckWithStateFunction
+            checkWithState description accessor expectation =
+                test description <|
+                    \() ->
+                        tiltakReceiver accessor
+                            |> checkMaybe expectation
+
+            expectedAnalyse =
+                { analysePeriode = 40
+                , isProfitable = Just True
+                , syklistNytte = Just 461367.3704234241
+                , fotgjengerNytte = Just 0
+                , trafikantNytte = Just 117322.9554847516
+                , helseGevinstNytte = Just 5013006.4928190885
+                , tsGevinstNytte = Just 1046261.9706246123
+                , eksterneEffekterNytte = Just 35300.2084146674
+                , nytte = Just 6673258.997766544
+                , skyggepris = Just -200000
+                , nettoNytte = Just 5473258.997766544
+                , kostUtenSkyggepris = Just -1000000
+                , nettoNyttePerBudsjettKrone = Just 5.4732589977665445
+                }
+
+            actualAnalyse =
+                Tiltak.analyse tiltak state
+         in
+         [ skip <| tiltakSuite checkWithState expectedRecord
+         , skip <|
             test "yearlyOverfoerteSykkelturer" <|
                 \() ->
-                    yearlyOverfoerteSykkelturer tiltak state |> checkMaybe (closeTo 750 2)
-        , skip <|
+                    tiltakReceiver .syklistForutsetninger |> TiltakSupport.yearlyOverfoerteTurer tiltak state |> checkMaybe (closeTo 750 2)
+         , skip <|
             test "analyse" <|
                 \() ->
                     actualAnalyse
                         |> Expect.equal
                             expectedAnalyse
-        , test "sum av nytte elementer" <|
+         , test "sum av nytte elementer" <|
             \() ->
                 Maybe.Extra.combine
                     [ actualAnalyse.syklistNytte
@@ -182,7 +276,8 @@ gangOgSykkelSuite =
                     ]
                     |> Maybe.map List.sum
                     |> Expect.equal actualAnalyse.nytte
-        ]
+         ]
+        )
 
 
 ifLengdeLongerThanAverageTrip : Test
@@ -197,7 +292,6 @@ ifLengdeLongerThanAverageTrip =
                     { nivaa = LavTilHoey
                     , sted = Storby
                     , installationCost = Just 1.0e6 |> formattedValue
-                    , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
                     , lengdeVeiKm = Just 6 |> formattedValue
@@ -211,7 +305,6 @@ ifLengdeLongerThanAverageTrip =
                     { nivaa = LavTilHoey
                     , sted = Storby
                     , installationCost = Just 1.0e6 |> formattedValue
-                    , yearlyMaintenance = Just 0 |> formattedValue
                     , sykkelturerPerYear = Just 1.5e4 |> formattedValue
                     , gangturerPerYear = Just 0 |> formattedValue
                     , lengdeVeiKm = Just 1 |> formattedValue

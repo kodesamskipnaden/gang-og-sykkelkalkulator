@@ -3,7 +3,11 @@ module Tiltak exposing (..)
 import BasicState exposing (BasicState, Nivaa, Sted)
 import Field exposing (Field)
 import Focus exposing (Focus)
-import TiltakStates exposing (TiltakStates)
+import TiltakStates
+
+
+type alias TiltakStates =
+    TiltakStates.TiltakStates
 
 
 type alias AnalyseData =
@@ -40,6 +44,8 @@ type alias BrukerForutsetninger =
     , turerPerYearMaybe : Maybe Float
     , totalReiseDistanceKm : Float
     , helseGevinstBruker : Float
+    , voTBruker : Float
+    , tidsbesparelseMinPerTur : Maybe Float
     }
 
 
@@ -81,13 +87,10 @@ type alias TiltakRecordHooks =
     , basicState : TiltakStates -> BasicState
     , nivaaFocus : Focus TiltakStates Nivaa
     , stedFocus : Focus TiltakStates Sted
-    , driftOgVedlihKost : StateCalculationMethod
     , investeringsKostInklRestverdi : StateCalculationMethod
     , syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
     , fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
-    , yearlySyklistNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
-    , yearlyFotgjengerNyttePerTur : TiltakStates -> Maybe Float -> Maybe Float
-    , nivaaForutsetninger : Nivaa -> NivaaForutsetninger
+    , nivaaForutsetninger : Tiltak -> TiltakStates -> NivaaForutsetninger
     }
 
 
@@ -97,6 +100,10 @@ type alias HooksPartial a specificState =
 
 type alias Hooks specificState =
     HooksPartial TiltakRecordHooks specificState
+
+
+type alias TiltakMethod =
+    Tiltak -> TiltakStates
 
 
 type alias TiltakRecordPartial a =
@@ -110,10 +117,10 @@ type alias TiltakRecordPartial a =
         , nytteInklOverfoert : StateCalculationMethod
         , skyggepris : StateCalculationMethod
         , kostUtenSkyggepris : StateCalculationMethod
+        , driftOgVedlihKost : StateCalculationMethod
         , nettoNytteInklOverfoert : StateCalculationMethod
         , yearlySyklistNytte : StateCalculationMethod
         , yearlyFotgjengerNytte : StateCalculationMethod
-        , yearlyTrafikantNytte : StateCalculationMethod
         , yearlyTSGevinstNytte : StateCalculationMethod
         , yearlySyklistNytteInklOverfoert : StateCalculationMethod
         , yearlyFotgjengerNytteInklOverfoert : StateCalculationMethod
@@ -129,6 +136,9 @@ type alias TiltakRecordPartial a =
         , yearlyTSGevinstNytteForBrukere : BrukerforutsetningStateCalculationMethod
         , yearlyTSGevinstNytteOverfoertForBrukere : BrukerforutsetningStateCalculationMethod
         , yearlyEksterneEffekterNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
+        , tidsbesparelseMinPerTurGaaende : StateCalculationMethod
+        , tidsbesparelseMinPerTurSyklende : StateCalculationMethod
+        , wtpNytte : BrukerforutsetningStateCalculationMethod
         , graphId : Tiltak -> String
         , domId : Tiltak -> String
         , preferredField : Tiltak -> TiltakStates -> Maybe Field
@@ -144,7 +154,7 @@ type alias TiltakAccessor a =
     TiltakRecord -> Tiltak -> a
 
 
-sendTo : Tiltak -> TiltakAccessor a -> a
+sendTo : Tiltak -> (TiltakRecord -> Tiltak -> a) -> a
 sendTo ((Tiltak object) as this) recordAccessor =
     recordAccessor object this
 
@@ -154,7 +164,7 @@ getAttr (Tiltak object) accessor =
     accessor object
 
 
-bindTiltak : Tiltak -> a -> (TiltakAccessor (a -> b) -> b)
+bindTiltak : Tiltak -> TiltakStates -> (TiltakRecord -> Tiltak -> TiltakStates -> a) -> a
 bindTiltak tiltak tiltakStates =
     \accessor -> sendTo tiltak accessor tiltakStates
 

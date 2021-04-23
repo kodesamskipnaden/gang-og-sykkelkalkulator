@@ -15,22 +15,15 @@ import FormattedValue
         , value
         , yearlyMaintenance
         )
-import GeneralForutsetninger exposing (verifiserteVerdisettinger)
 import SpecificStates exposing (LEDLysState)
-import Tiltak exposing (Hooks, StateCalculationMethod, Tiltak(..), bindTiltak, sendTo)
+import Tiltak exposing (..)
+import TiltakForutsetninger
+import TiltakSupport
 
 
 tiltak : Tiltak
 tiltak =
-    let
-        basicTiltakRecord =
-            BasicTiltak.basicTiltakRecord tiltakRecordImplementation
-    in
-    Tiltak
-        { basicTiltakRecord
-            | yearlyFotgjengerNytte = \_ _ -> Just 0
-            , yearlyFotgjengerNytteInklOverfoert = \_ _ -> Just 0
-        }
+    BasicTiltak.basicTiltakRecord tiltakRecordImplementation |> Tiltak
 
 
 tiltakRecordImplementation : Hooks LEDLysState
@@ -40,42 +33,18 @@ tiltakRecordImplementation =
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =
         \_ { ledLys } ->
-            BasicTiltak.investeringsKostInklRestverdi
+            TiltakSupport.investeringsKostInklRestverdi
                 ledLys
                 levetid
-    , driftOgVedlihKost =
-        \_ { ledLys } ->
-            BasicTiltak.driftOgVedlihKost ledLys
     , basicState =
         \{ ledLys } ->
-            { sykkelturerPerYear = ledLys.sykkelturerPerYear
-            , gangturerPerYear = ledLys.gangturerPerYear
-            , preferredToGraph = ledLys.preferredToGraph
-            , lengdeVeiKm = ledLys.lengdeVeiKm
-            , nivaa = ledLys.nivaa
-            , sted = ledLys.sted
-            }
+            BasicState.createBasicState ledLys
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
-    , yearlySyklistNyttePerTur = yearlySyklistNyttePerTur
-    , yearlyFotgjengerNyttePerTur = \_ _ -> Nothing
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , nivaaForutsetninger = nivaaForutsetninger
     }
-
-
-nivaaForutsetninger nivaa =
-    case nivaa of
-        _ ->
-            { annuiserteDriftsKostnaderPerKm = 0
-            , etterspoerselsEffekt = 0
-            , tidsbesparelseGaaendeMinutterPerKilometer = 0
-            , tidsbesparelseSyklendeMinutterPerKilometer = 0
-            , tsGevinstGaaende = 0
-            , tsGevinstSyklende = 0
-            , wtp = 0
-            }
 
 
 initialState : LEDLysState
@@ -83,7 +52,6 @@ initialState =
     { nivaa = LavTilHoey
     , sted = Storby
     , installationCost = formattedValueDefault
-    , yearlyMaintenance = formattedValueDefault
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue
     , lengdeVeiKm = formattedValueDefault
@@ -116,7 +84,6 @@ fields =
 fieldDefinitions : List SimpleField
 fieldDefinitions =
     [ Field.installationCostSimpleField specificState
-    , Field.yearlyMaintenanceSimpleField specificState
     , Field.lengdeVeiKmSimpleField specificState
     , Field.sykkelturerPerYearSimpleField specificState
     , Field.gangturerPerYearSimpleField specificState
@@ -127,40 +94,84 @@ levetid =
     40
 
 
-tidsbesparelseMinutterPerTur =
-    0.5
+nivaaForutsetninger : Tiltak -> TiltakStates -> NivaaForutsetninger
+nivaaForutsetninger ((Tiltak object) as this) state =
+    let
+        basicState =
+            object.basicState state
+
+        hastighet =
+            { syklende =
+                { lav = 16.7, middels = 17.0, hoey = 17.3 }
+            , gaaende =
+                { lav = 4.9, middels = 5.0, hoey = 5.1 }
+            }
+
+        tidsbesparelseMinutterPerKilometer fraKmt tilKmt =
+            (1 / fraKmt - 1 / tilKmt) * 60
+    in
+    case basicState.nivaa of
+        LavTilHoey ->
+            { annuiserteDriftsKostnaderPerKm = 99309
+            , etterspoerselsEffekt = 4.3 / 100
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.syklende.lav hastighet.syklende.hoey
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.gaaende.lav hastighet.gaaende.hoey
+            , tsGevinstSyklende = 0.108928571
+            , tsGevinstGaaende = 0.014473684
+            , wtp = 2.71
+            }
+
+        LavTilMiddels ->
+            { annuiserteDriftsKostnaderPerKm = 89316
+            , etterspoerselsEffekt = 3.9 / 100
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.syklende.lav hastighet.syklende.middels
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.gaaende.lav hastighet.gaaende.middels
+            , tsGevinstSyklende = 0.108035714
+            , tsGevinstGaaende = 0.013815789
+            , wtp = 2.49
+            }
+
+        MiddelsTilHoey ->
+            { annuiserteDriftsKostnaderPerKm = 9993
+            , etterspoerselsEffekt =
+                0.4 / 100
+            , tidsbesparelseSyklendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.syklende.middels hastighet.syklende.hoey
+            , tidsbesparelseGaaendeMinutterPerKilometer =
+                tidsbesparelseMinutterPerKilometer hastighet.gaaende.middels hastighet.gaaende.hoey
+            , tsGevinstSyklende = 0.001001001
+            , tsGevinstGaaende = 0.000667111
+            , wtp = 0.21
+            }
 
 
+syklistForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
 syklistForutsetninger this state =
     let
+        receiver =
+            bindTiltak this state
+
         basic =
-            BasicTiltak.basicSyklistForutsetninger this state
+            TiltakForutsetninger.basicSyklistForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = 0 -- verdisettinger.tsGevinstLEDLysSyklende
+        | tsGevinstTiltak = (receiver .nivaaForutsetninger).tsGevinstSyklende
     }
 
 
+fotgjengerForutsetninger : Tiltak -> TiltakStates -> BrukerForutsetninger
 fotgjengerForutsetninger this state =
     let
+        receiver =
+            bindTiltak this state
+
         basic =
-            BasicTiltak.basicFotgjengerForutsetninger this state
+            TiltakForutsetninger.basicFotgjengerForutsetninger this state
     in
     { basic
-        | tsGevinstTiltak = 0 --- verdisettinger.tsGevinstLEDLysGaaende
+        | tsGevinstTiltak = (receiver .nivaaForutsetninger).tsGevinstGaaende
     }
-
-
-tidsbesparelseMinPerTurSyklende { gsB_GsA } =
-    Just 5
-
-
-
--- fiks dette
-
-
-yearlySyklistNyttePerTur ({ gsB_GsA } as state) antallTurer =
-    Maybe.map2
-        (\a b -> a * b * verifiserteVerdisettinger.voTSykkel)
-        antallTurer
-        (tidsbesparelseMinPerTurSyklende state)

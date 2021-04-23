@@ -1,54 +1,26 @@
 module GeneralForutsetninger exposing (..)
 
--- TODO: grupper verdisettinger som varierer etter hva de varierer på
--- TODO: Datatype Nivaa: lav-middels, lav-høy, middels-høy
--- Noen varierer på nivå: lav-middels, lav-høy, middels-høy
--- Noen varierer på sted spredtbygd, liten by, stor by
--- Vi kan begynne med å introdusere nivåer ved å postulere at dagens program er lav til høy
--- Vi kunne uttrykt nivå bestemte verdier ved å lagre 2 tall (sjekk med nils). Enten lav til høy og lav til middels (så kan man regne ut differansen for å finne ut middels til høy).
 
-
-verifiserteVerdisettinger =
+verdisettinger =
     { voTGange =
         -- VoT_Gange
         -- kr pr. min pr. gangtur
-        2.77293673883309
+        2.88
     , voTSykkel =
         -- VoT_Sykkel
         -- kr. pr min pr syklist
-        147.47 / 60
+        1.93
     , helseGevinstGange =
         -- kr pr km gange
-        61.3491315
+        64.9
     , helseTSGevinstSykkel =
         -- kr pr km syklet
-        23.3515893
-    , tsKostnadGange = 1.8333
-    , tsKostnadSykkel = 2.0
+        24.8
+    , tsKostnadGange = 0.984932862
+    , tsKostnadSykkel = 1.386689163
     , syklistTotalReiseDistanceKm = 5
     , fotgjengerTotalReiseDistanceKm = 2
     }
-
-
-
--- verdisettinger =
---     -- alle verdier i NOK
---     { tsKostnadBil = 0.2639315
---     , tsKostnadKollektiv = 0.0125062
---     -- skadereduksjon %
---     , tsGevinstLEDLysSyklende = 100 / 100
---     , tsGevinstLEDLysGaaende = 0 / 100
---     -- Etterspørselseffekter
---     , sykkelBedreBelysningLED = 5 / 100
---     , fotgjengerBedreBelysningLED = 5 / 100
---     -- Overføring
---     , andelNyeSyklisterFraBil = 40 / 100
---     , andelNyeFotgjengereFraBil = 40 / 100
---     , andelNyeSyklisterFraKollektivtransport = 35 / 100
---     , andelNyeFotgjengereFraKollektivtransport = 35 / 100
---     , andelNyeSyklisterGenererte = 25 / 100
---     , andelNyeFotgjengereGenererte = 25 / 100
---     }
 
 
 drente : Float
