@@ -6,8 +6,7 @@ import Tiltak exposing (..)
 
 
 type alias StedsForutsetninger =
-    { koekostnadBiler : Float
-    , overfoertFra :
+    { overfoertFra :
         { bil : Float
         , kollektivtransport : Float
         , genererte : Float
@@ -17,6 +16,10 @@ type alias StedsForutsetninger =
         , kollektivtransport : Float
         }
     , oevrigeEksterneKostnader :
+        { bil : Float
+        , kollektivtransport : Float
+        }
+    , koekostnad :
         { bil : Float
         , kollektivtransport : Float
         }
@@ -39,11 +42,11 @@ stedsForutsetninger sted =
                 , kollektivtransport = 0.020346472
                 }
             , oevrigeEksterneKostnader =
-                { bil = 0.6207036
+                { bil = 0.601213008
                 , kollektivtransport = 0.250575631
                 }
             , koekostnad =
-                { bil = 1.3171136
+                { bil = 1.203231707
                 , kollektivtransport = 0.069319672
                 }
             }
@@ -59,7 +62,7 @@ stedsForutsetninger sted =
                 , kollektivtransport = 0.02447308
                 }
             , oevrigeEksterneKostnader =
-                { bil = 0.355979021
+                { bil = 0.3536
                 , kollektivtransport = 0.139331744
                 }
             , koekostnad =
@@ -89,6 +92,10 @@ stedsForutsetninger sted =
             }
 
 
+overfoertFraHelper :
+    Tiltak
+    -> TiltakStates
+    -> { bil : Float, kollektivtransport : Float, genererte : Float }
 overfoertFraHelper (Tiltak object) state =
     let
         basicState =

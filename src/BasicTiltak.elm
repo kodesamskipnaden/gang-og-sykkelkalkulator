@@ -147,6 +147,13 @@ yearlyEksterneEffekterNytteInklOverfoert ((Tiltak object) as this) state =
         (object.fotgjengerForutsetninger this state |> nytte)
 
 
+
+-- gammel
+-- =$B$11*F18*VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;18;FALSE())
+-- ny
+-- =$B$11*F18*VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;18;FALSE())+$B$11*F19*VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;17;FALSE())
+
+
 yearlyTrafikantNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
 yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state brukerForutsetninger =
     let
@@ -156,13 +163,20 @@ yearlyTrafikantNytteInklOverfoertForBruker ((Tiltak object) as this) state bruke
         basicState =
             object.basicState state
 
-        koekostnad =
-            (TiltakForutsetninger.stedsForutsetninger basicState.sted).koekostnadBiler
+        koekostnader =
+            (TiltakForutsetninger.stedsForutsetninger basicState.sted).koekostnad
     in
-    Maybe.map3 (\a b c -> a * b * c)
-        (Just brukerForutsetninger.totalReiseDistanceKm)
-        (TiltakSupport.nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraBil)
-        (Just koekostnad)
+    Maybe.map2 (+)
+        (Maybe.map3 (\a b c -> a * b * c)
+            (Just brukerForutsetninger.totalReiseDistanceKm)
+            (TiltakSupport.nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraBil)
+            (Just koekostnader.bil)
+        )
+        (Maybe.map3 (\a b c -> a * b * c)
+            (Just brukerForutsetninger.totalReiseDistanceKm)
+            (TiltakSupport.nyeTurerFra this state brukerForutsetninger .andelNyeBrukereFraKollektivtransport)
+            (Just koekostnader.kollektivtransport)
+        )
 
 
 yearlyHelsegevinstNytteInklOverfoertForBruker : BrukerforutsetningStateCalculationMethod
