@@ -117,60 +117,59 @@ suite =
               in
               describe "LavTilMiddels Storby"
                 [ tiltakSuite (createCheckWithState state) expectedRecord ]
-            , skip <|
-                let
-                    state =
-                        { initialState
-                            | gsB_GsA =
-                                { sykkelGsBState
-                                    | nivaa = LavTilHoey
-                                    , sted = Storby
-                                }
-                        }
+            , let
+                state =
+                    { initialState
+                        | gsB_GsA =
+                            { sykkelGsBState
+                                | nivaa = LavTilHoey
+                                , sted = Storby
+                            }
+                    }
 
-                    receiver =
-                        Tiltak.bindTiltak tiltak state
+                receiver =
+                    Tiltak.bindTiltak tiltak state
 
-                    expectedRecord =
-                        { yearlySyklistNytteInklOverfoert = 541522.0903
-                        , yearlyFotgjengerNytteInklOverfoert = 0
-                        , yearlyTrafikantNytteInklOverfoert = 4939.1761
-                        , yearlyHelsegevinstNytteInklOverfoert = 291894.8659
-                        , yearlyTSGevinstNytteInklOverfoert = -21072.0181
-                        , yearlyEksterneEffekterNytteInklOverfoert = 3978.4353
-                        , yearlyNytteInklOverfoertSum = 821262.55
-                        , nytteInklOverfoert = 20053553.3
-                        , skyggepris = -1775411.8173
-                        , driftOgVedlihKost = -8877059.0867
-                        , investeringsKostInklRestverdi = 0
-                        , kostUtenSkyggepris = -8877059.0867
-                        , nettoNytteInklOverfoert = 9401082.4
-                        }
-                in
-                describe "LavTilHøy Storby"
-                    [ tiltakSuite (createCheckWithState state) expectedRecord
-                    , test "overfoerteSykkelturer" <|
-                        \() ->
-                            receiver .syklistForutsetninger
-                                |> TiltakSupport.yearlyOverfoerteTurer tiltak state
-                                |> checkMaybe (Expect.equal 2500)
-                    , test "overfoerteGangturer" <|
-                        \() ->
-                            receiver .fotgjengerForutsetninger |> TiltakSupport.yearlyOverfoerteTurer tiltak state |> checkMaybe (Expect.equal 0)
-                    , test
-                        "tidsbesparelseMinPerTurSyklende"
-                      <|
-                        \() ->
-                            receiver .tidsbesparelseMinPerTurSyklende
-                                |> checkMaybe (Expect.within (Absolute 0.00001) 2.4167)
-                    , test
-                        "wtpNytte"
-                      <|
-                        \() ->
-                            receiver .syklistForutsetninger
-                                |> receiver .wtpNytte
-                                |> checkMaybe (Expect.within (Absolute 0.00001) 372485)
-                    ]
+                expectedRecord =
+                    { yearlySyklistNytteInklOverfoert = 489221.7943
+                    , yearlyFotgjengerNytteInklOverfoert = 0
+                    , yearlyTrafikantNytteInklOverfoert = 4945.3669
+                    , yearlyHelsegevinstNytteInklOverfoert = 310000
+                    , yearlyTSGevinstNytteInklOverfoert = -12201.0248
+                    , yearlyEksterneEffekterNytteInklOverfoert = 3820.6465
+                    , yearlyNytteInklOverfoertSum = 795786.7829
+                    , nytteInklOverfoert = 19431487.138
+                    , skyggepris = -1775411.8173
+                    , driftOgVedlihKost = -8877059.0867
+                    , investeringsKostInklRestverdi = 0
+                    , kostUtenSkyggepris = -8877059.0867
+                    , nettoNytteInklOverfoert = 8779016.2339
+                    }
+              in
+              describe "LavTilHøy Storby"
+                [ tiltakSuite (createCheckWithState state) expectedRecord
+                , test "overfoerteSykkelturer" <|
+                    \() ->
+                        receiver .syklistForutsetninger
+                            |> TiltakSupport.yearlyOverfoerteTurer tiltak state
+                            |> checkMaybe (Expect.equal 2500)
+                , test "overfoerteGangturer" <|
+                    \() ->
+                        receiver .fotgjengerForutsetninger |> TiltakSupport.yearlyOverfoerteTurer tiltak state |> checkMaybe (Expect.equal 0)
+                , test
+                    "tidsbesparelseMinPerTurSyklende"
+                  <|
+                    \() ->
+                        receiver .tidsbesparelseMinPerTurSyklende
+                            |> checkMaybe (Expect.within (Absolute 0.00001) 2.4167)
+                , test
+                    "wtpNytte"
+                  <|
+                    \() ->
+                        receiver .syklistForutsetninger
+                            |> receiver .wtpNytte
+                            |> checkMaybe (Expect.within (Absolute 0.00001) 372485)
+                ]
             ]
         , skip <|
             let
