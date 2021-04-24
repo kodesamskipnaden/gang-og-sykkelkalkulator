@@ -22,6 +22,10 @@ type alias VegdekkestandardState =
     SimpleCommonState
 
 
+type alias RenholdState =
+    SimpleCommonState
+
+
 type alias GsB_GsAStatePartial a =
     { a
         | oppetidPercent : FormattedValue Float
