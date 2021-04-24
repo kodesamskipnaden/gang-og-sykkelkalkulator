@@ -135,16 +135,15 @@ nivaaForutsetninger ((Tiltak object) as this) state =
             }
 
         MiddelsTilHoey ->
-            { annuiserteDriftsKostnaderPerKm = 0
-            , etterspoerselsEffekt =
-                0 / 100
+            { annuiserteDriftsKostnaderPerKm = 18700
+            , etterspoerselsEffekt = 0.6 / 100
             , tidsbesparelseSyklendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer hastighet.syklende.middels hastighet.syklende.hoey
             , tidsbesparelseGaaendeMinutterPerKilometer =
                 tidsbesparelseMinutterPerKilometer hastighet.gaaende.middels hastighet.gaaende.hoey
-            , tsGevinstSyklende = 0
-            , tsGevinstGaaende = 0
-            , wtp = 0
+            , tsGevinstSyklende = 0.05078125
+            , tsGevinstGaaende = 0.022772277
+            , wtp = 0.36
             }
 
 

@@ -129,6 +129,35 @@ suite =
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord ]
                 )
+             , describe "MiddelsTilHøy Storby"
+                (let
+                    state =
+                        { initialState
+                            | vegdekkestandard =
+                                { sykkelVegdekkeState
+                                    | nivaa = MiddelsTilHoey
+                                    , sted = Storby
+                                }
+                        }
+
+                    expectedRecord =
+                        { yearlySyklistNytteInklOverfoert = 55149.1075
+                        , yearlyFotgjengerNytteInklOverfoert = 0
+                        , yearlyTrafikantNytteInklOverfoert = 593.444
+                        , yearlyHelsegevinstNytteInklOverfoert = 37200
+                        , yearlyTSGevinstNytteInklOverfoert = 6107.065
+                        , yearlyEksterneEffekterNytteInklOverfoert = 458.4776
+                        , yearlyNytteInklOverfoertSum = 99508.0941
+                        , nytteInklOverfoert = 2429784.3247
+                        , investeringsKostInklRestverdi = 0
+                        , driftOgVedlihKost = -851287.2047
+                        , kostUtenSkyggepris = -851287.2047
+                        , skyggepris = -170257.4409
+                        , nettoNytteInklOverfoert = 1408239.679
+                        }
+                 in
+                 [ tiltakSuite (createCheckWithState state) expectedRecord ]
+                )
              ]
             )
         ]
