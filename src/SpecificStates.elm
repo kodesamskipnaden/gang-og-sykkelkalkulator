@@ -18,6 +18,10 @@ type alias LEDLysState =
     SimpleCommonState
 
 
+type alias VegdekkestandardState =
+    SimpleCommonState
+
+
 type alias GsB_GsAStatePartial a =
     { a
         | oppetidPercent : FormattedValue Float

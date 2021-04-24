@@ -50,18 +50,18 @@ createCheckWithState state =
 -- hva med å bruke Focus til å oppdatere state med istedet for disse lange utrykkene??
 
 
-sykkelGsBState =
-    { basicGsBTestState
-        | sykkelturerPerYear = Just 5.0e4 |> formattedValue
-        , gangturerPerYear = Just 0 |> formattedValue
-    }
-
-
 suite : Test
 suite =
     describe "GsB_GsA"
         [ describe "Sykkelvei"
-            [ describe "MiddelsTilHøy Storby"
+            (let
+                sykkelGsBState =
+                    { basicGsBTestState
+                        | sykkelturerPerYear = Just 5.0e4 |> formattedValue
+                        , gangturerPerYear = Just 0 |> formattedValue
+                    }
+             in
+             [ describe "MiddelsTilHøy Storby"
                 (let
                     state =
                         { initialState
@@ -90,7 +90,7 @@ suite =
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord ]
                 )
-            , describe "LavTilMiddels Storby"
+             , describe "LavTilMiddels Storby"
                 (let
                     state =
                         { initialState
@@ -119,7 +119,7 @@ suite =
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord ]
                 )
-            , describe "LavTilHøy Storby"
+             , describe "LavTilHøy Storby"
                 (let
                     state =
                         { initialState
@@ -173,7 +173,8 @@ suite =
                             |> checkMaybe (Expect.within (Absolute 0.00001) 372485)
                  ]
                 )
-            ]
+             ]
+            )
         , describe "Gangvei"
             (let
                 fotgjengerGsBState =
