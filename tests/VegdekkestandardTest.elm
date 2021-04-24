@@ -1,20 +1,22 @@
 module VegdekkestandardTest exposing (..)
 
 import BasicState exposing (..)
-import Expect exposing (FloatingPointTolerance(..))
+import Expect
 import FormattedValue exposing (formattedValue)
+import SpecificStates exposing (VegdekkestandardState)
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
-import Tiltak exposing (Tiltak(..), analyse, sendTo)
+import Tiltak exposing (Tiltak(..), TiltakRecord, TiltakStates, analyse, sendTo)
 import Tiltak.Vegdekkestandard as Vegdekkestandard exposing (tiltak)
 import TiltakAndGroupData
-import TiltakSupport
 
 
+initialState : TiltakStates
 initialState =
     TiltakAndGroupData.initialTiltakStates
 
 
+basicVegdekkeTestState : VegdekkestandardState
 basicVegdekkeTestState =
     let
         initialVegdekkestandard =
@@ -31,8 +33,17 @@ basicVegdekkeTestState =
     }
 
 
+type alias CheckWithStateFunction a =
+    String
+    -> (TiltakRecord -> Tiltak -> TiltakStates -> Maybe a)
+    -> (a -> Expect.Expectation)
+    -> Test
+
+
+createCheckWithState : TiltakStates -> CheckWithStateFunction a
 createCheckWithState state =
     let
+        checkWithState : CheckWithStateFunction a
         checkWithState description accessor expectation =
             test description <|
                 \() ->
@@ -85,6 +96,35 @@ suite =
                         , kostUtenSkyggepris = -1056142.4144
                         , skyggepris = -211228.4829
                         , nettoNytteInklOverfoert = 7908640.8411
+                        }
+                 in
+                 [ tiltakSuite (createCheckWithState state) expectedRecord ]
+                )
+             , describe "LavTilMiddels Storby"
+                (let
+                    state =
+                        { initialState
+                            | vegdekkestandard =
+                                { sykkelVegdekkeState
+                                    | nivaa = LavTilMiddels
+                                    , sted = Storby
+                                }
+                        }
+
+                    expectedRecord =
+                        { yearlySyklistNytteInklOverfoert = 156999.6695
+                        , yearlyFotgjengerNytteInklOverfoert = 0
+                        , yearlyTrafikantNytteInklOverfoert = 1879.2394
+                        , yearlyHelsegevinstNytteInklOverfoert = 117800
+                        , yearlyTSGevinstNytteInklOverfoert = -2652.812
+                        , yearlyEksterneEffekterNytteInklOverfoert = 1451.8457
+                        , yearlyNytteInklOverfoertSum = 275477.9426
+                        , nytteInklOverfoert = 6726608.4496
+                        , investeringsKostInklRestverdi = 0
+                        , driftOgVedlihKost = -204855.2097
+                        , kostUtenSkyggepris = -204855.2097
+                        , skyggepris = -40971.0419
+                        , nettoNytteInklOverfoert = 6480782.1979
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord ]
