@@ -3,6 +3,7 @@ module TiltakCharting exposing (..)
 import Charting
 import Focus exposing ((=>))
 import FormattedValue exposing (value)
+import Models exposing (FieldSpec(..))
 import Tiltak exposing (Tiltak, sendTo)
 
 
@@ -104,8 +105,16 @@ graphDataForField tiltak state field =
 
                 Nothing ->
                     Debug.crash "nettoNytte gave Nothing"
+
+        stepSize =
+            case field.fieldSpec of
+                PercentSpec ->
+                    0.1
+
+                FloatSpec { stepSize } ->
+                    stepSize
     in
-    Charting.samples field.stepSize sampleFunc
+    Charting.samples stepSize sampleFunc
         |> List.map generateData
         |> List.filterMap identity
 

@@ -60,6 +60,7 @@ til nesten ukentlig renhold"""
     }
 
 
+initialState : RenholdState
 initialState =
     { nivaa = LavTilHoey
     , sted = Storby

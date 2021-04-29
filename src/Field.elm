@@ -14,7 +14,7 @@ type alias SimpleField =
     { name : String
     , title : String
     , placeholder : String
-    , stepSize : Float
+    , fieldSpec : FieldSpec
 
     -- focus for TiltakStates to fields value
     , focus : Focus TiltakStates (FormattedValue Float)
@@ -32,8 +32,7 @@ transformToFields fieldDefinitions =
             { name = simpleField.name
             , title = simpleField.title
             , placeholder = simpleField.placeholder
-            , stepSize = simpleField.stepSize
-            , fieldSpec = FloatSpec { stepSize = simpleField.stepSize }
+            , fieldSpec = simpleField.fieldSpec
             , focus = simpleField.focus
             , isEditable =
                 \tiltakStates ->
@@ -68,8 +67,8 @@ lengdeVeiKmSimpleField specificState =
     { name = "lengdeVeiKm"
     , title = "Veilengde i kilometer"
     , placeholder = "Lengde vei (km)"
+    , fieldSpec = FloatSpec { stepSize = 5 }
     , focus = specificState => FormattedValue.lengdeVeiKm
-    , stepSize = 5
     }
 
 
@@ -81,7 +80,7 @@ sykkelturerPerYearSimpleField specificState =
     , title = "Antall sykkelturer per år"
     , placeholder = "Turer på mørke tider som får nytte av tiltaket"
     , focus = specificState => FormattedValue.sykkelturerPerYear
-    , stepSize = 50
+    , fieldSpec = FloatSpec { stepSize = 50 }
     }
 
 
@@ -93,5 +92,5 @@ gangturerPerYearSimpleField specificState =
     , title = "Antall gangturer per år"
     , placeholder = "Turer på mørke tider som får nytte av tiltaket"
     , focus = specificState => FormattedValue.gangturerPerYear
-    , stepSize = 50
+    , fieldSpec = FloatSpec { stepSize = 50 }
     }

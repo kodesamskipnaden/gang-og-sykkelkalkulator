@@ -138,13 +138,7 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
                             Maybe.map toString
 
                         False ->
-                            Maybe.map
-                                (if field.stepSize < 1 then
-                                    NumberFormat.prettyTwoDecimals
-
-                                 else
-                                    NumberFormat.pretty
-                                )
+                            Maybe.map NumberFormat.pretty
                    )
                 |> Maybe.withDefault ""
 
