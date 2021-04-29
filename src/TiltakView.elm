@@ -23,7 +23,7 @@ import TiltakStates exposing (TiltakStates)
 
 fieldLabelContent : Field -> List (Html msg)
 fieldLabelContent field =
-    [ text field.title ]
+    [ Html.strong [] [ text field.title ] ]
 
 
 chart : TiltakStates -> Tiltak -> Html Msg
@@ -178,7 +178,7 @@ nivaaGroup ((Tiltak object) as tiltak) tiltakStates =
             Focus.get object.nivaaFocus tiltakStates
     in
     Form.group []
-        ([ Form.label [ for "nivaaRadios" ] [ text "Nivå" ] ]
+        ([ Form.label [ for "nivaaRadios" ] [ Html.strong [] [ text "Nivå" ] ] ]
             ++ Radio.radioList "nivaaRadios"
                 [ object.nivaaTitle LavTilHoey
                     |> Radio.create
@@ -206,7 +206,7 @@ stedGroup ((Tiltak object) as tiltak) tiltakStates =
             Focus.get object.stedFocus tiltakStates
     in
     Form.group []
-        ([ Form.label [ for "stedRadios" ] [ text "Sted" ] ]
+        ([ Form.label [ for "stedRadios" ] [ Html.strong [] [ text "Sted" ] ] ]
             ++ Radio.radioList "stedRadios"
                 [ Radio.create
                     [ Radio.checked (sted == Storby)
