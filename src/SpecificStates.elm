@@ -26,11 +26,11 @@ type alias RenholdState =
     SimpleCommonState
 
 
-type alias GsB_GsAStatePartial a =
+type alias VinterdriftStatePartial a =
     { a
         | oppetidPercent : FormattedValue Float
     }
 
 
-type alias GsB_GsAState =
-    GsB_GsAStatePartial SimpleCommonState
+type alias VinterdriftState =
+    VinterdriftStatePartial SimpleCommonState

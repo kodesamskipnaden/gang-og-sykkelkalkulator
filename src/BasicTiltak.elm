@@ -100,10 +100,10 @@ yearlyTSGevinstNytteOverfoert ((Tiltak object) as this) state =
 
 
 
--- gammel gsb_gsa syklende
+-- gammel vinterdrift syklende
 -- =MIN($B$12;$B$6)*$B$10*TSkostnad_sykkel*VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;12;FALSE()) +$B$12*F19*(VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;14;FALSE())-TSkostnad_sykkel) +$B$12*F20*(VLOOKUP(CONCAT(F3;F4;F5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;15;FALSE())-TSkostnad_sykkel) +$B$12*F21*(TSkostnad_sykkel-TSkostnad_gange) -$B$12*F22*TSkostnad_sykkel
 --
--- ny gsb_gsa syklende
+-- ny vinterdrift syklende
 -- =MIN($B$12;$B$6)*$B$10*TSkostnad_sykkel*VLOOKUP(CONCAT(I3;I4;I5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;12;FALSE()) +$B$12*I19*(VLOOKUP(CONCAT(I3;I4;I5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;14;FALSE())-TSkostnad_sykkel) +$B$12*I20*(VLOOKUP(CONCAT(I3;I4;I5);$'Forutsetninger tiltak-nivå-sted'.$F$4:$AD$39;15;FALSE())-TSkostnad_sykkel) +$B$12*I21*(TSkostnad_sykkel-TSkostnad_gange) -$B$12*I22*TSkostnad_sykkel
 --
 -- ny led lys syklende

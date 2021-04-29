@@ -1,4 +1,4 @@
-module GsB_GsATest exposing (..)
+module VinterdriftTest exposing (..)
 
 import BasicState exposing (..)
 import Expect exposing (FloatingPointTolerance(..))
@@ -6,7 +6,7 @@ import FormattedValue exposing (formattedValue)
 import Test exposing (Test, describe, only, skip, test)
 import TestSupport exposing (..)
 import Tiltak exposing (Tiltak(..), analyse, sendTo)
-import Tiltak.GsB_GsA as GsB_GsA exposing (tiltak)
+import Tiltak.Vinterdrift as Vinterdrift exposing (tiltak)
 import TiltakAndGroupData
 import TiltakSupport
 
@@ -17,10 +17,10 @@ initialState =
 
 basicGsBTestState =
     let
-        initialGsB_GsA =
-            initialState.gsB_GsA
+        initialVinterdrift =
+            initialState.vinterdrift
     in
-    { initialGsB_GsA
+    { initialVinterdrift
         | nivaa = LavTilHoey
         , sted = Storby
         , installationCost = Just 0 |> formattedValue
@@ -52,7 +52,7 @@ createCheckWithState state =
 
 suite : Test
 suite =
-    describe "GsB_GsA"
+    describe "Vinterdrift"
         [ describe "Sykkelvei"
             (let
                 sykkelGsBState =
@@ -65,7 +65,7 @@ suite =
                 (let
                     state =
                         { initialState
-                            | gsB_GsA =
+                            | vinterdrift =
                                 { sykkelGsBState
                                     | nivaa = MiddelsTilHoey
                                     , sted = Storby
@@ -94,7 +94,7 @@ suite =
                 (let
                     state =
                         { initialState
-                            | gsB_GsA =
+                            | vinterdrift =
                                 { sykkelGsBState
                                     | nivaa = LavTilMiddels
                                     , sted = Storby
@@ -123,7 +123,7 @@ suite =
                 (let
                     state =
                         { initialState
-                            | gsB_GsA =
+                            | vinterdrift =
                                 { sykkelGsBState
                                     | nivaa = LavTilHoey
                                     , sted = Storby
@@ -187,7 +187,7 @@ suite =
                 (let
                     state =
                         { initialState
-                            | gsB_GsA =
+                            | vinterdrift =
                                 { fotgjengerGsBState
                                     | nivaa = LavTilHoey
                                     , sted = LitenBy
@@ -217,7 +217,7 @@ suite =
                 (let
                     state =
                         { initialState
-                            | gsB_GsA =
+                            | vinterdrift =
                                 { fotgjengerGsBState
                                     | nivaa = LavTilHoey
                                     , sted = Spredtbygd
@@ -246,7 +246,7 @@ suite =
                 (let
                     state =
                         { initialState
-                            | gsB_GsA =
+                            | vinterdrift =
                                 { fotgjengerGsBState
                                     | nivaa = LavTilHoey
                                     , sted = Storby

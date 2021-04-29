@@ -1,4 +1,4 @@
-module Tiltak.GsB_GsA exposing (..)
+module Tiltak.Vinterdrift exposing (..)
 
 import BasicState exposing (Nivaa(..), Sted(..))
 import BasicTiltak
@@ -14,7 +14,7 @@ import FormattedValue
         , sykkelturerPerYear
         , value
         )
-import SpecificStates exposing (GsB_GsAState)
+import SpecificStates exposing (VinterdriftState)
 import Tiltak exposing (..)
 import TiltakForutsetninger
 import TiltakSupport
@@ -31,17 +31,17 @@ tiltak =
             | yearlyFotgjengerNytteInklOverfoert =
                 \this state ->
                     Maybe.map2 (*)
-                        state.gsB_GsA.oppetidPercent.value
+                        state.vinterdrift.oppetidPercent.value
                         (basicTiltakRecord.yearlyFotgjengerNytteInklOverfoert this state)
             , yearlySyklistNytteInklOverfoert =
                 \this state ->
                     Maybe.map2 (*)
-                        state.gsB_GsA.oppetidPercent.value
+                        state.vinterdrift.oppetidPercent.value
                         (basicTiltakRecord.yearlySyklistNytteInklOverfoert this state)
         }
 
 
-tiltakRecordImplementation : Hooks GsB_GsAState
+tiltakRecordImplementation : Hooks VinterdriftState
 tiltakRecordImplementation =
     { title = \_ -> "Vinterdrift"
     , nivaaTitle =
@@ -58,13 +58,13 @@ tiltakRecordImplementation =
     , fields = \_ -> fields
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =
-        \_ { gsB_GsA } ->
+        \_ { vinterdrift } ->
             TiltakSupport.investeringsKostInklRestverdi
-                gsB_GsA
+                vinterdrift
                 levetid
     , basicState =
-        \{ gsB_GsA } ->
-            BasicState.createBasicState gsB_GsA
+        \{ vinterdrift } ->
+            BasicState.createBasicState vinterdrift
     , nivaaFocus = specificState => FormattedValue.nivaa
     , stedFocus = specificState => FormattedValue.sted
     , syklistForutsetninger = syklistForutsetninger
@@ -73,7 +73,7 @@ tiltakRecordImplementation =
     }
 
 
-initialState : GsB_GsAState
+initialState : VinterdriftState
 initialState =
     { nivaa = LavTilHoey
     , sted = Storby
@@ -89,15 +89,15 @@ initialState =
 specificState :
     Focus
         { tiltakStates
-            | gsB_GsA : GsB_GsAState
+            | vinterdrift : VinterdriftState
         }
-        GsB_GsAState
+        VinterdriftState
 specificState =
     Focus.create
-        .gsB_GsA
+        .vinterdrift
         (\f tiltakStates ->
             { tiltakStates
-                | gsB_GsA = f tiltakStates.gsB_GsA
+                | vinterdrift = f tiltakStates.vinterdrift
             }
         )
 
