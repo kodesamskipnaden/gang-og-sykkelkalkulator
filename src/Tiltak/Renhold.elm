@@ -96,7 +96,8 @@ fields =
 
 fieldDefinitions : List SimpleField
 fieldDefinitions =
-    [ Field.lengdeVeiKmSimpleField specificState
+    [ Field.installationCostSimpleField specificState
+    , Field.lengdeVeiKmSimpleField specificState
     , Field.sykkelturerPerYearSimpleField specificState
     , Field.gangturerPerYearSimpleField specificState
     ]

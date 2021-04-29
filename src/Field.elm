@@ -60,6 +60,15 @@ yearlyMaintenancePlaceholder =
     "Årlige (økninger i) kostnader til drift og vedlikehold som knytter seg til dette tiltaket"
 
 
+installationCostSimpleField specificState =
+    { name = "installationCost"
+    , title = "Installasjonskostnad"
+    , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"
+    , focus = specificState => FormattedValue.installationCost
+    , fieldSpec = FloatSpec { stepSize = 50000 }
+    }
+
+
 lengdeVeiKmSimpleField :
     Focus TiltakStates { b | lengdeVeiKm : FormattedValue Float }
     -> SimpleField

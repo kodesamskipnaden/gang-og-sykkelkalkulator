@@ -119,7 +119,8 @@ fieldDefinitions =
                     { specificState | oppetidPercent = f specificState.oppetidPercent }
                 )
     in
-    [ Field.lengdeVeiKmSimpleField specificState
+    [ Field.installationCostSimpleField specificState
+    , Field.lengdeVeiKmSimpleField specificState
     , Field.sykkelturerPerYearSimpleField specificState
     , Field.gangturerPerYearSimpleField specificState
     , { name = "oppetidPercent"
