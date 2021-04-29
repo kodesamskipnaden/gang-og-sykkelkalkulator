@@ -8,7 +8,7 @@ import Models exposing (..)
 import Msgs exposing (Msg(..), RadioValue(..))
 import Navigation exposing (Location)
 import Ports
-import Tiltak exposing (Tiltak(..), sendTo)
+import Tiltak exposing (Tiltak(..), TiltakStates, sendTo)
 import TiltakAndGroupData
 import TiltakCharting exposing (GraphState(..))
 import UrlParser exposing ((</>))
@@ -174,6 +174,7 @@ pageFromLocation location =
     decode location |> Maybe.withDefault NotFound
 
 
+computeGraphCmd : Tiltak -> TiltakStates -> ( GraphState, GraphState ) -> Cmd msg
 computeGraphCmd tiltak tiltakStates ( beforeState, afterState ) =
     let
         graphId =
@@ -231,6 +232,7 @@ updateField model tiltak field stringValue =
     updateGraphingState model tiltak newTiltakStates
 
 
+updateGraphingState : Model -> Tiltak -> TiltakStates -> ( Model, Cmd msg )
 updateGraphingState model tiltak newTiltakStates =
     let
         oldGraphState =
