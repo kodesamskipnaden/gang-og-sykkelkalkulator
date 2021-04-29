@@ -1,5 +1,6 @@
 module BasicTiltak exposing (..)
 
+import Field exposing (Field)
 import Focus exposing ((=>), Focus)
 import Tiltak exposing (..)
 import TiltakForutsetninger
@@ -337,7 +338,8 @@ basicTiltakRecord hooks =
     , wtpNytte = wtpNytte
     , title = hooks.title
     , fields = hooks.fields
-    , preferredField = preferredField hooks.specificStateFocus
+    , nivaaTitle = hooks.nivaaTitle
+    , preferredField = preferredField
     , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
     , basicState = hooks.basicState
     , nivaaFocus = hooks.nivaaFocus
@@ -356,7 +358,11 @@ preferredToGraph =
         (\f state -> { state | preferredToGraph = f state.preferredToGraph })
 
 
-preferredField specificStateFocus tiltak tiltakStates =
+preferredField :
+    Tiltak
+    -> TiltakStates
+    -> Maybe Field
+preferredField tiltak tiltakStates =
     let
         fieldName =
             Focus.get

@@ -29,6 +29,19 @@ tiltak =
 tiltakRecordImplementation : Hooks RenholdState
 tiltakRecordImplementation =
     { title = \_ -> "Renhold inkl. grus/strøsand"
+    , nivaaTitle =
+        \nivaa ->
+            case nivaa of
+                LavTilMiddels ->
+                    """Fra én feiing om våren til renhold etter behov
+ (typisk 3 feiinger + 10 vask per år)"""
+
+                LavTilHoey ->
+                    "Fra én feiing om våren til nesten ukentlig renhold"
+
+                MiddelsTilHoey ->
+                    """Fra renhold etter behov (typisk 3 feiinger + 10 vask per år)
+til nesten ukentlig renhold"""
     , fields = \_ -> fields
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =

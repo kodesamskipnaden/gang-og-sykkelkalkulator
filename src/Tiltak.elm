@@ -83,6 +83,7 @@ type alias NivaaForutsetninger =
 
 type alias TiltakRecordHooks =
     { title : Tiltak -> String
+    , nivaaTitle : Nivaa -> String
     , fields : Tiltak -> List Field
     , basicState : TiltakStates -> BasicState
     , nivaaFocus : Focus TiltakStates Nivaa

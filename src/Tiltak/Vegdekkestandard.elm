@@ -29,6 +29,17 @@ tiltak =
 tiltakRecordImplementation : Hooks VegdekkestandardState
 tiltakRecordImplementation =
     { title = \_ -> "Vegdekkestandard"
+    , nivaaTitle =
+        \nivaa ->
+            case nivaa of
+                LavTilMiddels ->
+                    "Fra sjelden reasfaltering og lapping til middels hyppig (hvert 12. år) reasfaltering og tetting"
+
+                LavTilHoey ->
+                    "Fra sjelden reasfaltering og lapping til meget hyppig (hvert 6. år) reasfaltering (uten lapping/tetting)"
+
+                MiddelsTilHoey ->
+                    "Fra middels hyppig (hvert 12. år) reasfaltering og tetting til meget hyppig (hvert 6. år) reasfaltering (uten lapping/tetting)"
     , fields = \_ -> fields
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =

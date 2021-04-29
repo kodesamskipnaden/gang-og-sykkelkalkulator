@@ -28,7 +28,18 @@ tiltak =
 
 tiltakRecordImplementation : Hooks LEDLysState
 tiltakRecordImplementation =
-    { title = \_ -> "LED-lys for syklende og eller gående"
+    { title = \_ -> "Belysning"
+    , nivaaTitle =
+        \nivaa ->
+            case nivaa of
+                LavTilHoey ->
+                    "Fra ingen belysning til LED-belysning"
+
+                LavTilMiddels ->
+                    "Fra ingen belysning til natrium-høytrykksbelysning"
+
+                MiddelsTilHoey ->
+                    "Fra natrium-høytrykksbelysning til LED-belysning"
     , fields = \_ -> fields
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =

@@ -43,7 +43,18 @@ tiltak =
 
 tiltakRecordImplementation : Hooks GsB_GsAState
 tiltakRecordImplementation =
-    { title = \_ -> "GsB til GsA"
+    { title = \_ -> "Vinterdrift"
+    , nivaaTitle =
+        \nivaa ->
+            case nivaa of
+                LavTilMiddels ->
+                    "Fra ingen vinterdrift til standard brøyting-strøing (GsB)"
+
+                LavTilHoey ->
+                    "Fra ingen vinterdrift til kosting-salting (GsA)"
+
+                MiddelsTilHoey ->
+                    "Fra standard brøyting-strøing (GsB) til kosting-salting (GsA)"
     , fields = \_ -> fields
     , specificStateFocus = specificState
     , investeringsKostInklRestverdi =

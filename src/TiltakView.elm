@@ -180,21 +180,21 @@ nivaaGroup ((Tiltak object) as tiltak) tiltakStates =
     Form.group []
         ([ Form.label [ for "nivaaRadios" ] [ text "Nivå" ] ]
             ++ Radio.radioList "nivaaRadios"
-                [ Radio.create
-                    [ Radio.checked (nivaa == LavTilHoey)
-                    , Radio.onClick (UpdateRadio tiltak (NivaaType LavTilHoey))
-                    ]
-                    "Lav til Høy"
-                , Radio.create
-                    [ Radio.checked (nivaa == MiddelsTilHoey)
-                    , Radio.onClick (UpdateRadio tiltak (NivaaType MiddelsTilHoey))
-                    ]
-                    "Middels til Høy"
-                , Radio.create
-                    [ Radio.checked (nivaa == LavTilMiddels)
-                    , Radio.onClick (UpdateRadio tiltak (NivaaType LavTilMiddels))
-                    ]
-                    "Lav til Middels"
+                [ object.nivaaTitle LavTilHoey
+                    |> Radio.create
+                        [ Radio.checked (nivaa == LavTilHoey)
+                        , Radio.onClick (UpdateRadio tiltak (NivaaType LavTilHoey))
+                        ]
+                , object.nivaaTitle MiddelsTilHoey
+                    |> Radio.create
+                        [ Radio.checked (nivaa == MiddelsTilHoey)
+                        , Radio.onClick (UpdateRadio tiltak (NivaaType MiddelsTilHoey))
+                        ]
+                , object.nivaaTitle LavTilMiddels
+                    |> Radio.create
+                        [ Radio.checked (nivaa == LavTilMiddels)
+                        , Radio.onClick (UpdateRadio tiltak (NivaaType LavTilMiddels))
+                        ]
                 ]
         )
 
