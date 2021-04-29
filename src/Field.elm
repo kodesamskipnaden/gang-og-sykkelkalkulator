@@ -2,7 +2,7 @@ module Field exposing (..)
 
 import Focus exposing ((=>), Focus)
 import FormattedValue exposing (Editable(..), FormattedValue, state, value)
-import Models
+import Models exposing (FieldSpec(..))
 import TiltakStates exposing (TiltakStates)
 
 
@@ -33,6 +33,7 @@ transformToFields fieldDefinitions =
             , title = simpleField.title
             , placeholder = simpleField.placeholder
             , stepSize = simpleField.stepSize
+            , fieldSpec = FloatSpec { stepSize = simpleField.stepSize }
             , focus = simpleField.focus
             , isEditable =
                 \tiltakStates ->
@@ -60,24 +61,9 @@ yearlyMaintenancePlaceholder =
     "Årlige (økninger i) kostnader til drift og vedlikehold som knytter seg til dette tiltaket"
 
 
-installationCostSimpleField specificState =
-    { name = "installationCost"
-    , title = "Installasjonskostnad"
-    , placeholder = "Kostnaden ved å installere tiltaket en gang, kroner"
-    , focus = specificState => FormattedValue.installationCost
-    , stepSize = 50000
-    }
-
-
-yearlyMaintenanceSimpleField specificState =
-    { name = "yearlyMaintenance"
-    , title = "Økte årlige drifts- og vedlikeholdskostnader"
-    , placeholder = yearlyMaintenancePlaceholder
-    , focus = specificState => FormattedValue.yearlyMaintenance
-    , stepSize = 5000
-    }
-
-
+lengdeVeiKmSimpleField :
+    Focus TiltakStates { b | lengdeVeiKm : FormattedValue Float }
+    -> SimpleField
 lengdeVeiKmSimpleField specificState =
     { name = "lengdeVeiKm"
     , title = "Veilengde i kilometer"
@@ -87,6 +73,9 @@ lengdeVeiKmSimpleField specificState =
     }
 
 
+sykkelturerPerYearSimpleField :
+    Focus TiltakStates { specificState | sykkelturerPerYear : FormattedValue Float }
+    -> SimpleField
 sykkelturerPerYearSimpleField specificState =
     { name = "sykkelturerPerYear"
     , title = "Antall sykkelturer per år"
@@ -96,6 +85,9 @@ sykkelturerPerYearSimpleField specificState =
     }
 
 
+gangturerPerYearSimpleField :
+    Focus TiltakStates { specificState | gangturerPerYear : FormattedValue Float }
+    -> SimpleField
 gangturerPerYearSimpleField specificState =
     { name = "gangturerPerYear"
     , title = "Antall gangturer per år"

@@ -24,10 +24,16 @@ type alias Model =
     }
 
 
+type FieldSpec
+    = FloatSpec { stepSize : Float }
+    | PercentSpec
+
+
 type alias Field =
     { name : String
     , title : String
     , placeholder : String
+    , fieldSpec : FieldSpec
     , stepSize : Float
     , value : TiltakStates -> Maybe Float
     , isEditable : TiltakStates -> Bool
