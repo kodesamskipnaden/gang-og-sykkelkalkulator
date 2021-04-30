@@ -1,7 +1,7 @@
 module TiltakSupport exposing (..)
 
 import Field exposing (Field, FieldSpec(..))
-import Focus exposing ((=>), Focus)
+import Focus exposing (Focus)
 import FormattedValue
     exposing
         ( Editable(..)
@@ -310,6 +310,6 @@ investeringsKostInklRestverdi :
     -> Maybe Float
 investeringsKostInklRestverdi specificState levetid =
     specificState
-        |> Focus.get (installationCost => value)
+        |> Focus.get (Focus.join installationCost value)
         |> Maybe.map ((*) <| GeneralForutsetninger.investeringsFaktor levetid)
         |> Maybe.map negate

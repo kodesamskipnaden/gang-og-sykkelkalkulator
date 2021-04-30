@@ -1,6 +1,6 @@
 module Field exposing (..)
 
-import Focus exposing ((=>), Focus)
+import Focus exposing (Focus)
 import FormattedValue exposing (Editable(..), FormattedValue, state, value)
 import TiltakStates exposing (TiltakStates)
 

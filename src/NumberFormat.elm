@@ -1,22 +1,25 @@
 module NumberFormat exposing (..)
 
 import FormatNumber
-import FormatNumber.Locales as Locales
+import FormatNumber.Locales exposing (Decimals(..), Locale)
 
 
-norwegianLocale : Locales.Locale
+norwegianLocale : Locale
 norwegianLocale =
-    { decimals = 3
-    , thousandSeparator = " "
-    , decimalSeparator = ","
-    , negativePrefix = "-"
-    , negativeSuffix = ""
+    let
+        base =
+            FormatNumber.Locales.spanishLocale
+    in
+    { base
+        | decimals = Exact 3
+        , thousandSeparator = " "
+        , negativePrefix = "-"
     }
 
 
 pretty : Float -> String
 pretty value =
-    prettyWithDecimals 0 value
+    prettyWithDecimals (Exact 0) value
 
 
 prettyWithDecimals decimals value =
@@ -25,7 +28,7 @@ prettyWithDecimals decimals value =
 
 prettyTwoDecimals : Float -> String
 prettyTwoDecimals value =
-    prettyWithDecimals 2 value
+    prettyWithDecimals (Exact 2) value
 
 
 maybePretty : Maybe Float -> String

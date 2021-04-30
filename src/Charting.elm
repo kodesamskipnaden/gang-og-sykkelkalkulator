@@ -18,12 +18,11 @@ breakEvenPoint func =
         b =
             func 0
     in
-        case a of
-            0 ->
-                Nothing
+    if a == 0.0 then
+        Nothing
 
-            _ ->
-                -b / a |> Just
+    else
+        -b / a |> Just
 
 
 stepCount : Float -> Float -> Float
@@ -58,15 +57,15 @@ samplesFromBreakEvenPoint stepSize nullPunkt =
                 |> List.map toFloat
                 |> List.map (\index -> start + index * stepSize)
     in
-        case nullPunkt > minimum of
-            True ->
-                (nullPunkt :: steps)
-                    |> Set.fromList
-                    |> Set.toList
-                    |> List.sort
+    case nullPunkt > minimum of
+        True ->
+            (nullPunkt :: steps)
+                |> Set.fromList
+                |> Set.toList
+                |> List.sort
 
-            False ->
-                steps
+        False ->
+            steps
 
 
 samples : Float -> (Float -> Float) -> List Float

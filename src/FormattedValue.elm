@@ -1,6 +1,6 @@
 module FormattedValue exposing (..)
 
-import Focus exposing ((=>), Focus)
+import Focus exposing (Focus)
 
 
 type Editable
@@ -17,8 +17,8 @@ type alias FormattedValue valueType =
 state =
     Focus.create
         .state
-        (\f formattedValue ->
-            { formattedValue | state = f formattedValue.state }
+        (\f aFormattedValue ->
+            { aFormattedValue | state = f aFormattedValue.state }
         )
 
 
@@ -29,8 +29,8 @@ formattedValueDefault =
     }
 
 
-formattedValue value =
-    { value = value
+formattedValue aValue =
+    { value = aValue
     , state = Display
     }
 
@@ -39,8 +39,8 @@ value : Focus { formattedValue | value : Maybe a } (Maybe a)
 value =
     Focus.create
         .value
-        (\f formattedValue ->
-            { formattedValue | value = f formattedValue.value }
+        (\f aFormattedValue ->
+            { aFormattedValue | value = f aFormattedValue.value }
         )
 
 
@@ -113,4 +113,4 @@ sted =
 
 
 installationCostValue =
-    installationCost => value
+    Focus.join installationCost value

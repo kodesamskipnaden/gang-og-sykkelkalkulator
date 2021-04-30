@@ -1,4 +1,4 @@
-port module Models exposing (..)
+module Models exposing (..)
 
 import Bootstrap.Accordion as Accordion
 import TiltakStates exposing (TiltakStates)

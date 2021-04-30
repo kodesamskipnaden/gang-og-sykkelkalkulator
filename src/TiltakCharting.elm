@@ -2,7 +2,7 @@ module TiltakCharting exposing (..)
 
 import Charting
 import Field exposing (FieldSpec(..))
-import Focus exposing ((=>))
+import Focus
 import FormattedValue exposing (value)
 import Tiltak exposing (Tiltak, sendTo)
 
@@ -89,7 +89,7 @@ graphState tiltak state =
 graphDataForField tiltak state field =
     let
         stateFrom x =
-            Focus.set (field.focus => value) (Just x) state
+            Focus.set (Focus.join field.focus value) (Just x) state
 
         nettoNytte x =
             sendTo tiltak .nettoNytteInklOverfoert (stateFrom x)
@@ -104,7 +104,7 @@ graphDataForField tiltak state field =
                     value
 
                 Nothing ->
-                    Debug.crash "nettoNytte gave Nothing"
+                    Debug.todo "nettoNytte gave Nothing"
 
         stepSize =
             case field.fieldSpec of

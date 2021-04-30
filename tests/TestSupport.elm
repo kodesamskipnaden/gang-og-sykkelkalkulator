@@ -19,11 +19,11 @@ closeTo expected precision actual =
         Expect.pass
 
     else
-        toString actual
+        Debug.toString actual
             ++ " is not near enough to "
-            ++ toString expected
+            ++ Debug.toString expected
             ++ " using "
-            ++ toString precision
+            ++ Debug.toString precision
             ++ " digits of precision"
             |> Expect.fail
 
