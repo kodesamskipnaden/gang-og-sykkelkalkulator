@@ -1,9 +1,9 @@
 module TiltakCharting exposing (..)
 
 import Charting
+import Field exposing (FieldSpec(..))
 import Focus exposing ((=>))
 import FormattedValue exposing (value)
-import Models exposing (FieldSpec(..))
 import Tiltak exposing (Tiltak, sendTo)
 
 

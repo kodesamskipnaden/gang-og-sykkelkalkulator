@@ -1,8 +1,6 @@
 port module Models exposing (..)
 
 import Bootstrap.Accordion as Accordion
-import Focus exposing (Focus)
-import FormattedValue exposing (FormattedValue)
 import TiltakStates exposing (TiltakStates)
 
 
@@ -21,22 +19,4 @@ type alias Model =
     , accordionState : Accordion.State
     , tiltakStates : TiltakStates
     , chartIds : List String
-    }
-
-
-type FieldSpec
-    = FloatSpec { stepSize : Float }
-    | PercentSpec
-
-
-type alias Field =
-    { name : String
-    , title : String
-    , placeholder : String
-    , fieldSpec : FieldSpec
-    , value : TiltakStates -> Maybe Float
-    , isEditable : TiltakStates -> Bool
-    , beDisplayMode : TiltakStates -> TiltakStates
-    , beEditMode : TiltakStates -> TiltakStates
-    , focus : Focus TiltakStates (FormattedValue Float)
     }

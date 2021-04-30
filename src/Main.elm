@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Bootstrap.Accordion as Accordion
+import Field exposing (Field, FieldSpec(..))
 import Focus exposing ((=>))
 import FormattedValue exposing (value)
 import Group

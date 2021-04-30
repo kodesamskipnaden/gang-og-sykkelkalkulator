@@ -2,7 +2,7 @@ module Tiltak.Vinterdrift exposing (..)
 
 import BasicState exposing (Nivaa(..), Sted(..))
 import BasicTiltak
-import Field exposing (SimpleField)
+import Field exposing (Field, FieldSpec(..))
 import Focus exposing ((=>), Focus)
 import FormattedValue
     exposing
@@ -14,11 +14,10 @@ import FormattedValue
         , sykkelturerPerYear
         , value
         )
-import Models exposing (Field, FieldSpec(..))
 import SpecificStates exposing (VinterdriftState)
 import Tiltak exposing (..)
 import TiltakForutsetninger
-import TiltakSupport
+import TiltakSupport exposing (SimpleField)
 
 
 tiltak : Tiltak
@@ -106,7 +105,7 @@ specificState =
 fields : List Field
 fields =
     fieldDefinitions
-        |> Field.transformToFields
+        |> TiltakSupport.transformToFields
 
 
 fieldDefinitions : List SimpleField
@@ -119,9 +118,9 @@ fieldDefinitions =
                     { specificState | oppetidPercent = f specificState.oppetidPercent }
                 )
     in
-    [ Field.lengdeVeiKmSimpleField specificState
-    , Field.sykkelturerPerYearSimpleField specificState
-    , Field.gangturerPerYearSimpleField specificState
+    [ TiltakSupport.lengdeVeiKmSimpleField specificState
+    , TiltakSupport.sykkelturerPerYearSimpleField specificState
+    , TiltakSupport.gangturerPerYearSimpleField specificState
     , { name = "oppetidPercent"
       , title = "Tiltakets oppetid, prosent"
       , placeholder = "Andel av aktuell tidsperiode hvor nivået GsA oppfylles (mindre enn 100% pga f.eks. at det tar tid fra nedbør skjer, til GsA-standard er gjenopprettet)"

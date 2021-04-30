@@ -2,7 +2,7 @@ module Tiltak.Vegdekkestandard exposing (initialState, tiltak)
 
 import BasicState exposing (Nivaa(..), Sted(..))
 import BasicTiltak
-import Field exposing (Field, SimpleField)
+import Field exposing (Field)
 import Focus exposing ((=>), Focus)
 import FormattedValue
     exposing
@@ -18,7 +18,7 @@ import FormattedValue
 import SpecificStates exposing (VegdekkestandardState)
 import Tiltak exposing (..)
 import TiltakForutsetninger
-import TiltakSupport
+import TiltakSupport exposing (SimpleField)
 
 
 tiltak : Tiltak
@@ -58,6 +58,7 @@ tiltakRecordImplementation =
     }
 
 
+initialState : VegdekkestandardState
 initialState =
     { nivaa = LavTilHoey
     , sted = Storby
@@ -88,14 +89,14 @@ specificState =
 fields : List Field
 fields =
     fieldDefinitions
-        |> Field.transformToFields
+        |> TiltakSupport.transformToFields
 
 
 fieldDefinitions : List SimpleField
 fieldDefinitions =
-    [ Field.lengdeVeiKmSimpleField specificState
-    , Field.sykkelturerPerYearSimpleField specificState
-    , Field.gangturerPerYearSimpleField specificState
+    [ TiltakSupport.lengdeVeiKmSimpleField specificState
+    , TiltakSupport.sykkelturerPerYearSimpleField specificState
+    , TiltakSupport.gangturerPerYearSimpleField specificState
     ]
 
 

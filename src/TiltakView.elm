@@ -9,12 +9,11 @@ import Bootstrap.Card as Card
 import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.Radio as Radio
-import Field exposing (Field)
+import Field exposing (Field, FieldSpec(..))
 import Focus
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onBlur, onFocus)
-import Models exposing (FieldSpec(..))
 import Msgs exposing (Msg(..), RadioValue(..))
 import NumberFormat
 import Tiltak exposing (Tiltak(..), sendTo)
