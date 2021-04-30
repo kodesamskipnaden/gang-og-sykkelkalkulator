@@ -214,11 +214,11 @@ updateField model tiltak field stringValue =
                     stringValue |> String.toFloat |> Result.toMaybe
             in
             case field.fieldSpec of
-                FloatSpec _ ->
-                    maybeFloat
-
                 PercentSpec ->
                     maybeFloat |> Maybe.map (\float -> float / 100)
+
+                _ ->
+                    maybeFloat
 
         updatePreferredToGraph preferredString =
             case

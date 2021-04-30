@@ -6,7 +6,8 @@ import TiltakStates exposing (TiltakStates)
 
 
 type FieldSpec
-    = FloatSpec { stepSize : Float }
+    = FloatSpec { stepSize : Int }
+    | IntSpec { stepSize : Int }
     | PercentSpec
 
 

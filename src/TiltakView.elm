@@ -134,13 +134,21 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
         fieldValueString =
             field.value tiltakStates
                 |> (case field.fieldSpec of
+                        IntSpec _ ->
+                            case isEditable of
+                                True ->
+                                    Maybe.map toString
+
+                                False ->
+                                    Maybe.map (NumberFormat.prettyWithDecimals 0)
+
                         FloatSpec _ ->
                             case isEditable of
                                 True ->
                                     Maybe.map toString
 
                                 False ->
-                                    Maybe.map NumberFormat.pretty
+                                    Maybe.map (NumberFormat.prettyWithDecimals 1)
 
                         PercentSpec ->
                             Maybe.map (\float -> float * 100 |> round |> toString)

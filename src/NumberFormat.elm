@@ -16,12 +16,16 @@ norwegianLocale =
 
 pretty : Float -> String
 pretty value =
-    FormatNumber.format { norwegianLocale | decimals = 0 } value
+    prettyWithDecimals 0 value
+
+
+prettyWithDecimals decimals value =
+    FormatNumber.format { norwegianLocale | decimals = decimals } value
 
 
 prettyTwoDecimals : Float -> String
 prettyTwoDecimals value =
-    FormatNumber.format { norwegianLocale | decimals = 2 } value
+    prettyWithDecimals 2 value
 
 
 maybePretty : Maybe Float -> String

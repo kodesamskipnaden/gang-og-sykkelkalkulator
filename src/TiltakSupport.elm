@@ -64,7 +64,7 @@ lengdeVeiKmSimpleField specificState =
     { name = "lengdeVeiKm"
     , title = "Veilengde i kilometer"
     , placeholder = "Lengde vei (km)"
-    , fieldSpec = FloatSpec { stepSize = 5 }
+    , fieldSpec = FloatSpec { stepSize = 1 }
     , focus = specificState => FormattedValue.lengdeVeiKm
     }
 
@@ -77,7 +77,7 @@ sykkelturerPerYearSimpleField specificState =
     , title = "Antall sykkelturer per år"
     , placeholder = "Sykkelturer som får nytte av tiltaket"
     , focus = specificState => FormattedValue.sykkelturerPerYear
-    , fieldSpec = FloatSpec { stepSize = 50 }
+    , fieldSpec = IntSpec { stepSize = 50 }
     }
 
 
@@ -89,7 +89,7 @@ gangturerPerYearSimpleField specificState =
     , title = "Antall gangturer per år"
     , placeholder = "Gangturer som får nytte av tiltaket"
     , focus = specificState => FormattedValue.gangturerPerYear
-    , fieldSpec = FloatSpec { stepSize = 50 }
+    , fieldSpec = IntSpec { stepSize = 50 }
     }
 
 

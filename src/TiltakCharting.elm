@@ -112,7 +112,10 @@ graphDataForField tiltak state field =
                     0.1
 
                 FloatSpec { stepSize } ->
-                    stepSize
+                    stepSize |> toFloat
+
+                IntSpec { stepSize } ->
+                    stepSize |> toFloat
     in
     Charting.samples stepSize sampleFunc
         |> List.map generateData
