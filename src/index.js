@@ -97,8 +97,12 @@ app.ports.updateC3.subscribe(function (object) {
 
 app.ports.destroyC3.subscribe(function (domId) {
   console.log("destroyC3", domId);
-  charts[domId].destroy();
-  delete charts[domId];
+  if (charts[domId]) {
+    charts[domId].destroy();
+    delete charts[domId];    
+  } else {
+    console.log('chart', domId, 'is not present in', charts);
+  }
   app.ports.charts.send(Object.keys(charts));
 });
 

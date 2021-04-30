@@ -14,6 +14,7 @@ import Focus
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onBlur, onFocus)
+import Models exposing (FieldSpec(..))
 import Msgs exposing (Msg(..), RadioValue(..))
 import NumberFormat
 import Tiltak exposing (Tiltak(..), sendTo)
@@ -133,14 +134,27 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
 
         fieldValueString =
             field.value tiltakStates
-                |> (case isEditable of
-                        True ->
-                            Maybe.map toString
+                |> (case field.fieldSpec of
+                        FloatSpec _ ->
+                            case isEditable of
+                                True ->
+                                    Maybe.map toString
 
-                        False ->
-                            Maybe.map NumberFormat.pretty
+                                False ->
+                                    Maybe.map NumberFormat.pretty
+
+                        PercentSpec ->
+                            Maybe.map (\float -> float * 100 |> round |> toString)
                    )
                 |> Maybe.withDefault ""
+
+        inputAttrs =
+            case field.fieldSpec of
+                PercentSpec ->
+                    [ Html.Attributes.min "1", Html.Attributes.max "100" ]
+
+                _ ->
+                    []
 
         inputElement =
             case isEditable of
@@ -155,10 +169,11 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
         , inputElement
             [ Input.id name
             , Input.placeholder placeholder
-            , Input.attrs
-                [ onBlur (FieldBlur field)
-                , onFocus (FieldFocus field)
-                ]
+            , [ onBlur (FieldBlur field)
+              , onFocus (FieldFocus field)
+              ]
+                ++ inputAttrs
+                |> Input.attrs
             , Input.onInput <| UpdateField tiltak field
             , Input.value fieldValueString
             ]

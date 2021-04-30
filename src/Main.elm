@@ -208,7 +208,16 @@ updateField : Model -> Tiltak -> Field -> String -> ( Model, Cmd Msg )
 updateField model tiltak field stringValue =
     let
         maybeValue =
-            stringValue |> String.toFloat |> Result.toMaybe
+            let
+                maybeFloat =
+                    stringValue |> String.toFloat |> Result.toMaybe
+            in
+            case field.fieldSpec of
+                FloatSpec _ ->
+                    maybeFloat
+
+                PercentSpec ->
+                    maybeFloat |> Maybe.map (\float -> float / 100)
 
         updatePreferredToGraph preferredString =
             case

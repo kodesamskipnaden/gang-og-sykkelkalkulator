@@ -64,7 +64,7 @@ initialState : RenholdState
 initialState =
     { nivaa = LavTilHoey
     , sted = Storby
-    , installationCost = formattedValueDefault
+    , installationCost = Just 0 |> formattedValue
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue
     , lengdeVeiKm = formattedValueDefault
@@ -96,8 +96,7 @@ fields =
 
 fieldDefinitions : List SimpleField
 fieldDefinitions =
-    [ Field.installationCostSimpleField specificState
-    , Field.lengdeVeiKmSimpleField specificState
+    [ Field.lengdeVeiKmSimpleField specificState
     , Field.sykkelturerPerYearSimpleField specificState
     , Field.gangturerPerYearSimpleField specificState
     ]
