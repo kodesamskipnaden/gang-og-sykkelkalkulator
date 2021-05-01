@@ -38,7 +38,7 @@ transformToFields fieldDefinitions =
             , focus = simpleField.focus
             , isEditable =
                 \tiltakStates ->
-                    case Focus.get (simpleField.focus => state) tiltakStates of
+                    case Focus.get (Focus.join simpleField.focus state) tiltakStates of
                         Edit ->
                             True
 
@@ -46,11 +46,11 @@ transformToFields fieldDefinitions =
                             False
             , beDisplayMode =
                 \tiltakStates ->
-                    Focus.set (simpleField.focus => state) Display tiltakStates
+                    Focus.set (Focus.join simpleField.focus state) Display tiltakStates
             , beEditMode =
                 \tiltakStates ->
-                    Focus.set (simpleField.focus => state) Edit tiltakStates
-            , value = Focus.get (simpleField.focus => value)
+                    Focus.set (Focus.join simpleField.focus state) Edit tiltakStates
+            , value = Focus.get (Focus.join simpleField.focus value)
             }
     in
     fieldDefinitions
@@ -65,7 +65,7 @@ lengdeVeiKmSimpleField specificState =
     , title = "Veilengde i kilometer"
     , placeholder = "Lengde vei (km)"
     , fieldSpec = FloatSpec { stepSize = 1 }
-    , focus = specificState => FormattedValue.lengdeVeiKm
+    , focus = Focus.join specificState FormattedValue.lengdeVeiKm
     }
 
 
@@ -76,7 +76,7 @@ sykkelturerPerYearSimpleField specificState =
     { name = "sykkelturerPerYear"
     , title = "Antall sykkelturer per år"
     , placeholder = "Sykkelturer som får nytte av tiltaket"
-    , focus = specificState => FormattedValue.sykkelturerPerYear
+    , focus = Focus.join specificState FormattedValue.sykkelturerPerYear
     , fieldSpec = IntSpec { stepSize = 50 }
     }
 
@@ -88,7 +88,7 @@ gangturerPerYearSimpleField specificState =
     { name = "gangturerPerYear"
     , title = "Antall gangturer per år"
     , placeholder = "Gangturer som får nytte av tiltaket"
-    , focus = specificState => FormattedValue.gangturerPerYear
+    , focus = Focus.join specificState FormattedValue.gangturerPerYear
     , fieldSpec = IntSpec { stepSize = 50 }
     }
 
@@ -105,11 +105,20 @@ rather than a black list like it does now
 --}
 
 
+userReplace userRegex replacer string =
+    case Regex.fromString userRegex of
+        Nothing ->
+            string
+
+        Just regex ->
+            Regex.replace regex replacer string
+
+
 toDomId : String -> String
 toDomId string =
     string
         -- add all invalid characters in domId here
-        |> Regex.replace Regex.All (Regex.regex "[:/]") (\_ -> " ")
+        |> userReplace "[:/]" (\_ -> " ")
         -- whitespace is handled here
         |> String.words
         |> String.join "-"
@@ -209,12 +218,8 @@ kostUtenSkyggepris this state =
 
 skyggeprisHelper : StateCalculationMethod
 skyggeprisHelper this state =
-    let
-        calculation kostUtenSkyggepris =
-            kostUtenSkyggepris * GeneralForutsetninger.skyggepris
-    in
     sendTo this .kostUtenSkyggepris state
-        |> Maybe.map calculation
+        |> Maybe.map ((*) GeneralForutsetninger.skyggepris)
 
 
 tidsbesparelseMinPerTurSyklende : StateCalculationMethod
