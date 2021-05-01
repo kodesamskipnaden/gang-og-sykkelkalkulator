@@ -5,6 +5,7 @@ import Bootstrap.Accordion as Accordion
 import Bootstrap.Card as Card
 import Bootstrap.Card.Block as Block
 import Bootstrap.Grid as Grid
+import Browser exposing (Document)
 import Group
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -21,12 +22,16 @@ groupIcon group =
             Assets.informasjon
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
-    div [ class "contents" ]
-        [ mainContent model
-        , appFooter
-        ]
+    let
+        content =
+            div [ class "contents" ]
+                [ mainContent model
+                , appFooter
+                ]
+    in
+    { title = "Flesk", body = [ content ] }
 
 
 mainContent : Model -> Html Msg

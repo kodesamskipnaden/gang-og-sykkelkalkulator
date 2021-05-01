@@ -1,7 +1,5 @@
 module Main exposing (main)
 
--- import Navigation exposing (Location)
-
 import Bootstrap.Accordion as Accordion
 import Browser exposing (UrlRequest)
 import Browser.Navigation as Navigation
@@ -15,6 +13,7 @@ import Ports
 import Tiltak exposing (Tiltak(..), TiltakStates, sendTo)
 import TiltakAndGroupData
 import TiltakCharting exposing (GraphState(..))
+import Url exposing (Url)
 import Url.Parser as UrlParser exposing (Parser)
 import Views exposing (view)
 
@@ -46,15 +45,16 @@ main =
         , update = update
         , subscriptions = subscriptions
         , init = init
-        , onUrlRequest = UrlChange
+        , onUrlRequest = Visit
+        , onUrlChange = decode >> NewRoute
         }
 
 
-init : Navigation.Key -> ( Model, Cmd Msg )
-init navigationKey =
+init : () -> Url -> Navigation.Key -> ( Model, Cmd Msg )
+init () url navigationKey =
     let
         model =
-            { page = NotFound
+            { page = pageFromLocation url
             , navigationKey = navigationKey
             , accordionState = Accordion.initialState
             , tiltakStates = TiltakAndGroupData.initialTiltakStates
@@ -98,10 +98,10 @@ updateRadio ({ tiltakStates } as model) ((Tiltak object) as tiltak) radioValue =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UrlChange location ->
+        NewRoute maybePage ->
             let
                 newModel =
-                    { model | page = pageFromLocation location }
+                    { model | page = Maybe.withDefault NotFound maybePage }
             in
             ( newModel
             , Cmd.batch
@@ -109,6 +109,12 @@ update msg model =
                 , Ports.setTitle (titleFromPage newModel.page)
                 ]
             )
+
+        Visit (Browser.Internal url) ->
+            ( model, Navigation.pushUrl model.navigationKey (Url.toString url) )
+
+        Visit _ ->
+            ( model, Cmd.none )
 
         AccordionMsg state ->
             ( { model | accordionState = state }, Cmd.none )
@@ -178,7 +184,7 @@ groupCreateCharts group model =
         |> Cmd.batch
 
 
-pageFromLocation : UrlRequest -> Page
+pageFromLocation : Url -> Page
 pageFromLocation location =
     decode location |> Maybe.withDefault NotFound
 
@@ -219,7 +225,7 @@ updateField model tiltak field stringValue =
         maybeValue =
             let
                 maybeFloat =
-                    stringValue |> String.toFloat |> Result.toMaybe
+                    stringValue |> String.toFloat
             in
             case field.fieldSpec of
                 PercentSpec ->
@@ -289,9 +295,9 @@ updateFieldToGraph tiltak field model =
         newTiltakStates
 
 
-decode : UrlRequest -> Maybe Page
-decode location =
-    UrlParser.parseHash routeParser location
+decode : Url -> Maybe Page
+decode url =
+    UrlParser.parse routeParser url
 
 
 routeParser : UrlParser.Parser (Page -> a) a
