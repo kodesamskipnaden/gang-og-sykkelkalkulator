@@ -52,36 +52,39 @@ conclusionRow data =
 view : AnalyseData -> List (Html Msg)
 view data =
     let
+        analysePeriodeString =
+            data.analysePeriode |> round |> String.fromInt
+
         titleAndValueList =
-            [ ( "Syklistenes nytte over " ++ toString data.analysePeriode ++ " år"
+            [ ( "Syklistenes nytte over " ++ analysePeriodeString ++ " år"
               , data.syklistNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av syklistenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
-            , ( "Fotgjengernes nytte over " ++ toString data.analysePeriode ++ " år"
+            , ( "Fotgjengernes nytte over " ++ analysePeriodeString ++ " år"
               , data.fotgjengerNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av fotgjengernes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
-            , ( "Øvrige trafikanters nytte over " ++ toString data.analysePeriode ++ " år"
+            , ( "Øvrige trafikanters nytte over " ++ analysePeriodeString ++ " år"
               , data.trafikantNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
               )
-            , ( "Helsegevinst over " ++ toString data.analysePeriode ++ " år"
+            , ( "Helsegevinst over " ++ analysePeriodeString ++ " år"
               , data.helseGevinstNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
               )
-            , ( "TS gevinst over " ++ toString data.analysePeriode ++ " år"
+            , ( "TS gevinst over " ++ analysePeriodeString ++ " år"
               , data.tsGevinstNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av TS-gevinster, over hele analyseperioden"
               )
-            , ( "Øvrige eksterne effekter over " ++ toString data.analysePeriode ++ " år"
+            , ( "Øvrige eksterne effekter over " ++ analysePeriodeString ++ " år"
               , data.eksterneEffekterNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av eksterne effekter, over hele analyseperioden"
               )
-            , ( "Sum nytteelementer over " ++ toString data.analysePeriode ++ " år"
+            , ( "Sum nytteelementer over " ++ analysePeriodeString ++ " år"
               , data.nytte |> NumberFormat.maybePretty
               , text "-"
               )
-            , ( "Sum kostnader over " ++ toString data.analysePeriode ++ " år"
+            , ( "Sum kostnader over " ++ analysePeriodeString ++ " år"
               , data.kostUtenSkyggepris |> NumberFormat.maybePretty
               , text "Verdien i dag av alle kostnader (drift/vedlikehold, investering og ev. gjeninvestering) som vil påløpe i analyseperioden"
               )

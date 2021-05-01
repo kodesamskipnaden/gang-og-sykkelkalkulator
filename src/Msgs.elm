@@ -2,8 +2,8 @@ module Msgs exposing (..)
 
 import BasicState exposing (Nivaa, Sted)
 import Bootstrap.Accordion as Accordion
+import Browser exposing (UrlRequest)
 import Field exposing (Field)
-import Navigation exposing (Location)
 import Tiltak exposing (Tiltak)
 
 
@@ -13,7 +13,7 @@ type RadioValue
 
 
 type Msg
-    = UrlChange Location
+    = UrlChange UrlRequest
     | AccordionMsg Accordion.State
     | UpdateField Tiltak Field String
     | UpdateRadio Tiltak RadioValue

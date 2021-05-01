@@ -1,18 +1,21 @@
 module Main exposing (main)
 
+-- import Navigation exposing (Location)
+
 import Bootstrap.Accordion as Accordion
+import Browser exposing (UrlRequest)
+import Browser.Navigation as Navigation
 import Field exposing (Field, FieldSpec(..))
-import Focus exposing ((=>))
+import Focus
 import FormattedValue exposing (value)
 import Group
 import Models exposing (..)
 import Msgs exposing (Msg(..), RadioValue(..))
-import Navigation exposing (Location)
 import Ports
 import Tiltak exposing (Tiltak(..), TiltakStates, sendTo)
 import TiltakAndGroupData
 import TiltakCharting exposing (GraphState(..))
-import UrlParser exposing ((</>))
+import Url.Parser as UrlParser exposing (Parser)
 import Views exposing (view)
 
 
@@ -33,21 +36,26 @@ titleFromPage page =
             Group.groupTitle group ++ " - " ++ appName
 
 
-main : Program Never Model Msg
+
+-- main : Program Never Model Msg
+
+
 main =
-    Navigation.program UrlChange
+    Browser.application
         { view = view
         , update = update
         , subscriptions = subscriptions
         , init = init
+        , onUrlRequest = UrlChange
         }
 
 
-init : Location -> ( Model, Cmd Msg )
-init location =
+init : Navigation.Key -> ( Model, Cmd Msg )
+init navigationKey =
     let
         model =
-            { page = pageFromLocation location
+            { page = NotFound
+            , navigationKey = navigationKey
             , accordionState = Accordion.initialState
             , tiltakStates = TiltakAndGroupData.initialTiltakStates
             , chartIds = []
@@ -170,7 +178,7 @@ groupCreateCharts group model =
         |> Cmd.batch
 
 
-pageFromLocation : Navigation.Location -> Page
+pageFromLocation : UrlRequest -> Page
 pageFromLocation location =
     decode location |> Maybe.withDefault NotFound
 
@@ -226,15 +234,15 @@ updateField model tiltak field stringValue =
                     tiltak
                     model.tiltakStates
             of
-                Just field ->
-                    field.name
+                Just aField ->
+                    aField.name
 
                 Nothing ->
                     preferredString
 
         newTiltakStates =
             model.tiltakStates
-                |> Focus.set (field.focus => value) maybeValue
+                |> Focus.set (Focus.join field.focus value) maybeValue
                 |> Focus.update
                     (Tiltak.getAttr tiltak .preferredToGraphFocus)
                     updatePreferredToGraph
@@ -281,7 +289,7 @@ updateFieldToGraph tiltak field model =
         newTiltakStates
 
 
-decode : Location -> Maybe Page
+decode : UrlRequest -> Maybe Page
 decode location =
     UrlParser.parseHash routeParser location
 

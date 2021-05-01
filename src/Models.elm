@@ -1,6 +1,7 @@
 module Models exposing (..)
 
 import Bootstrap.Accordion as Accordion
+import Browser.Navigation as Navigation
 import TiltakStates exposing (TiltakStates)
 
 
@@ -16,6 +17,7 @@ type Page
 
 type alias Model =
     { page : Page
+    , navigationKey : Navigation.Key
     , accordionState : Accordion.State
     , tiltakStates : TiltakStates
     , chartIds : List String

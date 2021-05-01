@@ -6,6 +6,7 @@ import Bootstrap.Accordion as Accordion
 import Bootstrap.Button as Button
 import Bootstrap.ButtonGroup as ButtonGroup
 import Bootstrap.Card as Card
+import Bootstrap.Card.Block as Block
 import Bootstrap.Form as Form
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.Radio as Radio
@@ -104,18 +105,18 @@ tiltakCard tiltakStates tiltak =
         , blocks =
             [ Accordion.block
                 []
-                [ Card.custom <|
+                [ Block.custom <|
                     div []
                         ([ tiltakForm tiltak tiltakStates ]
                             ++ analyse
                         )
                 ]
             , Accordion.block
-                [ Card.blockAttrs
+                [ Block.attrs
                     [ class "chartBlock"
                     ]
                 ]
-                [ Card.custom <| chart tiltakStates tiltak
+                [ Block.custom <| chart tiltakStates tiltak
                 ]
             ]
         }
@@ -137,7 +138,7 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
                         IntSpec _ ->
                             case isEditable of
                                 True ->
-                                    Maybe.map toString
+                                    Maybe.map String.fromFloat
 
                                 False ->
                                     Maybe.map (NumberFormat.prettyWithDecimals 0)
@@ -145,13 +146,13 @@ fieldView tiltak tiltakStates ({ name, title, placeholder } as field) =
                         FloatSpec _ ->
                             case isEditable of
                                 True ->
-                                    Maybe.map toString
+                                    Maybe.map String.fromFloat
 
                                 False ->
                                     Maybe.map (NumberFormat.prettyWithDecimals 1)
 
                         PercentSpec ->
-                            Maybe.map (\float -> float * 100 |> round |> toString)
+                            Maybe.map (\float -> float * 100 |> round |> String.fromInt)
                    )
                 |> Maybe.withDefault ""
 

@@ -3,6 +3,7 @@ module Views exposing (view)
 import Assets
 import Bootstrap.Accordion as Accordion
 import Bootstrap.Card as Card
+import Bootstrap.Card.Block as Block
 import Bootstrap.Grid as Grid
 import Group
 import Html exposing (..)
@@ -49,7 +50,7 @@ groupPanel group =
         ]
         [ Card.config []
             |> Card.block []
-                [ Card.text []
+                [ Block.text []
                     [ img
                         [ class "groupIcon"
                         , Assets.src (groupIcon group)
