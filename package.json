@@ -6,13 +6,13 @@
   "author": "Syver Enstad <syver.enstad@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "postinstall": "elm-package install --yes",
+    "postinstall": "elm install --yes",
     "build": "webpack --env production",
     "client-for-virtualbox-ie-testing": "webpack-dev-server --host 0.0.0.0 --public 10.0.2.2:3000 --env development",
     "client": "webpack-dev-server --port 3000 --env development",
     "start": "nodemon --watch webpack.config.js --exec 'npm run client'",
-    "test": "elm test",
-    "test:watch": "elm test --watch",
+    "test": "elm-test",
+    "test:watch": "elm-test --watch",
     "predeploy": "npm run build"
   },
   "dependencies": {
@@ -24,7 +24,6 @@
     "url-loader": "^0.5.9",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.5.0",
-    "elm-test": "elm0.18.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
