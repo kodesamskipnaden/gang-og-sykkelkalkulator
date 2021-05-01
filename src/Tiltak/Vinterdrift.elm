@@ -3,7 +3,7 @@ module Tiltak.Vinterdrift exposing (..)
 import BasicState exposing (Nivaa(..), Sted(..))
 import BasicTiltak
 import Field exposing (Field, FieldSpec(..))
-import Focus exposing ((=>), Focus)
+import Focus exposing (Focus)
 import FormattedValue
     exposing
         ( formattedValue
@@ -65,8 +65,8 @@ tiltakRecordImplementation =
     , basicState =
         \{ vinterdrift } ->
             BasicState.createBasicState vinterdrift
-    , nivaaFocus = specificState => FormattedValue.nivaa
-    , stedFocus = specificState => FormattedValue.sted
+    , nivaaFocus = Focus.join specificState FormattedValue.nivaa
+    , stedFocus = Focus.join specificState FormattedValue.sted
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , nivaaForutsetninger = nivaaForutsetninger
@@ -114,8 +114,8 @@ fieldDefinitions =
         oppetidPercent =
             Focus.create
                 .oppetidPercent
-                (\f specificState ->
-                    { specificState | oppetidPercent = f specificState.oppetidPercent }
+                (\f aSpecificState ->
+                    { aSpecificState | oppetidPercent = f aSpecificState.oppetidPercent }
                 )
     in
     [ TiltakSupport.lengdeVeiKmSimpleField specificState
@@ -124,7 +124,7 @@ fieldDefinitions =
     , { name = "oppetidPercent"
       , title = "Tiltakets oppetid, prosent"
       , placeholder = "Andel av aktuell tidsperiode hvor nivået GsA oppfylles (mindre enn 100% pga f.eks. at det tar tid fra nedbør skjer, til GsA-standard er gjenopprettet)"
-      , focus = specificState => oppetidPercent
+      , focus = Focus.join specificState oppetidPercent
       , fieldSpec = PercentSpec
       }
     ]

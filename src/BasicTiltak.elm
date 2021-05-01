@@ -1,7 +1,7 @@
 module BasicTiltak exposing (..)
 
 import Field exposing (Field)
-import Focus exposing ((=>), Focus)
+import Focus exposing (Focus)
 import Tiltak exposing (..)
 import TiltakForutsetninger
 import TiltakSupport
@@ -340,7 +340,7 @@ basicTiltakRecord hooks =
     , fields = hooks.fields
     , nivaaTitle = hooks.nivaaTitle
     , preferredField = preferredField
-    , preferredToGraphFocus = hooks.specificStateFocus => preferredToGraph
+    , preferredToGraphFocus = Focus.join hooks.specificStateFocus preferredToGraph
     , basicState = hooks.basicState
     , nivaaFocus = hooks.nivaaFocus
     , stedFocus = hooks.stedFocus

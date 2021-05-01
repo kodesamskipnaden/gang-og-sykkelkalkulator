@@ -106,7 +106,7 @@ graphDataForField tiltak state field =
                 Nothing ->
                     Debug.todo "nettoNytte gave Nothing"
 
-        stepSize =
+        stepSizeValue =
             case field.fieldSpec of
                 PercentSpec ->
                     0.1
@@ -117,7 +117,7 @@ graphDataForField tiltak state field =
                 IntSpec { stepSize } ->
                     stepSize |> toFloat
     in
-    Charting.samples stepSize sampleFunc
+    Charting.samples stepSizeValue sampleFunc
         |> List.map generateData
         |> List.filterMap identity
 

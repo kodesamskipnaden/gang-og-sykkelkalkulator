@@ -3,7 +3,7 @@ module Tiltak.Renhold exposing (initialState, tiltak)
 import BasicState exposing (Nivaa(..), Sted(..))
 import BasicTiltak
 import Field exposing (Field)
-import Focus exposing ((=>), Focus)
+import Focus exposing (Focus)
 import FormattedValue
     exposing
         ( formattedValue
@@ -52,8 +52,8 @@ til nesten ukentlig renhold"""
     , basicState =
         \{ renhold } ->
             BasicState.createBasicState renhold
-    , nivaaFocus = specificState => FormattedValue.nivaa
-    , stedFocus = specificState => FormattedValue.sted
+    , nivaaFocus = Focus.join specificState FormattedValue.nivaa
+    , stedFocus = Focus.join specificState FormattedValue.sted
     , syklistForutsetninger = syklistForutsetninger
     , fotgjengerForutsetninger = fotgjengerForutsetninger
     , nivaaForutsetninger = nivaaForutsetninger
