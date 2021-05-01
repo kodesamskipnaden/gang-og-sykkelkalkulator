@@ -10,7 +10,10 @@ groupPath tag =
 
 groupPathSansHash : Group -> String
 groupPathSansHash tag =
-    tag |> toString |> String.toLower
+    case tag of
+        GruppoA ->
+            "GruppoA"
+                |> String.toLower
 
 
 groupTitle : Group -> String
