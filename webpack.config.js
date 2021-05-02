@@ -9,6 +9,7 @@ const PATHS = {
 
 const makeConfig = (isDevelopment) => {
   return {
+    mode: isDevelopment ? 'development' : 'production',
     entry: {
       app: PATHS.app
     },
@@ -32,19 +33,23 @@ const makeConfig = (isDevelopment) => {
         {
           test:    /\.html$/,
           exclude: /node_modules/,
-          loader:  'file-loader?name=[name].[ext]',
+          loader:  'file-loader',
+	  options: {
+	    name: '[name].[ext]'
+	  },
         },
         {
           test:    /\.elm$/,
           exclude: [/elm-stuff/, /node_modules/],
           use: [
-            {
+/*            {
               loader: 'elm-assets-loader',
               options: {
                 module: 'Assets',
                 tagger: 'Image'
               }
             },            
+*/
             {
               loader:  'elm-webpack-loader',
               options: {
@@ -57,7 +62,11 @@ const makeConfig = (isDevelopment) => {
         },
         {
           test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-          loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+          loader: 'url-loader',
+	  options: {
+	    limit: 10000,
+	    mimetype:'application/font-woff'
+	  }
         },
         {
           test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -92,5 +101,5 @@ const makeConfig = (isDevelopment) => {
 
 module.exports = (env) => {
   console.log("env", env);
-  return makeConfig(env == 'development');
+  return makeConfig(!env.production);
 }

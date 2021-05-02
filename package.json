@@ -1,0 +1,44 @@
+{
+  "name": "elm19-gang-og-sykkelkalkulator",
+  "version": "1.0.0",
+  "description": "Nytte- og kostnadsanalyse verktøy for gang og sykkelvei tiltak",
+  "main": "webpack.config.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "postinstall": "elm install --yes",
+    "build": "webpack --env production",
+    "test": "elm-test",
+    "client": "webpack-dev-server --port 3000 --env development",
+    "start": "nodemon --watch webpack.config.js --exec 'npm run client'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kodesamskipnaden/gang-og-sykkelkalkulator.git"
+  },
+  "keywords": [
+    "elm"
+  ],
+  "author": "Syver Enstad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kodesamskipnaden/gang-og-sykkelkalkulator/issues"
+  },
+  "homepage": "https://github.com/kodesamskipnaden/gang-og-sykkelkalkulator#readme",
+  "dependencies": {
+    "c3": "^0.7.20",
+    "css-loader": "^5.2.4",
+    "elm-webpack-loader": "^8.0.0",
+    "file-loader": "^6.2.0",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^11.0.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.36.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.6.0"
+  }
+}

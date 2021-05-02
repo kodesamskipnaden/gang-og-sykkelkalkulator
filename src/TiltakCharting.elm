@@ -104,7 +104,8 @@ graphDataForField tiltak state field =
                     value
 
                 Nothing ->
-                    Debug.todo "nettoNytte gave Nothing"
+                    -- Debug.todo "nettoNytte gave Nothing"
+                    42
 
         stepSizeValue =
             case field.fieldSpec of
