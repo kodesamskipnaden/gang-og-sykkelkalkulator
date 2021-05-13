@@ -81,7 +81,7 @@ pageHome model =
             [ Grid.container [ class "container__narrow" ]
                 [ h1 [] [ text "Gang- og sykkelveikalkulator" ]
                 , h2 [] [ text "Nyttekostnadsverktøy for sykkel- og gangveitiltak" ]
-                , p [] [ text "Publisert 2021" ]
+                , p [] [ text "Publisert mai 2021" ]
                 ]
             ]
         , Grid.container [ class "groupPanels container__narrow" ]
