@@ -43,7 +43,7 @@ tiltak =
 
 tiltakRecordImplementation : Hooks VinterdriftState
 tiltakRecordImplementation =
-    { title = \_ -> "Vinterdrift"
+    { title = \_ -> "Vinterdrift - brøyting, strøing, kosting og salting"
     , nivaaTitle =
         \nivaa ->
             case nivaa of
@@ -81,7 +81,7 @@ initialState =
     , sykkelturerPerYear = Just 0 |> formattedValue
     , gangturerPerYear = Just 0 |> formattedValue
     , lengdeVeiKm = formattedValueDefault
-    , oppetidPercent = Just 0.8 |> formattedValue
+    , oppetidPercent = Just 0.9 |> formattedValue
     , preferredToGraph = ""
     }
 
@@ -123,7 +123,7 @@ fieldDefinitions =
     , TiltakSupport.gangturerPerYearSimpleField specificState
     , { name = "oppetidPercent"
       , title = "Tiltakets oppetid, prosent"
-      , placeholder = "Andel av aktuell tidsperiode hvor nivået GsA oppfylles (mindre enn 100% pga f.eks. at det tar tid fra nedbør skjer, til GsA-standard er gjenopprettet)"
+      , placeholder = "Tall mellom 0 og 100 %, hensyn tatt til tid fra nedbør til brøyting/kosting"
       , focus = specificState => oppetidPercent
       , fieldSpec = PercentSpec
       }

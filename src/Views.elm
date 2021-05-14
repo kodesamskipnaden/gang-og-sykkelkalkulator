@@ -74,13 +74,26 @@ groupPanel group =
         ]
 
 
+tempText =
+    """Velkommen til TØIs nyttekostnadsberegningsverktøy for sykkel- og gangveitiltak knyttet til vinterdrift, belysning, vegdekkestandard og renhold. Kalkulatoren følger gjeldende tilnærming og metodikk for nyttekostnadsanalyser i transportsektoren (Statens vegvesens Håndbok v712) og benytter derfor 40 års analyseperiode. 
+
+Klikk boksen nedenfor og velg hovedkategori av tiltak. Ved å legge inn bakgrunnsinformasjon om prosjektet, beregner kalkulatoren nytte for ulike aktører, tiltakets nettonåverdi og nettonytte per budsjettkrone (nyttekostnadsbrøk).
+
+Beregningsopplegget er dokumentert i vedlagte dokumentasjon [SETT INN LENKE]. Vi har også laget en kortfattet veiledning [SETT INN LENKE] til kalkulatoren, og en samlet liste over forutsetninger [SETT INN LENKE] som er brukt.
+"""
+
+
+haandbokV712Link =
+    a [ href "https://www.vegvesen.no/_attachment/704540/" ] [ text "Håndbok v712" ]
+
+
 pageHome : Model -> Html Msg
 pageHome model =
     div []
         [ div [ class "jumbotron homeHeader" ]
             [ Grid.container [ class "container__narrow" ]
-                [ h1 [] [ text "Gang- og sykkelveikalkulator" ]
-                , h2 [] [ text "Nyttekostnadsverktøy for sykkel- og gangveitiltak" ]
+                [ h1 [] [ text "Nytte-kostnadskalkulator" ]
+                , h2 [] [ text "for drift og vedlikehold av gang- og sykkelanlegg" ]
                 , p [] [ text "Publisert mai 2021" ]
                 ]
             ]
@@ -90,27 +103,26 @@ pageHome model =
                     [ Grid.col []
                         [ p []
                             [ text """
-Gang og sykkelkalkulatoren er et
-nyttekostnadsberegningsverktøy for
-sykkel- og gangveitiltak. Kalkulatoren følger gjeldende
-tilnærming og metodikk for nyttekostnadsanalyser i
-transportsektoren. Derfor kan NKA-beregningene sammenlignes med andre
-samferdselstiltak.
+Velkommen til TØIs nyttekostnadsberegningsverktøy for sykkel- og gangveitiltak knyttet til vinterdrift, belysning, vegdekkestandard og renhold. Kalkulatoren følger gjeldende tilnærming og metodikk for nyttekostnadsanalyser i transportsektoren (Statens vegvesens """
+                            , haandbokV712Link
+                            , text """) og benytter derfor 40 års analyseperiode. 
 """
                             ]
                         , p []
                             [ text """
-Velg hovedkategori av tiltak fra boksene nedenfor, og deretter konkret tiltak.
-Ved å legge inn bakgrunnsinformasjon om prosjektet, beregner kalkulatoren nytte for
-ulike aktører, tiltakets nettonåverdi og nettonytte per budsjettkrone (nyttekostnadsbrøk).
+Klikk boksen nedenfor og velg hovedkategori av tiltak. Ved å legge inn bakgrunnsinformasjon om prosjektet, beregner kalkulatoren nytte for ulike aktører, tiltakets nettonåverdi og nettonytte per budsjettkrone (nyttekostnadsbrøk).
 """
                             ]
                         , p []
-                            [ text "Beregningsopplegget er dokumentert i "
-                            , a [ href "https://www.toi.no/publikasjoner/article29858-8.html" ]
-                                [ text "TØI-rapport 1121" ]
+                            [ text "Beregningsopplegget er dokumentert i vedlagte dokumentasjon\n"
+                            , a [ href "" ]
+                                [ text "[SETT INN LENKE]" ]
                             , text
-                                ". Her fins også nærmere veiledning til utfylling og bruk av kalkulatoren, samt erfaringsbaserte anslag på tiltakenes kostnader"
+                                ". Vi har også laget en kortfattet veiledning "
+                            , a [ href "" ] [ text "[SETT INN LENKE]" ]
+                            , text " til kalkulatoren, og en samlet liste over forutsetninger "
+                            , a [ href "" ] [ text "[SETT INN LENKE]" ]
+                            , text " som er brukt."
                             ]
                         ]
                     ]

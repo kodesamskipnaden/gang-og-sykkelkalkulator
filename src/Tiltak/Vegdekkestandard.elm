@@ -28,7 +28,7 @@ tiltak =
 
 tiltakRecordImplementation : Hooks VegdekkestandardState
 tiltakRecordImplementation =
-    { title = \_ -> "Vegdekkestandard"
+    { title = \_ -> "Vegdekkestandard og reasfaltering"
     , nivaaTitle =
         \nivaa ->
             case nivaa of

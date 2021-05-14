@@ -228,12 +228,12 @@ stedGroup ((Tiltak object) as tiltak) tiltakStates =
                     [ Radio.checked (sted == Storby)
                     , Radio.onClick (UpdateRadio tiltak (StedType Storby))
                     ]
-                    "Storby"
+                    "Sentralt storbyområde (> 100 000 innbyggere)"
                 , Radio.create
                     [ Radio.checked (sted == LitenBy)
                     , Radio.onClick (UpdateRadio tiltak (StedType LitenBy))
                     ]
-                    "Liten by"
+                    "Større tettstedområde (15 000 - 100 000 innbyggere)"
                 , Radio.create
                     [ Radio.checked (sted == Spredtbygd)
                     , Radio.onClick (UpdateRadio tiltak (StedType Spredtbygd))

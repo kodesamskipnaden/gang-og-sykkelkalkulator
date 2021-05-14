@@ -28,7 +28,7 @@ tiltak =
 
 tiltakRecordImplementation : Hooks RenholdState
 tiltakRecordImplementation =
-    { title = \_ -> "Renhold"
+    { title = \_ -> "Renhold - feiing og vask"
     , nivaaTitle =
         \nivaa ->
             case nivaa of

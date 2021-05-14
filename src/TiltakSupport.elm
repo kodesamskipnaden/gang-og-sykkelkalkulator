@@ -74,7 +74,7 @@ sykkelturerPerYearSimpleField :
     -> SimpleField
 sykkelturerPerYearSimpleField specificState =
     { name = "sykkelturerPerYear"
-    , title = "Antall sykkelturer per år"
+    , title = "Antall sykkelturer per år som får nytte av tiltaket"
     , placeholder = "Sykkelturer som får nytte av tiltaket"
     , focus = specificState => FormattedValue.sykkelturerPerYear
     , fieldSpec = IntSpec { stepSize = 50 }
@@ -86,7 +86,7 @@ gangturerPerYearSimpleField :
     -> SimpleField
 gangturerPerYearSimpleField specificState =
     { name = "gangturerPerYear"
-    , title = "Antall gangturer per år"
+    , title = "Antall gangturer per år som får nytte av tiltaket"
     , placeholder = "Gangturer som får nytte av tiltaket"
     , focus = specificState => FormattedValue.gangturerPerYear
     , fieldSpec = IntSpec { stepSize = 50 }

@@ -53,35 +53,35 @@ view : AnalyseData -> List (Html Msg)
 view data =
     let
         titleAndValueList =
-            [ ( "Syklistenes nytte over " ++ toString data.analysePeriode ++ " år"
+            [ ( "Syklistenes nytte"
               , data.syklistNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av syklistenes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
-            , ( "Fotgjengernes nytte over " ++ toString data.analysePeriode ++ " år"
+            , ( "Fotgjengernes nytte"
               , data.fotgjengerNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av fotgjengernes tids- og bekvemmelighetsgevinster, over hele analyseperioden"
               )
-            , ( "Øvrige trafikanters nytte over " ++ toString data.analysePeriode ++ " år"
+            , ( "Øvrige trafikanters nytte"
               , data.trafikantNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
               )
-            , ( "Helsegevinst over " ++ toString data.analysePeriode ++ " år"
+            , ( "Helsegevinst"
               , data.helseGevinstNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
               )
-            , ( "TS gevinst over " ++ toString data.analysePeriode ++ " år"
+            , ( "TS gevinst"
               , data.tsGevinstNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av TS-gevinster, over hele analyseperioden"
               )
-            , ( "Øvrige eksterne effekter over " ++ toString data.analysePeriode ++ " år"
+            , ( "Øvrige eksterne effekter"
               , data.eksterneEffekterNytte |> NumberFormat.maybePretty
               , text "Verdien i dag av eksterne effekter, over hele analyseperioden"
               )
-            , ( "Sum nytteelementer over " ++ toString data.analysePeriode ++ " år"
+            , ( "Sum nytteelementer"
               , data.nytte |> NumberFormat.maybePretty
               , text "-"
               )
-            , ( "Sum kostnader over " ++ toString data.analysePeriode ++ " år"
+            , ( "Sum kostnader (se vedlagte dokumentasjon for hvordan dette er beregnet)"
               , data.kostUtenSkyggepris |> NumberFormat.maybePretty
               , text "Verdien i dag av alle kostnader (drift/vedlikehold, investering og ev. gjeninvestering) som vil påløpe i analyseperioden"
               )
@@ -117,4 +117,4 @@ view data =
         gridRows =
             dataRows ++ [ conclusionRow data ]
     in
-    h3 [] [ text "Samfunnsøkonomisk analyse" ] :: gridRows
+    h3 [] [ text "Samfunnsøkonomisk analyse over 40 års analyseperiode" ] :: gridRows
