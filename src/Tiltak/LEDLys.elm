@@ -28,7 +28,7 @@ tiltak =
 
 tiltakRecordImplementation : Hooks LEDLysState
 tiltakRecordImplementation =
-    { title = \_ -> "Belysning"
+    { title = "Belysning"
     , nivaaTitle =
         \nivaa ->
             case nivaa of

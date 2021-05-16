@@ -17,6 +17,7 @@ import Html.Events exposing (onBlur, onFocus)
 import Msgs exposing (Msg(..), RadioValue(..))
 import NumberFormat
 import Tiltak exposing (Tiltak(..), sendTo)
+import Tiltak.Vinterdrift
 import TiltakCharting exposing (GraphState(..))
 import TiltakStates exposing (TiltakStates)
 
@@ -89,13 +90,13 @@ nettonåverdi varierer med """ ++ fieldToGraphName
 
 
 tiltakCard : TiltakStates -> Tiltak -> Accordion.Card Msg
-tiltakCard tiltakStates tiltak =
+tiltakCard tiltakStates ((Tiltak tiltakRecord) as tiltak) =
     let
         analyse =
             AnalyseView.view <| Tiltak.analyse tiltak tiltakStates
 
         title =
-            sendTo tiltak .title
+            tiltakRecord.title
     in
     Accordion.card
         { id = sendTo tiltak .domId
@@ -192,9 +193,28 @@ nivaaGroup ((Tiltak object) as tiltak) tiltakStates =
     let
         nivaa =
             Focus.get object.nivaaFocus tiltakStates
+
+        (Tiltak vinterdriftRecord) =
+            Tiltak.Vinterdrift.tiltak
+
+        nivaaExplanation =
+            if object.title == vinterdriftRecord.title then
+                [ text ". For detaljer se "
+                , a
+                    [ href
+                        "https://www.vegvesen.no/fag/veg+og+gate/drift+og+vedlikehold/Driftskontrakter/dvkurs/forberedelser-til-kurs/bli-kjent-med-r610/r610"
+                    ]
+                    [ text "Håndbok R610" ]
+                ]
+
+            else
+                []
+
+        nivaaTitle =
+            [ Html.strong [] [ text "Nivå" ] ] ++ nivaaExplanation
     in
     Form.group []
-        ([ Form.label [ for "nivaaRadios" ] [ Html.strong [] [ text "Nivå" ] ] ]
+        ([ Form.label [ for "nivaaRadios" ] nivaaTitle ]
             ++ Radio.radioList "nivaaRadios"
                 [ object.nivaaTitle LavTilHoey
                     |> Radio.create

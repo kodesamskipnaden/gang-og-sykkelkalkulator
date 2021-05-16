@@ -43,7 +43,7 @@ tiltak =
 
 tiltakRecordImplementation : Hooks VinterdriftState
 tiltakRecordImplementation =
-    { title = \_ -> "Vinterdrift - brøyting, strøing, kosting og salting"
+    { title = "Vinterdrift - brøyting, strøing, kosting og salting"
     , nivaaTitle =
         \nivaa ->
             case nivaa of
