@@ -52,9 +52,17 @@ init location =
             , tiltakStates = TiltakAndGroupData.initialTiltakStates
             , chartIds = []
             }
+
+        dummyModel =
+            { model | page = NotFound }
     in
     -- if we had more than one cmd, use Cmd.batch : List Cmd -> Cmd
-    ( model, Ports.setTitle (titleFromPage model.page) )
+    ( model
+    , Cmd.batch
+        [ destroyAndCreateCharts dummyModel model
+        , Ports.setTitle (titleFromPage model.page)
+        ]
+    )
 
 
 subscriptions : Model -> Sub Msg
