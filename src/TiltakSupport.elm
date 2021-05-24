@@ -109,7 +109,7 @@ toDomId : String -> String
 toDomId string =
     string
         -- add all invalid characters in domId here
-        |> Regex.replace Regex.All (Regex.regex "[:/]") (\_ -> " ")
+        |> Regex.replace Regex.All (Regex.regex "[:/,æøå]") (\_ -> " ")
         -- whitespace is handled here
         |> String.words
         |> String.join "-"
