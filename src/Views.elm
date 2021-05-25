@@ -118,8 +118,8 @@ Klikk boksen nedenfor og velg hovedkategori av tiltak. Ved å legge inn bakgrunn
                             , a [ href "" ]
                                 [ text "[SETT INN LENKE]" ]
                             , text
-                                ". Vi har også laget en kortfattet veiledning "
-                            , a [ href "" ] [ text "[SETT INN LENKE]" ]
+                                ". Vi har også laget en kortfattet  "
+                            , a [ Assets.href Assets.brukerveiledning ] [ text "veiledning" ]
                             , text " til kalkulatoren, og en samlet liste over forutsetninger "
                             , a [ href "" ] [ text "[SETT INN LENKE]" ]
                             , text " som er brukt."

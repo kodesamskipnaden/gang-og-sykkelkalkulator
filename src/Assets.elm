@@ -78,6 +78,10 @@ tilgjengelighet =
     Image "./images/noun_1050600_cc.gif"
 
 
+brukerveiledning =
+    Image "./images/Brukerveiledning.pdf"
+
+
 
 -- USING IMAGES --
 
@@ -85,3 +89,8 @@ tilgjengelighet =
 src : Image -> Attribute msg
 src (Image url) =
     Attr.src url
+
+
+href : Image -> Attribute msg
+href (Image url) =
+    Attr.href url
