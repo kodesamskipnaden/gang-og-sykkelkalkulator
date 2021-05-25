@@ -203,7 +203,7 @@ appFooter =
                 [ text "Utvikling "
                 , a [ href "http://github.com/kodesamskipnaden" ]
                     [ text "Kodesamskipnaden" ]
-                , text " ved Syver Enstad & Knut Aksel Røisland"
+                , text " ved Syver Enstad & Knut Aksel Røysland"
                 ]
             ]
         ]
