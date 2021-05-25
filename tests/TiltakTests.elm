@@ -26,7 +26,7 @@ suite =
             \() ->
                 "Alarmsystem / nødtelefon: på holdeplass"
                     |> TiltakSupport.toDomId
-                    |> Expect.equal "Alarmsystem-nødtelefon-på-holdeplass"
+                    |> Expect.equal "Alarmsystem-n-dtelefon-p-holdeplass"
         , describe "samples"
             [ test "linear function" <|
                 \() ->
