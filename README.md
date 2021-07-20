@@ -4,6 +4,8 @@ Nytte- og kostnadsanalyse verktøy for gang og sykkelvei tiltak
 
 Author: Syver Enstad, Knut Aksel Røysland, Svend Børge Vullum
 
+Edit.
+
 Deployes kontinuerlig til: http://gang-og-sykkelkalkulator.s3-website.eu-north-1.amazonaws.com/
 
 # Installering
