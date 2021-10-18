@@ -73,16 +73,16 @@ sykkelSuite =
                 { yearlySyklistNytteInklOverfoert = 346601.4504
                 , yearlyFotgjengerNytteInklOverfoert = 0
                 , yearlyTrafikantNytteInklOverfoert = 4253.0155
-                , yearlyHelsegevinstNytteInklOverfoert = 266600
+                , yearlyHelsegevinstNytteInklOverfoert = 158885
                 , yearlyTSGevinstNytteInklOverfoert = 3102.0462
                 , yearlyEksterneEffekterNytteInklOverfoert = 3285.756
-                , yearlyNytteInklOverfoertSum = 623842.268
-                , nytteInklOverfoert = 15232953.4342
+                , yearlyNytteInklOverfoertSum = 516127.2679
+                , nytteInklOverfoert = 12602773.2358
                 , investeringsKostInklRestverdi = 0
                 , driftOgVedlihKost = -4520881.3377
                 , kostUtenSkyggepris = -4520881.3377
                 , skyggepris = -904176.2675
-                , nettoNytteInklOverfoert = 9807895.829
+                , nettoNytteInklOverfoert = 7177715.6306
                 }
           in
           describe "Storby Lav til Høy"
@@ -123,16 +123,16 @@ fotgjengerSuite =
                     { yearlySyklistNytteInklOverfoert = 0
                     , yearlyFotgjengerNytteInklOverfoert = 439285.4676
                     , yearlyTrafikantNytteInklOverfoert = 1701.2062
-                    , yearlyHelsegevinstNytteInklOverfoert = 279070
+                    , yearlyHelsegevinstNytteInklOverfoert = 100749
                     , yearlyTSGevinstNytteInklOverfoert = -2554.3719
                     , yearlyEksterneEffekterNytteInklOverfoert = 1314.3024
-                    , yearlyNytteInklOverfoertSum = 718816.6043
-                    , nytteInklOverfoert = 17552032.656
+                    , yearlyNytteInklOverfoertSum = 540495.6042
+                    , nytteInklOverfoert = 13197798.2141
                     , investeringsKostInklRestverdi = 0
                     , driftOgVedlihKost = -4520881.3377
                     , kostUtenSkyggepris = -4520881.3377
                     , skyggepris = -904176.2675
-                    , nettoNytteInklOverfoert = 12126975.0508
+                    , nettoNytteInklOverfoert = 7772740.6089
                     }
              in
              [ tiltakSuite (createCheckWithState state) expectedRecord ]
@@ -152,16 +152,16 @@ fotgjengerSuite =
                     { yearlySyklistNytteInklOverfoert = 0
                     , yearlyFotgjengerNytteInklOverfoert = 336547.3531
                     , yearlyTrafikantNytteInklOverfoert = 1542.9545
-                    , yearlyHelsegevinstNytteInklOverfoert = 253110
+                    , yearlyHelsegevinstNytteInklOverfoert = 91377
                     , yearlyTSGevinstNytteInklOverfoert = -2248.9438
                     , yearlyEksterneEffekterNytteInklOverfoert = 1192.0417
-                    , yearlyNytteInklOverfoertSum = 590143.4054
-                    , nytteInklOverfoert = 14410096.0685
+                    , yearlyNytteInklOverfoertSum = 428410.4053
+                    , nytteInklOverfoert = 10460906.6903
                     , investeringsKostInklRestverdi = 0
                     , driftOgVedlihKost = -4065966.202
                     , kostUtenSkyggepris = -4065966.202
                     , skyggepris = -813193.2404
-                    , nettoNytteInklOverfoert = 9530936.6261
+                    , nettoNytteInklOverfoert = 5581747.2479
                     }
              in
              [ tiltakSuite (createCheckWithState state) expectedRecord ]

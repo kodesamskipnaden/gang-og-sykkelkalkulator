@@ -76,16 +76,16 @@ suite =
                         { yearlySyklistNytteInklOverfoert = 112249.3499
                         , yearlyFotgjengerNytteInklOverfoert = 0
                         , yearlyTrafikantNytteInklOverfoert = 989.0734
-                        , yearlyHelsegevinstNytteInklOverfoert = 62000
+                        , yearlyHelsegevinstNytteInklOverfoert = 36950
                         , yearlyTSGevinstNytteInklOverfoert = -1092.4132
                         , yearlyEksterneEffekterNytteInklOverfoert = 764.1293
-                        , yearlyNytteInklOverfoertSum = 174910.1394
-                        , nytteInklOverfoert = 4270948.1954
+                        , yearlyNytteInklOverfoertSum = 149860.1395
+                        , nytteInklOverfoert = 3659278.3837
                         , investeringsKostInklRestverdi = 0
                         , driftOgVedlihKost = -7192694.0292
                         , kostUtenSkyggepris = -7192694.0292
                         , skyggepris = -1438538.8058
-                        , nettoNytteInklOverfoert = -4360284.6397
+                        , nettoNytteInklOverfoert = -4971954.451432221
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord ]
@@ -105,16 +105,16 @@ suite =
                         { yearlySyklistNytteInklOverfoert = 372910.6332
                         , yearlyFotgjengerNytteInklOverfoert = 0
                         , yearlyTrafikantNytteInklOverfoert = 3956.2935
-                        , yearlyHelsegevinstNytteInklOverfoert = 248000
+                        , yearlyHelsegevinstNytteInklOverfoert = 147800
                         , yearlyTSGevinstNytteInklOverfoert = -11077.97
                         , yearlyEksterneEffekterNytteInklOverfoert = 3056.5172
-                        , yearlyNytteInklOverfoertSum = 616845.4738
-                        , nytteInklOverfoert = 15062106.0175
+                        , yearlyNytteInklOverfoertSum = 516645.4738
+                        , nytteInklOverfoert = 12615426.7633
                         , investeringsKostInklRestverdi = 0
                         , driftOgVedlihKost = -1684365.0575
                         , kostUtenSkyggepris = -1684365.0575
                         , skyggepris = -336873.0115
-                        , nettoNytteInklOverfoert = 13040867.9485
+                        , nettoNytteInklOverfoert = 10594188.6944
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord ]
@@ -137,16 +137,16 @@ suite =
                         { yearlySyklistNytteInklOverfoert = 489221.7943
                         , yearlyFotgjengerNytteInklOverfoert = 0
                         , yearlyTrafikantNytteInklOverfoert = 4945.3669
-                        , yearlyHelsegevinstNytteInklOverfoert = 310000
+                        , yearlyHelsegevinstNytteInklOverfoert = 184750
                         , yearlyTSGevinstNytteInklOverfoert = -12201.0248
                         , yearlyEksterneEffekterNytteInklOverfoert = 3820.6465
-                        , yearlyNytteInklOverfoertSum = 795786.7829
-                        , nytteInklOverfoert = 19431487.138
+                        , yearlyNytteInklOverfoertSum = 670536.7829
+                        , nytteInklOverfoert = 16373138.0731
                         , skyggepris = -1775411.8173
                         , driftOgVedlihKost = -8877059.0867
                         , investeringsKostInklRestverdi = 0
                         , kostUtenSkyggepris = -8877059.0867
-                        , nettoNytteInklOverfoert = 8779016.2339
+                        , nettoNytteInklOverfoert = 5720667.169
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord
@@ -198,16 +198,16 @@ suite =
                         { yearlySyklistNytteInklOverfoert = 0
                         , yearlyFotgjengerNytteInklOverfoert = 888002.3328
                         , yearlyTrafikantNytteInklOverfoert = 437.7465
-                        , yearlyHelsegevinstNytteInklOverfoert = 324500
+                        , yearlyHelsegevinstNytteInklOverfoert = 117150
                         , yearlyTSGevinstNytteInklOverfoert = 28455.7855
                         , yearlyEksterneEffekterNytteInklOverfoert = 1092.9976
-                        , yearlyNytteInklOverfoertSum = 1242488.8624
-                        , nytteInklOverfoert = 30339039.1351
+                        , yearlyNytteInklOverfoertSum = 1035138.8624
+                        , nytteInklOverfoert = 25275975.832210887
                         , investeringsKostInklRestverdi = 0
                         , driftOgVedlihKost = -8877059.0867
                         , kostUtenSkyggepris = -8877059.0867
                         , skyggepris = -1775411.8173
-                        , nettoNytteInklOverfoert = 19686568.231
+                        , nettoNytteInklOverfoert = 14623504.9282
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord
@@ -228,16 +228,16 @@ suite =
                         { yearlySyklistNytteInklOverfoert = 0
                         , yearlyFotgjengerNytteInklOverfoert = 888002.3328
                         , yearlyTrafikantNytteInklOverfoert = 0
-                        , yearlyHelsegevinstNytteInklOverfoert = 324500
+                        , yearlyHelsegevinstNytteInklOverfoert = 117150
                         , yearlyTSGevinstNytteInklOverfoert = 28602.1506
                         , yearlyEksterneEffekterNytteInklOverfoert = 422.1363
-                        , yearlyNytteInklOverfoertSum = 1241526.6197
-                        , nytteInklOverfoert = 30315543.1353
+                        , yearlyNytteInklOverfoertSum = 1034176.6198
+                        , nytteInklOverfoert = 25252479.8325
                         , investeringsKostInklRestverdi = 0
                         , driftOgVedlihKost = -8877059.0867
                         , kostUtenSkyggepris = -8877059.0867
                         , skyggepris = -1775411.8173
-                        , nettoNytteInklOverfoert = 19663072.2313
+                        , nettoNytteInklOverfoert = 14600008.9284
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord ]
@@ -260,16 +260,16 @@ suite =
                         { yearlySyklistNytteInklOverfoert = 0
                         , yearlyFotgjengerNytteInklOverfoert = 888002.3328
                         , yearlyTrafikantNytteInklOverfoert = 1978.1467
-                        , yearlyHelsegevinstNytteInklOverfoert = 324500
+                        , yearlyHelsegevinstNytteInklOverfoert = 117150
                         , yearlyTSGevinstNytteInklOverfoert = 28312.5216
                         , yearlyEksterneEffekterNytteInklOverfoert = 1528.2586
-                        , yearlyNytteInklOverfoertSum = 1244321.2597
+                        , yearlyNytteInklOverfoertSum = 1036971.2598
                         , investeringsKostInklRestverdi = 0
                         , driftOgVedlihKost = -8877059.0867
                         , kostUtenSkyggepris = -8877059.0867
                         , skyggepris = -1775411.8173
-                        , nytteInklOverfoert = 30383782.5336
-                        , nettoNytteInklOverfoert = 19731311.6295
+                        , nytteInklOverfoert = 25320719.2307
+                        , nettoNytteInklOverfoert = 14668248.3267
                         }
                  in
                  [ tiltakSuite (createCheckWithState state) expectedRecord
