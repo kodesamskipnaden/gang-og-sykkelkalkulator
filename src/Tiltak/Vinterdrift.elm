@@ -122,7 +122,7 @@ fieldDefinitions =
     , TiltakSupport.sykkelturerPerYearSimpleField specificState
     , TiltakSupport.gangturerPerYearSimpleField specificState
     , { name = "oppetidPercent"
-      , title = "Tiltakets oppetid, prosent"
+      , title = "Tiltakets oppetid i prosent (pga. forsinkelse mellom snøfall og tiltak)"
       , placeholder = "Tall mellom 0 og 100 %, hensyn tatt til tid fra nedbør til brøyting/kosting"
       , focus = specificState => oppetidPercent
       , fieldSpec = PercentSpec

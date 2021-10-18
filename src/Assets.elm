@@ -82,6 +82,14 @@ brukerveiledning =
     Image "./images/Brukerveiledning.pdf"
 
 
+dokumentasjon =
+    Image "./images/Arbeidsdokument_51766_Gang-_og_sykkelkalkulator.pdf"
+
+
+forutsetninger =
+    Image "./images/GS-kalkulator-Forutsetninger.pdf"
+
+
 
 -- USING IMAGES --
 

@@ -67,7 +67,7 @@ view data =
               )
             , ( "Helsegevinst"
               , data.helseGevinstNytte |> NumberFormat.maybePretty
-              , text "Verdien i dag av effektene på øvrige trafikanter, over hele analyseperioden"
+              , text "Verdien av helseeffekter fra fysisk aktivitet på sykefravær og redusert risiko for alvorlig sykdom"
               )
             , ( "TS gevinst"
               , data.tsGevinstNytte |> NumberFormat.maybePretty

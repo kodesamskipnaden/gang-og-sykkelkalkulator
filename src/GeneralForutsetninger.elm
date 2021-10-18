@@ -13,7 +13,7 @@ verdisettinger =
     , helseGevinstGange =
         -- kr pr km gange
         64.9
-    , helseTSGevinstSykkel =
+    , helseGevinstSykkel =
         -- kr pr km syklet
         24.8
     , tsKostnadGange = 0.984932862

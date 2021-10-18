@@ -74,17 +74,17 @@ groupPanel group =
         ]
 
 
-tempText =
-    """Velkommen til TØIs nyttekostnadsberegningsverktøy for sykkel- og gangveitiltak knyttet til vinterdrift, belysning, vegdekkestandard og renhold. Kalkulatoren følger gjeldende tilnærming og metodikk for nyttekostnadsanalyser i transportsektoren (Statens vegvesens Håndbok v712) og benytter derfor 40 års analyseperiode. 
-
-Klikk boksen nedenfor og velg hovedkategori av tiltak. Ved å legge inn bakgrunnsinformasjon om prosjektet, beregner kalkulatoren nytte for ulike aktører, tiltakets nettonåverdi og nettonytte per budsjettkrone (nyttekostnadsbrøk).
-
-Beregningsopplegget er dokumentert i vedlagte dokumentasjon [SETT INN LENKE]. Vi har også laget en kortfattet veiledning [SETT INN LENKE] til kalkulatoren, og en samlet liste over forutsetninger [SETT INN LENKE] som er brukt.
-"""
-
-
 haandbokV712Link =
-    a [ href "https://www.vegvesen.no/_attachment/704540/" ] [ text "Håndbok v712" ]
+    a
+        [ href "https://www.vegvesen.no/fag/veg-og-gate/planlegging/grunnlagsdata/konsekvensanalyser"
+        ]
+        [ text "Håndbok v712" ]
+
+
+dokumentasjonLink =
+    a
+        [ Assets.href Assets.dokumentasjon ]
+        [ text "dokumentasjon" ]
 
 
 pageHome : Model -> Html Msg
@@ -114,14 +114,13 @@ Klikk boksen nedenfor og velg hovedkategori av tiltak. Ved å legge inn bakgrunn
 """
                             ]
                         , p []
-                            [ text "Beregningsopplegget er dokumentert i vedlagte dokumentasjon\n"
-                            , a [ href "" ]
-                                [ text "[SETT INN LENKE]" ]
+                            [ text "Beregningsopplegget er dokumentert i vedlagte "
+                            , dokumentasjonLink
                             , text
                                 ". Vi har også laget en kortfattet  "
                             , a [ Assets.href Assets.brukerveiledning ] [ text "veiledning" ]
-                            , text " til kalkulatoren, og en samlet liste over forutsetninger "
-                            , a [ href "" ] [ text "[SETT INN LENKE]" ]
+                            , text " til kalkulatoren, og en samlet liste over "
+                            , a [ Assets.href Assets.forutsetninger ] [ text "forutsetninger" ]
                             , text " som er brukt."
                             ]
                         ]
