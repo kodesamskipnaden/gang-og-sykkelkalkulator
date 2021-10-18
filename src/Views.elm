@@ -74,17 +74,39 @@ groupPanel group =
         ]
 
 
-haandbokV712Link =
+blankAnchor attrs elements =
     a
+        ([ target "_blank" ]
+            ++ attrs
+        )
+        elements
+
+
+haandbokV712Link =
+    blankAnchor
         [ href "https://www.vegvesen.no/fag/veg-og-gate/planlegging/grunnlagsdata/konsekvensanalyser"
         ]
         [ text "Håndbok v712" ]
 
 
 dokumentasjonLink =
-    a
+    blankAnchor
         [ Assets.href Assets.dokumentasjon ]
         [ text "dokumentasjon" ]
+
+
+veiledningsLink =
+    blankAnchor
+        [ Assets.href Assets.brukerveiledning ]
+        [ text "veiledning" ]
+
+
+forutsetningsLink =
+    blankAnchor
+        [ Assets.href
+            Assets.forutsetninger
+        ]
+        [ text "forutsetninger" ]
 
 
 pageHome : Model -> Html Msg
@@ -118,9 +140,9 @@ Klikk boksen nedenfor og velg hovedkategori av tiltak. Ved å legge inn bakgrunn
                             , dokumentasjonLink
                             , text
                                 ". Vi har også laget en kortfattet  "
-                            , a [ Assets.href Assets.brukerveiledning ] [ text "veiledning" ]
+                            , veiledningsLink
                             , text " til kalkulatoren, og en samlet liste over "
-                            , a [ Assets.href Assets.forutsetninger ] [ text "forutsetninger" ]
+                            , forutsetningsLink
                             , text " som er brukt."
                             ]
                         ]
