@@ -20,7 +20,7 @@ titleFromPage : Page -> String
 titleFromPage page =
     let
         appName =
-            "Gang- og sykkel-vei kalkulator"
+            "Nyttekostnadskalkulator for drift og vedlikehold av gang- og sykkelanlegg"
     in
     case page of
         Home ->
