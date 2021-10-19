@@ -201,8 +201,8 @@ nivaaGroup ((Tiltak object) as tiltak) tiltakStates =
             if object.title == vinterdriftRecord.title then
                 [ text ". For detaljer se "
                 , a
-                    [ href
-                        "https://www.vegvesen.no/fag/veg+og+gate/drift+og+vedlikehold/Driftskontrakter/dvkurs/forberedelser-til-kurs/bli-kjent-med-r610/r610"
+                    [ href "https://www.vegvesen.no/fag/publikasjoner/handboker/handboker-etter-hovedtema/drift-og-vedlikehold/"
+                    , target "_blank"
                     ]
                     [ text "Håndbok R610" ]
                 ]

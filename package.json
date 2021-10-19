@@ -13,7 +13,8 @@
     "start": "nodemon --watch webpack.config.js --exec 'npm run client'",
     "test": "elm test",
     "test:watch": "elm test --watch",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "build-zip": "npm run build && zip -r dist.zip dist/"
   },
   "dependencies": {
     "c3": "^0.4.14",
