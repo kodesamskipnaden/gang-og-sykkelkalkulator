@@ -209,10 +209,10 @@ appFooter : Html Msg
 appFooter =
     footer [ class "footer footer-text" ]
         [ Grid.container [ class "container__narrow" ]
-            [ text "Kontakt: "
-            , a [ href "mailto:naf@toi.no" ] [ text "Nils Fearnley" ]
-
-            -- , br [] []
+            [ div [ class "kontakt" ]
+                [ text "Kontakt: "
+                , a [ href "mailto:naf@toi.no" ] [ text "Nils Fearnley" ]
+                ]
             , Grid.container []
                 [ a [ href "https://www.vegvesen.no" ]
                     [ img
