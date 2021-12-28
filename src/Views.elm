@@ -116,7 +116,7 @@ pageHome model =
             [ Grid.container [ class "container__narrow" ]
                 [ h1 [] [ text "Nytte-kostnadskalkulator" ]
                 , h2 [] [ text "for drift og vedlikehold av gang- og sykkelanlegg" ]
-                , p [] [ text "Publisert mai 2021" ]
+                , p [] [ text "Publisert 2021" ]
                 ]
             ]
         , Grid.container [ class "groupPanels container__narrow" ]
@@ -211,14 +211,25 @@ appFooter =
         [ Grid.container [ class "container__narrow" ]
             [ text "Kontakt: "
             , a [ href "mailto:naf@toi.no" ] [ text "Nils Fearnley" ]
-            , br [] []
-            , a [ href "https://www.toi.no" ]
-                [ img
-                    [ Assets.src Assets.toiLogo
-                    , class "toiLogo"
-                    , alt "TØI logo"
+
+            -- , br [] []
+            , Grid.container []
+                [ a [ href "https://www.vegvesen.no" ]
+                    [ img
+                        [ Assets.src Assets.svvLogo
+                        , class "svvLogo"
+                        , alt "SVV logo"
+                        ]
+                        []
                     ]
-                    []
+                , a [ href "https://www.toi.no" ]
+                    [ img
+                        [ Assets.src Assets.toiLogo
+                        , class "toiLogo"
+                        , alt "TØI logo"
+                        ]
+                        []
+                    ]
                 ]
             , div [ class "colophon" ]
                 [ text "Utvikling "

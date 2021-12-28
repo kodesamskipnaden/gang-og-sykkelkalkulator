@@ -27,6 +27,12 @@ toiLogo =
     Image "./images/toi_logo_navn.png"
 
 
+svvLogo : Image
+svvLogo =
+    --    Image "./images/vegvesen-logo-hvit-rgb.png"
+    Image "./images/vegvesen-logo-farger-neg-rgb.png"
+
+
 backArrow : Image
 backArrow =
     Image "./images/689246_arrows_512x512.png"

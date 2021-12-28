@@ -1,4 +1,4 @@
-$footer-height: 170px;
+$footer-height: 210px;
 
 /* Position the footer at the bottom of the page, but not fixed. */
 html {
@@ -86,8 +86,17 @@ footer {
 }
 
 .toiLogo {
-    width: 500px;
+    // width: 500px;
+    height: 50px;
+    margin-top: -20px;
     margin-right: 10px;
+}
+
+.svvLogo {
+    // width: 200px;
+    height: 100px;
+    margin-right: 20px;
+
 }
 
 .byvaapen {
